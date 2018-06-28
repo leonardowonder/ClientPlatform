@@ -1,28 +1,14 @@
-const { ccclass } = cc._decorator;
+import Singleton from '../Utils/Singleton';
 
 export let RedDotHintKey = {
-    
+
 }
 
 export const RedDotHintRefreshKey = 'CUSTOM_EVENT_RED_HINT_REFRESH';
 
-@ccclass
-class RedDotHintManager {
-    private m_beenInit: boolean = false;
+class RedDotHintManager extends Singleton {
 
     private m_getHintCntfuncMap: any = {};
-
-    getInstance() {
-        if (!this.m_beenInit) {
-            this._init();
-        }
-
-        return this;
-    }
-
-    _init() {
-        //do something
-    }
 
     clearAllCnts() {
         this.m_getHintCntfuncMap = null;

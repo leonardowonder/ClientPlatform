@@ -37,26 +37,6 @@ export default class MainUIScene extends cc.Component {
     }
 
     onLoad() {
-        // var fsm = new StateMachine({
-        //     init: 'solid',
-        //     transitions: [
-        //         { name: 'Melt', from: 'solid', to: 'liquid' },
-        //         { name: 'freeze', from: 'liquid', to: 'solid' },
-        //         { name: 'vaporize', from: 'liquid', to: 'gas' },
-        //         { name: 'condense', from: 'gas', to: 'liquid' }
-        //     ],
-        //     methods: {
-        //         onBeforeMelt: function () { console.log('onBeforeMelt') },
-        //         onMelt: function () { console.log('I melted') },
-        //         onAfterMelt: function () { console.log('onAfterMelt') },
-        //         onFreeze: function () { console.log('I froze') },
-        //         onLeaveSolid: function () { console.log('onLeaveSolid') },
-        //         onEnterLiquid: function () { console.log('onEnterLiquid') },
-        //         onVaporize: function () { console.log('I vaporized') },
-        //         onCondense: function () { console.log('I condensed') }
-        //     }
-        // });
-
         let fsm = new StateMachine(
             'Solid',
             [

@@ -1,20 +1,11 @@
-const { ccclass } = cc._decorator;
+import Singleton from '../Utils/Singleton';
 
 import StringConfigManager from './StringConfigManager';
 
-@ccclass
-class ConfigManager {
-    private m_beenInit: boolean = false;
-
-    getInstance() {
-        if (!this.m_beenInit) {
-            this._init();
-        }
-
-        return this;
-    }
-
+class ConfigManager extends Singleton {
     _init() {
+        super._init();
+
         StringConfigManager.getInstance();
     }
 }

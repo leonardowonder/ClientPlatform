@@ -1,17 +1,10 @@
-class StringConfigManager {
-    private m_beenInit: boolean = false;
+import Singleton from '../Utils/Singleton';
 
+class StringConfigManager extends Singleton {
     private m_config = null;
 
-    getInstance() {
-        if (!this.m_beenInit) {
-            this._init();
-        }
-
-        return this;
-    }
-
     _init() {
+        super._init();
         cc.loader.loadRes('config/string_config', (err, res) => {
             if (err == null) {
                 if (res.cfg) {

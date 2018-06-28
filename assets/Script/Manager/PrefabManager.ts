@@ -1,30 +1,19 @@
 import * as _ from 'lodash';
 
+import Singleton from '../Utils/Singleton';
+
 export enum ePrefabEnum {
-    Mtt_Set_Time = 0
+    Prefab_key = 0,
+    Prefab_Max
 }
 
-class PrefabManager {
-    private m_beenInit: boolean = false;
-
+class PrefabManager extends Singleton {
     private static s_prefabConfig = [
-        { path: 'prefab/MttSetTime', componentName: 'MttSetTime' }
+        { path: 'path', componentName: 'componentName' }
     ];
 
     _loadingList: number[] = [];
     _unloadinglist: number[] = [];
-
-    getInstance() {
-        if (!this.m_beenInit) {
-            this._init();
-        }
-
-        return this;
-    }
-
-    _init() {
-        //do something
-    }
 
     showPrefab(key: number, params: any[] = null, parentNode: cc.Node = null) {
         let component = this._getComponentByKey(key, parentNode);
