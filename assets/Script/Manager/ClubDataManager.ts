@@ -1,12 +1,12 @@
 import * as async from 'async';
 import * as _ from 'lodash';
 
-import Network from '../Network';
-import PlayerData from '../PlayerData';
-import { eMsgPort, eMsgType } from '../MessageIdentifer';
-import clientDefine, { clientEventDefine, eClubMemberLevel } from '../clientDefine';
+import Network from '../Utils/Network';
+import PlayerData from './PlayerData';
+import { eMsgPort, eMsgType } from '../Define/MessageIdentifer';
+import clientDefine, { clientEventDefine, eClubMemberLevel } from '../Define/clientDefine';
 
-class ClubDataManagerNew {
+class ClubDataManager {
     private m_beenInit: boolean = false;
 
     private m_clubDataMap: any = {};
@@ -101,10 +101,10 @@ class ClubDataManagerNew {
                 (clubID: number, next: Function) => {
                     this.m_curNextFunc = next;
     
-                    Network.s_pNetwork.sendMsg(
+                    Network.getInstance().sendMsg(
                         {
                             msgID: eMsgType.MSG_CLUB_APPLY_CLUB_INFO,
-                            uid: PlayerData.prototype.getInstance().getPlaterData().uid
+                            uid: PlayerData.getInstance().getPlaterData().uid
                         },
                         eMsgType.MSG_CLUB_APPLY_CLUB_INFO,
                         eMsgPort.ID_MSG_PORT_DATA,
@@ -176,7 +176,7 @@ class ClubDataManagerNew {
 
     _onNetReconnected() {
         if (this.m_isProcessReq) {
-            cc.warn('ClubDataManagerNew _onNetReconnected _isProcessReq = true');
+            cc.warn('ClubDataManager _onNetReconnected _isProcessReq = true');
             this.m_isProcessReq = false;
         }
         
@@ -204,4 +204,4 @@ class ClubDataManagerNew {
     }
 };
 
-export default new ClubDataManagerNew();
+export default new ClubDataManager();

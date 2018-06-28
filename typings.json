@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "async": "registry:npm/async#2.0.1+20160815105832",
+    "lodash": "registry:npm/lodash#4.0.0+20161015015725"
+  }
+}

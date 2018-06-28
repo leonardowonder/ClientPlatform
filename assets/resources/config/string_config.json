@@ -1,0 +1,10 @@
+{
+    "cfg": {
+        "create_mtt_match": {
+            "cn": "{0}的比赛场"
+        },
+        "create_mtt_brief": {
+            "cn": "比赛场"
+        }
+    }
+}

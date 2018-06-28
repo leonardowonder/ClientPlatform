@@ -1,16 +1,10 @@
-const { ccclass, property } = cc._decorator;
-
-import { clientEventDefine } from '../clientDefine';
+const { ccclass } = cc._decorator;
 
 export let RedDotHintKey = {
-    ClubLayerTokenInRecordNormal: 'ClubLayerTokenInRecordNormal',
-    ClubLayerTokenInRecordMtt: 'ClubLayerTokenInRecordMtt',
-    MainClubManageTab: 'MainClubManageTab',
-    MainClubMyClubItemJoinMsg: 'MainClubMyClubItemJoinMsg',
-    MainClubMyClubItemTakeInMsg: 'MainClubMyClubItemTakeInMsg',
-    ClubLayerControlTab: 'ClubLayerControlTab',
-    MainSceneClubTab: 'MainSceneClubTab'
+    
 }
+
+export const RedDotHintRefreshKey = 'CUSTOM_EVENT_RED_HINT_REFRESH';
 
 @ccclass
 class RedDotHintManager {
@@ -51,7 +45,7 @@ class RedDotHintManager {
     }
 
     refreshRedDotHints() {
-        let dispEvent = new cc.Event.EventCustom(clientEventDefine.CUSTOM_EVENT_RED_HINT_REFRESH, true);
+        let dispEvent = new cc.Event.EventCustom(RedDotHintRefreshKey, true);
         cc.systemEvent.dispatchEvent(dispEvent);
     }
 }

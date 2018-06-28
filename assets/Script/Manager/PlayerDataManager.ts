@@ -1,135 +1,158 @@
-// Learn TypeScript:
-//  - [Chinese] http://www.cocos.com/docs/creator/scripting/typescript.html
-//  - [English] http://www.cocos2d-x.org/docs/editors_and_tools/creator-chapters/scripting/typescript/index.html
-// Learn Attribute:
-//  - [Chinese] http://www.cocos.com/docs/creator/scripting/reference/attributes.html
-//  - [English] http://www.cocos2d-x.org/docs/editors_and_tools/creator-chapters/scripting/reference/attributes/index.html
-// Learn life-cycle callbacks:
-//  - [Chinese] http://www.cocos.com/docs/creator/scripting/life-cycle-callbacks.html
-//  - [English] http://www.cocos2d-x.org/docs/editors_and_tools/creator-chapters/scripting/life-cycle-callbacks/index.html
+import * as async from 'async';
+import * as _ from 'lodash';
 
-import Network from '../Network'
-import PlayerData from '../PlayerData'
-import { eMsgPort, eMsgType } from '../MessageIdentifer'
-import clientDefine, { clientEventDefine } from '../clientDefine'
+import { eMsgPort, eMsgType } from '../Define/MessageIdentifer';
+import clientDefine, { clientEventDefine } from '../Define/clientDefine';
 
-const { ccclass, property } = cc._decorator;
+import Network from '../Utils/Network';
+import PlayerData from './PlayerData';
 
-@ccclass
-export default class PlayerDataManager extends cc.Component {
-    private static s_pInstance: PlayerDataManager = null;
+class PlayerDataManager {
+    private m_beenInit: boolean = false;
 
-    private _playerDatalMap: any = {};
-    private m_nReqIdx: number = 0;
-    private m_vReqQueue: any = [];
-    private _reqFunc: any = null;
+    private m_playerDataMap: any = {};
 
-    _registEvent() {
-        cc.systemEvent.on(clientDefine.netEventMsg, this.onMsg.bind(this), this);
-    }
+    private m_reqQueue: number[][] = [];
+
+    private m_isProcessReq: boolean = false;
+    private m_curNextFunc: Function = null;
 
     getInstance() {
-        if (PlayerDataManager.s_pInstance == null) {
-            PlayerDataManager.s_pInstance = new PlayerDataManager();
-
-            this._registEvent();
+        if (!this.m_beenInit) {
+            this._init();
         }
-        return PlayerDataManager.s_pInstance;
+
+        return this;
     }
 
-    _getPlayerDataMap() { return this._playerDatalMap; }
+    clearAll() {
+        this.m_playerDataMap = {};
+    }
 
-    onMsg(event: cc.Event.EventCustom) {
-        let nMsgID = event.detail[clientDefine.msgKey];
-        let jsMsg = event.detail[clientDefine.msg];
-        if (nMsgID == eMsgType.MSG_REQUEST_PLAYER_DATA) {
-            this.setPlayerData(jsMsg, jsMsg.uid);
+    getPlayerData(uid: number) {
+        return this.m_playerDataMap[uid];
+    }
 
-            let dispEvent = new cc.Event.EventCustom(clientEventDefine.CUSTOM_EVENT_PLAYER_DATA_GET, true);
+    setPlayerData(data: any, uid: number) {
+        this.m_playerDataMap[uid] = data;
+    }
 
-            dispEvent.detail = jsMsg;
+    reqPlayerData(uidList: number[]) {
+        this.m_reqQueue.push(uidList);
+
+        if (!this.m_isProcessReq) {
+            this._processReq();
+        }
+    }
+
+    _processReq() {
+        if (this.m_reqQueue.length > 0) {
+            let curReqList = _.uniq(this.m_reqQueue[0]);
+
+            curReqList = this._filterReqList(curReqList);
+
+            this._startReq(curReqList, this._processReq.bind(this));
+        }
+        else {
+            //all req finished
+
+            let dispEvent = new cc.Event.EventCustom(clientEventDefine.CUSTOM_EVENT_PLAYER_DATA_REQ_FINISHED, true);
             cc.systemEvent.dispatchEvent(dispEvent);
         }
     }
 
-    requestPlayerData(uid) {
-        var msg = {
-            msgID: eMsgType.MSG_REQUEST_PLAYER_DATA,
-            nReqID: uid,
-            isDetail: false,
-        };
+    _startReq(list: number[], callback: Function) {
+        this.m_isProcessReq = true;
 
-        Network.s_pNetwork.sendMsg(msg, eMsgType.MSG_REQUEST_PLAYER_DATA, eMsgPort.ID_MSG_PORT_DATA, uid);
+        async.forEachOfSeries(
+            list,
+            function (uid: number, key: number, next: Function) {
+                this.m_curNextFunc = next;
+
+                Network.getInstance().sendMsg(
+                    {
+                        msgID: eMsgType.MSG_REQUEST_PLAYER_DATA,
+                        nReqID: uid,
+                        isDetail: false,
+                    },
+                    eMsgType.MSG_REQUEST_PLAYER_DATA,
+                    eMsgPort.ID_MSG_PORT_DATA,
+                    PlayerData.getInstance().getPlaterData().uid,
+                    function (jsMsg) {
+                        this._onGetPlayerData(jsMsg);
+
+                        if (this.m_curNextFunc != null) {
+                            next();
+                        }
+                    }.bind(this));
+            }.bind(this),
+            function (err: any) {
+                this.m_isProcessReq = false;
+
+                if (err == null) {
+                    this.m_curNextFunc = null;
+                    this.m_reqQueue && this.m_reqQueue.shift();
+                    callback && callback();
+                }
+            }.bind(this)
+        )
     }
 
-    _reqPlayerDatas() {
-        if (this.m_nReqIdx < this.m_vReqQueue.length) {
-            // let uidList = this.m_vReqQueue[this.m_nReqIdx++];
-
-            // uidList.forEach(function (uid) {
-            //     // let url = this.getPlayerData(uid);
-            //     // if (url == null || url.length == 0) {
-            //         this.requestPlayerData(uid)
-            //     // }
-            // }.bind(this))
-            let uid = this.m_vReqQueue[this.m_nReqIdx++];
-
-            this.requestPlayerData(uid);
+    _onGetPlayerData(player: any) {
+        if (player && player.uid) {
+            this.m_playerDataMap[player.uid] = player;
         }
         else {
-            if (this._reqFunc) {
-                clearInterval(this._reqFunc);
-            }
-        }
-    }
-    requestMutilPlayerDatas(uidList) {
-        this.m_nReqIdx = 0;
-        this.m_vReqQueue.length = 0;
-
-        // let startIdx = 0;
-        // let reqNum = 2;
-        let reqInterval = 500;
-        // while (startIdx < uidList.length) {
-        //     let endIdx = startIdx + reqNum;
-        //     if (endIdx < uidList.length) {
-        //         this.m_vReqQueue.push(uidList.slice(startIdx, endIdx));
-        //     }
-        //     else {
-        //         this.m_vReqQueue.push(uidList.slice(startIdx));
-        //     }
-        //     startIdx += reqNum;
-        // }
-        this.m_vReqQueue = uidList;
-
-        if (this._reqFunc) {
-            clearInterval(this._reqFunc);
-        }
-        this._reqFunc = setInterval(this._reqPlayerDatas.bind(this), reqInterval);
-    }
-
-    clearPlayerDataById(uid) {
-        let playerDataMap = PlayerDataManager.prototype.getInstance()._getPlayerDataMap();
-        let data = playerDataMap[uid];
-        if (data != null) {
-            data = null;
+            cc.warn('PlayerDataManger _onGetPlayerData player data err, player =', player);
         }
     }
 
-    clearAllDatas() {
-        let playerDataMap = PlayerDataManager.prototype.getInstance()._getPlayerDataMap();
-        for (let key in playerDataMap) {
-            this.clearPlayerDataById(key);
+    _filterReqList(list): number[] {
+        let retList: number[] = [];
+        retList = _.filter(list, (uid: number) => {
+            let ret = false;
+            ret = this.m_playerDataMap[uid] == null ? true : false;
+            return ret;
+        })
+
+        return retList;
+    }
+
+    _onNetClose() {
+        this.m_isProcessReq = false;
+
+        this.m_curNextFunc && this.m_curNextFunc('net close');
+
+        this.m_curNextFunc = null;
+    }
+
+    _onNetReconnected() {
+        if (this.m_isProcessReq) {
+            cc.warn('PlayerDatamanger _onNetReconnected _isProcessReq = true');
+            this.m_isProcessReq = false;
         }
-        //this.this._playerDatalMap = {};
+        this._processReq();
     }
 
-    setPlayerData(data, uid) {
-        let playerDataMap = PlayerDataManager.prototype.getInstance()._getPlayerDataMap();
-        playerDataMap[uid] = data;
+    _registEvent() {
+        cc.systemEvent.on(clientDefine.netEventClose, this._onNetClose, this);
+        cc.systemEvent.on(clientDefine.netEventReconnectd, this._onNetReconnected, this);
     }
 
-    getPlayerData(uid) {
-        let playerDataMap = PlayerDataManager.prototype.getInstance()._getPlayerDataMap();
-        return playerDataMap[uid];
+    _init() {
+        this._registEvent();
+        this._loadFile();
+
+        this.m_beenInit = true;
     }
-}
+
+    _loadFile() {
+
+    }
+
+    _saveToFile() {
+
+    }
+};
+
+export default new PlayerDataManager();

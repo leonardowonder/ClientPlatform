@@ -1,7 +1,6 @@
 const { ccclass, property } = cc._decorator;
 
-import { clientEventDefine } from '../clientDefine';
-import RedDotHintManager, { RedDotHintKey } from '../Manager/RedDotHintManager';
+import RedDotHintManager, { RedDotHintRefreshKey } from '../Manager/RedDotHintManager';
 
 @ccclass
 export default class RedDotHintComponent extends cc.Component {
@@ -16,7 +15,7 @@ export default class RedDotHintComponent extends cc.Component {
     m_key: string = '';
 
     onLoad() {
-        cc.systemEvent.on(clientEventDefine.CUSTOM_EVENT_RED_HINT_REFRESH, this.refreshRedDotHint, this);
+        cc.systemEvent.on(RedDotHintRefreshKey, this.refreshRedDotHint, this);
     }
 
     onEnable() {
@@ -24,7 +23,7 @@ export default class RedDotHintComponent extends cc.Component {
     }
 
     onDestroy() {
-        cc.systemEvent.off(clientEventDefine.CUSTOM_EVENT_RED_HINT_REFRESH, this.refreshRedDotHint, this);
+        cc.systemEvent.off(RedDotHintRefreshKey, this.refreshRedDotHint, this);
     }
 
     refreshRedDotHint(event: cc.Event.EventCustom = null) {

@@ -1,6 +1,5 @@
 const {
-    ccclass,
-    property
+    ccclass
 } = cc._decorator;
 
 import TableView from './TableView'
@@ -10,15 +9,9 @@ export default class ViewCell extends cc.Component {
 
     tableView: TableView = null;
 
-    // @property
-    // componentName: string = ''
-
     _isCellInit_: boolean = false;
     _longClicked_: boolean = false;
 
-    // _cellAddMethodToNode_() {
-    //     this.node.clicked = this.clicked.bind(this);
-    // }
     _cellAddTouch_() {
         this.node.on(cc.Node.EventType.TOUCH_START, function (event) {
             if (this.node.active === true && this.node.opacity !== 0) {
@@ -51,7 +44,6 @@ export default class ViewCell extends cc.Component {
     _cellInit_(tableView) {
         this.tableView = tableView;
         if (!this._isCellInit_) {
-            // this._cellAddMethodToNode_();
             this._cellAddTouch_();
             this._isCellInit_ = true;
         }
@@ -69,13 +61,11 @@ export default class ViewCell extends cc.Component {
     }
     //被点击时相应的方法
     clicked() {
-        // let component = this.node.getComponent(this.componentName);
-        // component && component.clicked && component.clicked();
+
     }
 
     //加载需要初始化数据时调用
     init(index, data, reload, group) {
-        // let component = this.node.getComponent(this.componentName);
-        // component && component.init && component.init(index, data, reload, group);
+
     }
 }

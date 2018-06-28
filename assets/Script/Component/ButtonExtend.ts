@@ -1,7 +1,7 @@
 const { ccclass, property } = cc._decorator;
 
-import AudioManager from "../AudioManager"
-import AudioType from "../AudioType"
+import AudioManager from '../Manager/AudioManager';
+import AudioType from '../Define/AudioType';
 
 @ccclass
 export default class ButtonExtend extends cc.Component {
@@ -77,7 +77,7 @@ export default class ButtonExtend extends cc.Component {
                     }.bind(this), this.m_eventInterval * 1000);
                 }
     
-                this._button.clickEvents.forEach(function (clickEvent, index) {
+                this._button.clickEvents.forEach(function (clickEvent) {
                     clickEvent.emit([event]);
                 })
             }

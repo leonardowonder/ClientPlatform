@@ -1,10 +1,10 @@
 import * as _ from 'lodash';
 
 import { NetMsg, praseMsg } from '../Logic/LogicBasic';
-import Network from '../Network';
-import PlayerData from '../PlayerData';
-import { eMsgPort, eMsgType } from '../MessageIdentifer';
-import clientDefine, { clientEventDefine, eClubMemberLevel } from '../clientDefine';
+import Network from '../Utils/Network';
+import PlayerData from '../Manager/PlayerData';
+import { eMsgPort, eMsgType } from '../Define/MessageIdentifer';
+import clientDefine, { clientEventDefine } from '../Define/clientDefine';
 
 class ClubMemberDataManager {
     private m_beenInit: boolean = false;
@@ -102,10 +102,10 @@ class ClubMemberDataManager {
 
     //net 
     requestClubMemberList(clubID: number) {
-        Network.s_pNetwork.sendMsg(
+        Network.getInstance().sendMsg(
             {
                 msgID: eMsgType.MSG_CLUB_MEMBER_INFO,
-                uid: PlayerData.prototype.getInstance().getPlaterData().uid
+                uid: PlayerData.getInstance().getPlaterData().uid
             },
             eMsgType.MSG_CLUB_MEMBER_INFO,
             eMsgPort.ID_MSG_PORT_DATA,
