@@ -1,16 +1,19 @@
 import * as async from 'async';
+import * as _ from 'lodash';
 
 import Singleton from '../../Utils/Singleton';
 
 class Anim {
     public key: string;
-    public animCallback: Function;
+    public animPlayCallback: Function;
     public playTime: number;
+    public animStopCallback: Function;
 
-    constructor(key: string, callback: Function, time: number) {
+    constructor(key: string, playCallback: Function, time: number, stopCallback: Function) {
         this.key = key;
-        this.animCallback = callback;
+        this.animPlayCallback = playCallback;
         this.playTime = time;
+        this.animStopCallback = stopCallback;
     }
 }
 
@@ -30,7 +33,15 @@ class AnimationPlayManager extends Singleton {
         this.m_animList.length = 0;
     }
 
-    getCurAnim() {
+    getCurAnim(): Anim {
+        let anim = _.find(this.m_animList, (anim: Anim) => {
+            return this.m_curAnimKey == anim.key;
+        });
+
+        return anim;
+    }
+
+    getCurAnimKey() {
         return this.m_curAnimKey;
     }
 
@@ -40,6 +51,9 @@ class AnimationPlayManager extends Singleton {
 
     stopPlay() {
         this.m_shouldPlay = false;
+
+        let curAnim = this.getCurAnim();
+        curAnim.animStopCallback && curAnim.animStopCallback();
     }
 
     startPlay() {
@@ -55,7 +69,7 @@ class AnimationPlayManager extends Singleton {
                 if (this.m_shouldPlay) {
                     this.m_curAnimKey = anim.key;
 
-                    anim.animCallback && anim.animCallback();
+                    anim.animPlayCallback && anim.animPlayCallback();
 
                     if (anim.playTime && anim.playTime > 0) {
                         setTimeout(() => {

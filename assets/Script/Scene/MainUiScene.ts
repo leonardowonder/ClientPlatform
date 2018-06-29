@@ -1,135 +1,104 @@
 const { ccclass, property } = cc._decorator;
-// import { MyUtils, QuitGameType } from '../MyUtils'
-// import PlayerData from '../PlayerData'
-// import { MainUiScenePage } from '../clientDefine'
-// import AudioManager from '../AudioManager'
-// import AudioType from '../AudioType'
-// import PrefabManager, { ePrefabEnum } from '../Manager/PrefabManager';
-// import ToggleChangeColor from '../Component/ToggleChangeColor';
-// import MainSceneLogic from '../Logic/MainSceneLogic';
-// import MainClubLogic from '../Logic/MainClubLogic';
-// var StateMachine = require('javascript-state-machine');
+
+import * as async from 'async';
+
 import StateMachine, { Transition, Method } from '../Manager/StateMachine/StateMachine';
+import PrefabManager, { ePrefabEnum } from '../Manager/PrefabManager';
 
 @ccclass
 export default class MainUIScene extends cc.Component {
 
-    // @property(cc.Toggle)
-    // m_toggles: cc.Toggle[] = [];
-
-    // @property(ToggleChangeColor)
-    // private m_toggleChangeComp: ToggleChangeColor = null;
-
-    // @property(cc.Node)
-    // m_contentNode: cc.Node = null;
-
-    // @property(cc.Node)
-    // private m_pClubNull: cc.Node = null;
-
-    // /*-----------------------*/
-    // private m_pageIdx: number = MainUiScenePage.Page_Rooms;
-
-    // private m_pageEnumList: number[] = [ePrefabEnum.MainRooms, ePrefabEnum.MainClub, ePrefabEnum.MainCreate, ePrefabEnum.MainRecord, ePrefabEnum.MainMe];
+    @property(cc.Node)
+    m_node: cc.Node = null;
 
     onDestroy() {
-
-        // MainSceneLogic.getInstance().unsetCurView();
     }
 
     onLoad() {
-        let fsm = new StateMachine(
-            'Solid',
-            [
-                new Transition('Melt', ['Solid'], 'Liquid'),
-                new Transition('Freeze', ['Liquid'], 'Solid'),
-                new Transition('Vaporize', ['Liquid'], 'Gas'),
-                new Transition('Condense', ['Gas'], 'Liquid')
-            ],
-            [
-                new Method('onBeforeMeltFromSolid', function () { console.log('onBeforeMeltFromSolid') }),
-                new Method('onLeaveSolidInMelt', function () { console.log('onLeaveSolidInMelt') }),
-                new Method('onMeltFromSolid', function () { console.log('onMeltFromSolid') }),
-                new Method('onEnterLiquidInMelt', function () { console.log('onEnterLiquidInMelt') }),
-                new Method('onAfterMeltFromSolid', function () { console.log('onAfterMeltFromSolid') }),
-                new Method('onFreezeFromLiquid', function () { console.log('onFreezeFromLiquid') }),
-                new Method('onVaporizeFromLiquid', function () { console.log('onVaporizeFromLiquid') }),
-                new Method('onCondenseFromGas', function () { console.log('onCondenseFromGas') })
-            ]
-        );
+        // let args: any[] = [];
+        // let foo = function(...params) {
+        //     cc.log('wd deug', arguments, params);
+        // }
+        // foo(...args);
 
-        fsm.changeState('Freeze');
+        // let fsm = new StateMachine(
+        //     'Solid',
+        //     [
+        //         new Transition('Melt', ['Solid'], 'Liquid'),
+        //         new Transition('Freeze', ['Liquid'], 'Solid'),
+        //         new Transition('Vaporize', ['Liquid'], 'Gas'),
+        //         new Transition('Condense', ['Gas'], 'Liquid')
+        //     ],
+        //     [
+        //         new Method('onBeforeMeltFromSolid', function () { console.log('onBeforeMeltFromSolid') }),
+        //         new Method('onLeaveSolidInMelt', function () { console.log('onLeaveSolidInMelt') }),
+        //         new Method('onMeltFromSolid', this.onMeltFromSolid.bind(this, 1, 2, 'asdf')),
+        //         new Method('onEnterLiquidInMelt', function () { console.log('onEnterLiquidInMelt') }),
+        //         new Method('onAfterMeltFromSolid', function () { console.log('onAfterMeltFromSolid') }),
+        //         new Method('onFreezeFromLiquid', function () { console.log('onFreezeFromLiquid') }),
+        //         new Method('onVaporizeFromLiquid', function () { console.log('onVaporizeFromLiquid') }),
+        //         new Method('onCondenseFromGas', function () { console.log('onCondenseFromGas') })
+        //     ]
+        // );
+
+        // fsm.changeState('Melt');
     }
+
+    showPrefab() {
+        async.eachSeries(
+            [0, 1, 2, 3, 4],
+            (n, next) => {
+                let parentNode = null;
+                if (n % 2) {
+                    parentNode = this.m_node;
+                }
+                
+                PrefabManager.getInstance().showPrefab(ePrefabEnum.TestPrefab + n, [], parentNode, true);
+                setTimeout(() => {
+                    next();
+                }, 2000)
+            },
+            () => {
+
+            }
+        );
+    }
+
+    refreshPrefab() {
+        async.eachSeries(
+            [0, 1, 2, 3, 4],
+            (n, next) => {
+                PrefabManager.getInstance().refreshPrefab(ePrefabEnum.TestPrefab + n);
+                setTimeout(() => {
+                    next();
+                }, 2000)
+            },
+            () => {
+
+            }
+        );
+    }
+
+    hidePrefab() {
+        async.eachSeries(
+            [0, 1, 2, 3, 4],
+            (n, next) => {
+                PrefabManager.getInstance().hideLastPrefabAndShowPrevious();
+                setTimeout(() => {
+                    next();
+                }, 3000)
+            },
+            () => {
+
+            }
+        );
+    }
+
+    // onMeltFromSolid() {
+    //     console.log('onMeltFromSolid', arguments);
+    // }
 
     start() {
-        // this.reqRoomList();
-    }
 
-    onToggleClick(target: cc.Toggle, customEvent: string) {
-        // AudioManager.prototype.getInstance().playerEffect(AudioType.audio_TouchButton);
-        // let pageIdx = parseInt(customEvent);
-
-        // this.m_toggleChangeComp.updateColor();
-
-        // this._updatePageTypeIdx(pageIdx);
-
-        // this.refreshContent();
-    }
-
-    reqRoomList() {
-        // MainSceneLogic.getInstance().reqRoomList();
-    }
-
-    init() {
-        // MainSceneLogic.getInstance().checkJianQieBan();
-        // MainSceneLogic.getInstance().refreshMoney();
-        // MainClubLogic.getInstance().requestPlayerClubInfo();
-
-        // if (PlayerData.prototype.getInstance().getQuitGameType() == QuitGameType.QuitGameType_MANUAL) {
-        //     this.m_pageIdx = MainUiScenePage.Page_Clubs;
-        // } else if (PlayerData.prototype.getInstance().getQuitGameType() == QuitGameType.QuitGameType_ROOMEND) {
-        //     this.m_pageIdx = MainUiScenePage.Page_Record;
-        // }
-
-        // PlayerData.prototype.getInstance().setQuitGameType(QuitGameType.QuitGameType_NONE);
-        // //获取定位
-        // if (!MyUtils.prototype.getInstance().isCheck()) {
-        //     MyUtils.prototype.getInstance().startUpdatingLocation();
-        // }
-
-        // this._recheckToggles();
-    }
-
-    refreshContent() {
-        // // to do by wd newbie guide
-        // if (this.m_pageIdx == MainUiScenePage.Page_Clubs) {
-        //     this.m_pClubNull.active = false;
-        // } else if (this.m_pageIdx == MainUiScenePage.Page_Me) {
-        //     MainSceneLogic.getInstance().refreshMoney();
-        // }
-
-        // this.m_pageEnumList.forEach((prefabKey) => {
-        //     if (prefabKey != this.m_pageEnumList[this.m_pageIdx]) {
-        //         PrefabManager.getInstance().hidePrefab(prefabKey, this.m_contentNode);
-        //     }
-        // })
-
-        // PrefabManager.getInstance().showPrefab(this.m_pageEnumList[this.m_pageIdx], [], this.m_contentNode);
-    }
-
-    _recheckToggles() {
-        // this.m_toggles.forEach((toggle, idx) => {
-        //     if (idx == this.m_pageIdx) {
-        //         if (toggle.isChecked) {
-        //             this.refreshContent();
-        //         }
-        //         else {
-        //             toggle.check();
-        //         }
-        //     }
-        // })
-    }
-
-    _updatePageTypeIdx(typeIdx: number) {
-        // this.m_pageIdx = typeIdx;
     }
 }

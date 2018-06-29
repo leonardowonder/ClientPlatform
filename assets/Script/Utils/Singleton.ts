@@ -5,7 +5,7 @@ class Singleton {
     private m_beenInit: boolean = false;
 
     getInstance() {
-        if (!this.m_beenInit) {
+        if (!this.beenInit()) {
             this._init();
         }
 
@@ -16,7 +16,7 @@ class Singleton {
         return this.m_beenInit;
     }
 
-    _init() {
+    private _init() {
         this.m_beenInit = true;
     }
 }
