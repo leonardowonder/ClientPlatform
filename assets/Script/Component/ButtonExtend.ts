@@ -1,6 +1,6 @@
 const { ccclass, property } = cc._decorator;
 
-import AudioManager from '../Manager/AudioManager';
+import AudioManager from '../Manager/CommonManager/AudioManager';
 import AudioType from '../Define/AudioType';
 
 @ccclass

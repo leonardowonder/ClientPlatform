@@ -77,8 +77,8 @@ export enum GCloudVoiceCompleteCode {
     GV_ON_UNKNOWN,
 }
 
-import VoiceDefine from '../Define/VoiceDefine';
-import PlayerData from './PlayerData';
+import VoiceDefine from '../../Define/VoiceDefine';
+import PlayerData from '../../Data/PlayerData';
 
 @ccclass
 export default class VoiceManager {

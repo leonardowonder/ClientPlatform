@@ -1,33 +1,54 @@
 const { ccclass, property } = cc._decorator;
 
+import StringUtils from '../Utils/StringUtils';
+
 @ccclass
 export default class Loading extends cc.Component {
+    @property(cc.Label)
+    m_loadingLabel: cc.Label = null;
 
-    _registEvent() {
-        this._unregistEvent();
-        // cc.systemEvent.on(clientEventDefine.CUSTOM_EVENT_STOP_LOADING, this.hide, this);
-    }
+    @property
+    m_intarval = 0.5;
 
-    _unregistEvent() {
-        // cc.systemEvent.off(clientEventDefine.CUSTOM_EVENT_STOP_LOADING, this.hide, this);
-    }
+    @property
+    m_dotCount = 3;
 
-    onLoad() {
-    }
-
-    onEnable() {
-        this._registEvent();
-    }
+    _initCount = 0;
 
     onDisable() {
-        this._unregistEvent();
+        this.unschedule(this._loadingfunc);
     }
 
     onDestroy() {
-        
+        this.unschedule(this._loadingfunc);        
     }
 
-    hide() {        
+    init() {
+        this._startLoading();
+    }
+
+    hide() {      
         this.node.active = false;
+    }
+
+    private _loadingfunc() {
+        let suffix = '';
+        let docCnt = this._initCount++ % (this.m_dotCount + 1);
+
+        if (this._initCount > this.m_dotCount) {
+            this._initCount = 0;
+        }
+
+        while(docCnt > 0) {
+            suffix += '.';
+            docCnt--;
+        } 
+
+        this.m_loadingLabel.string = StringUtils.getInstance().formatByKey('loading', suffix);
+    }
+
+    private _startLoading() {
+        this.unschedule(this._loadingfunc);
+        this.schedule(this._loadingfunc, this.m_intarval)
     }
 }

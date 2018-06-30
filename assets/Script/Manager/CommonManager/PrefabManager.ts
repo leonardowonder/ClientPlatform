@@ -1,19 +1,17 @@
 import * as _ from 'lodash';
 
-import Singleton from '../Utils/Singleton';
+import Singleton from '../../Utils/Singleton';
 
-export enum ePrefabEnum {
-    TestPrefab = 0,
-    TestPrefab2,
-    TestPrefab3,
+export enum EmPrefabEnum {
+    Loading = 0,
     Prefab_Max
 }
 
 class PrefabHistory {
-    public prefabKey: ePrefabEnum = ePrefabEnum.Prefab_Max;
+    public prefabKey: EmPrefabEnum = EmPrefabEnum.Prefab_Max;
     public initParams: any[] = [];
 
-    constructor(key: ePrefabEnum, params: any[]) {
+    constructor(key: EmPrefabEnum, params: any[]) {
         this.prefabKey = key;
         this.initParams = params;
     }
@@ -21,20 +19,19 @@ class PrefabHistory {
 
 class PrefabManager extends Singleton {
     private static s_prefabConfig = [
-        { path: 'prefab/TestPrefab', componentName: 'TestPrefab' },
-        { path: 'prefab/TestPrefab2', componentName: 'TestPrefab2' },
-        { path: 'prefab/TestPrefab3', componentName: 'TestPrefab3' }
+        { path: 'prefab/common/Loading', componentName: 'Loading' },
     ];
 
-    private _loadingList: ePrefabEnum[] = [];
-    private _unloadinglist: ePrefabEnum[] = [];
+    private _loadingList: EmPrefabEnum[] = [];
+    private _unloadinglist: EmPrefabEnum[] = [];
 
     private _historyInfo: PrefabHistory[][] = [];
     private _parentNodeStack: cc.Node[] = [];
 
     //load, hide, refresh
-    showPrefab(key: ePrefabEnum, params: any[] = [], node: cc.Node = null, needAutoHide: boolean = false) {
+    showPrefab(key: EmPrefabEnum, params: any[] = [], node: cc.Node = null, needAutoHide: boolean = false) {
         if (!this._checkPrefabKeyValid(key)) {
+            cc.warn(`PrefabManger showPrefab invalid key = ${key}`);
             return;
         }
 
@@ -49,7 +46,7 @@ class PrefabManager extends Singleton {
             this._initPrefab(component.node, key, params);
 
             this._processAutoHide(parentNode, needAutoHide);
-            
+
             this._pushPrefabHistoryStack(key, params, node);
         } else {
             if (this._isNotLoading(key)) {
@@ -83,8 +80,9 @@ class PrefabManager extends Singleton {
         }
     }
 
-    hidePrefab(key: ePrefabEnum, params: any[] = [], parentNode: cc.Node = null) {
+    hidePrefab(key: EmPrefabEnum, params: any[] = [], parentNode: cc.Node = null) {
         if (!this._checkPrefabKeyValid(key)) {
+            cc.warn(`PrefabManger hidePrefab invalid key = ${key}`);
             return;
         }
 
@@ -107,8 +105,9 @@ class PrefabManager extends Singleton {
         }
     }
 
-    refreshPrefab(key: ePrefabEnum, params: any[] = [], parentNode: cc.Node = null) {
+    refreshPrefab(key: EmPrefabEnum, params: any[] = [], parentNode: cc.Node = null) {
         if (!this._checkPrefabKeyValid(key)) {
+            cc.warn(`PrefabManger refreshPrefab invalid key = ${key}`);
             return;
         }
 
@@ -144,7 +143,7 @@ class PrefabManager extends Singleton {
         let parentNode = this._getParentNode(node);
 
         let parentNodeKey: number = this._parseParentNodeToKey(parentNode);
-        
+
         if (this._checkParentKeyValid(parentNodeKey)) {
             this._historyInfo[parentNodeKey].length = 0;
         }
@@ -165,12 +164,8 @@ class PrefabManager extends Singleton {
     }
 
     //private interface
-    private _checkPrefabKeyValid(key: ePrefabEnum): boolean {
-        let valid = key != null && key < ePrefabEnum.Prefab_Max;
-
-        if (!valid) {
-            cc.warn(`PrefabManger _checkPrefabKeyValid invalid key = ${key}`);
-        }
+    private _checkPrefabKeyValid(key: EmPrefabEnum): boolean {
+        let valid = key != null && key < EmPrefabEnum.Prefab_Max;
 
         return valid;
     }
@@ -197,7 +192,7 @@ class PrefabManager extends Singleton {
         return parentNode;
     }
 
-    private _getComponentByKey(key: ePrefabEnum, node: cc.Node) {
+    private _getComponentByKey(key: EmPrefabEnum, node: cc.Node) {
         let parentNode = this._getParentNode(node);
 
         let ret = null;
@@ -214,7 +209,7 @@ class PrefabManager extends Singleton {
         return ret;
     }
 
-    private _initPrefab(node: cc.Node, key: ePrefabEnum, params: any[] = []) {
+    private _initPrefab(node: cc.Node, key: EmPrefabEnum, params: any[] = []) {
         let component = node.getComponent(PrefabManager.s_prefabConfig[key].componentName);
         if (component && component.init) {
             component.init(...params);
@@ -230,17 +225,17 @@ class PrefabManager extends Singleton {
         }
     }
 
-    private _pushLoadingList(key: ePrefabEnum) {
+    private _pushLoadingList(key: EmPrefabEnum) {
         this._loadingList.push(key);
     }
 
-    private _removeFromLoadingList(key: ePrefabEnum) {
-        _.remove(this._loadingList, (value: ePrefabEnum) => {
+    private _removeFromLoadingList(key: EmPrefabEnum) {
+        _.remove(this._loadingList, (value: EmPrefabEnum) => {
             return value == key;
         })
     }
 
-    private _prefabLoading(key: ePrefabEnum) {
+    private _prefabLoading(key: EmPrefabEnum) {
         let idx = _.findIndex(this._loadingList, (value) => {
             return value == key;
         })
@@ -248,7 +243,7 @@ class PrefabManager extends Singleton {
         return idx != -1;
     }
 
-    private _isNotLoading(key: ePrefabEnum) {
+    private _isNotLoading(key: EmPrefabEnum) {
         let idx = _.findIndex(this._loadingList, (value) => {
             return value == key;
         })
@@ -256,7 +251,7 @@ class PrefabManager extends Singleton {
         return idx == -1;
     }
 
-    private _pushUnloadingList(key: ePrefabEnum) {
+    private _pushUnloadingList(key: EmPrefabEnum) {
         if (-1 == _.findIndex(this._unloadinglist, (value) => {
             return value == key;
         })) {
@@ -264,19 +259,19 @@ class PrefabManager extends Singleton {
         }
     }
 
-    private _updateUnloadingList(key: ePrefabEnum) {
+    private _updateUnloadingList(key: EmPrefabEnum) {
         if (this._prefabLoading(key)) {
             this._pushUnloadingList(key);
         }
     }
 
-    private _removeFromUnloadingList(key: ePrefabEnum) {
-        _.remove(this._unloadinglist, (value: ePrefabEnum) => {
+    private _removeFromUnloadingList(key: EmPrefabEnum) {
+        _.remove(this._unloadinglist, (value: EmPrefabEnum) => {
             return value == key;
         })
     }
 
-    private _hasBeenUnloaded(key: ePrefabEnum) {
+    private _hasBeenUnloaded(key: EmPrefabEnum) {
         let idx = _.findIndex(this._unloadinglist, (value) => {
             return value == key;
         })
@@ -323,7 +318,7 @@ class PrefabManager extends Singleton {
         }
     }
 
-    private _pushPrefabHistoryStack(key: ePrefabEnum, params: any[], node: cc.Node = null) {
+    private _pushPrefabHistoryStack(key: EmPrefabEnum, params: any[], node: cc.Node = null) {
         let parentNode = this._getParentNode(node);
 
         let parentNodeKey: number = this._parseParentNodeToKey(parentNode);
@@ -341,7 +336,7 @@ class PrefabManager extends Singleton {
         }
     }
 
-    private _popPrefabHistoryStack(node: cc.Node = null): ePrefabEnum {
+    private _popPrefabHistoryStack(node: cc.Node = null): EmPrefabEnum {
         let parentNode = this._getParentNode(node);
 
         let parentNodeKey: number = this._parseParentNodeToKey(parentNode);
@@ -366,7 +361,7 @@ class PrefabManager extends Singleton {
         this._hideComponent(component, [], true);
     }
 
-    private _getLastPrefabKey(node: cc.Node): ePrefabEnum {
+    private _getLastPrefabKey(node: cc.Node): EmPrefabEnum {
         let parentNode = this._getParentNode(node);
 
         let parentNodeKey: number = this._parseParentNodeToKey(parentNode);
@@ -403,7 +398,10 @@ class PrefabManager extends Singleton {
         let lastKey = this._getLastPrefabKey(node);
 
         let component = null;
-        if (this._checkPrefabKeyValid(lastKey)) {
+        if (!this._checkPrefabKeyValid(lastKey)) {
+            cc.warn(`PrefabManger _getLastPrefabComponent invalid lastKey = ${lastKey}`);
+        }
+        else {
             component = this._getComponentByKey(lastKey, node);
         }
 

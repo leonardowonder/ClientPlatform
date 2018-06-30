@@ -27,13 +27,10 @@
 // const { ccclass } = cc._decorator;
 
 // @ccclass
-import StringConfigManager from '../Manager/StringConfigManager';
+import Singleton from './Singleton';
+import StringConfigManager from '../Manager/ConfigManager/StringConfigManager';
 
-class StringUtils {
-    getInstance() {
-        return this;
-    }
-
+class StringUtils extends Singleton {
     formatByKey = function (...args) {
         if (arguments.length == 0)
             return '';

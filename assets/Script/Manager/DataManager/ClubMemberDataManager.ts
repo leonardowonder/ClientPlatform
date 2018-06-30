@@ -1,10 +1,10 @@
 import * as _ from 'lodash';
 
-import { NetMsg, praseMsg } from '../Logic/LogicBasic';
-import Network from '../Utils/Network';
-import PlayerData from '../Manager/PlayerData';
-import { eMsgPort, eMsgType } from '../Define/MessageIdentifer';
-import clientDefine, { clientEventDefine } from '../Define/clientDefine';
+import { NetMsg, praseMsg } from '../../Logic/LogicBasic';
+import Network from '../../Utils/Network';
+import PlayerData from '../../Data/PlayerData';
+import { eMsgPort, eMsgType } from '../../Define/MessageIdentifer';
+import clientDefine, { clientEventDefine } from '../../Define/clientDefine';
 
 class ClubMemberDataManager {
     private m_beenInit: boolean = false;

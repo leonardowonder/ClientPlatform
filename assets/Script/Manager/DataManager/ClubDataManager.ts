@@ -1,10 +1,10 @@
 import * as async from 'async';
 import * as _ from 'lodash';
 
-import Network from '../Utils/Network';
-import PlayerData from './PlayerData';
-import { eMsgPort, eMsgType } from '../Define/MessageIdentifer';
-import clientDefine, { clientEventDefine, eClubMemberLevel } from '../Define/clientDefine';
+import Network from '../../Utils/Network';
+import PlayerData from '../../Data/PlayerData';
+import { eMsgPort, eMsgType } from '../../Define/MessageIdentifer';
+import clientDefine, { clientEventDefine, eClubMemberLevel } from '../../Define/clientDefine';
 
 class ClubDataManager {
     private m_beenInit: boolean = false;

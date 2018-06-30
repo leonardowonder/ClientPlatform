@@ -1,4 +1,4 @@
-import Singleton from '../Utils/Singleton';
+import Singleton from '../../Utils/Singleton';
 
 export let RedDotHintKey = {
 

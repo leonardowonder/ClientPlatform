@@ -2,8 +2,8 @@ const { ccclass, property } = cc._decorator;
 
 import * as async from 'async';
 
-import StateMachine, { Transition, Method } from '../Manager/StateMachine/StateMachine';
-import PrefabManager, { ePrefabEnum } from '../Manager/PrefabManager';
+import StateMachine, { Transition, Method } from '../../Utils/StateMachine';
+import PrefabManager, { EmPrefabEnum } from '../../Manager/CommonManager/PrefabManager';
 
 @ccclass
 export default class MainUIScene extends cc.Component {
@@ -44,61 +44,7 @@ export default class MainUIScene extends cc.Component {
         // fsm.changeState('Melt');
     }
 
-    showPrefab() {
-        async.eachSeries(
-            [0, 1, 2, 3, 4],
-            (n, next) => {
-                let parentNode = null;
-                if (n % 2) {
-                    parentNode = this.m_node;
-                }
-                
-                PrefabManager.getInstance().showPrefab(ePrefabEnum.TestPrefab + n, [], parentNode, true);
-                setTimeout(() => {
-                    next();
-                }, 2000)
-            },
-            () => {
-
-            }
-        );
-    }
-
-    refreshPrefab() {
-        async.eachSeries(
-            [0, 1, 2, 3, 4],
-            (n, next) => {
-                PrefabManager.getInstance().refreshPrefab(ePrefabEnum.TestPrefab + n);
-                setTimeout(() => {
-                    next();
-                }, 2000)
-            },
-            () => {
-
-            }
-        );
-    }
-
-    hidePrefab() {
-        async.eachSeries(
-            [0, 1, 2, 3, 4],
-            (n, next) => {
-                PrefabManager.getInstance().hideLastPrefabAndShowPrevious();
-                setTimeout(() => {
-                    next();
-                }, 3000)
-            },
-            () => {
-
-            }
-        );
-    }
-
     // onMeltFromSolid() {
     //     console.log('onMeltFromSolid', arguments);
     // }
-
-    start() {
-
-    }
 }

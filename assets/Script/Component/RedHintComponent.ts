@@ -1,6 +1,6 @@
 const { ccclass, property } = cc._decorator;
 
-import RedDotHintManager, { RedDotHintRefreshKey } from '../Manager/RedDotHintManager';
+import RedDotHintManager, { RedDotHintRefreshKey } from '../Manager/CommonManager/RedDotHintManager';
 
 @ccclass
 export default class RedDotHintComponent extends cc.Component {

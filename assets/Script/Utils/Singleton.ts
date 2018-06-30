@@ -1,6 +1,3 @@
-const { ccclass } = cc._decorator;
-
-@ccclass
 class Singleton {
     private m_beenInit: boolean = false;
 
@@ -16,7 +13,7 @@ class Singleton {
         return this.m_beenInit;
     }
 
-    private _init() {
+    _init() {
         this.m_beenInit = true;
     }
 }

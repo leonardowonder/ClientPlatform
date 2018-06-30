@@ -130,7 +130,7 @@ class StateMachine {
         }
     }
 
-    _seekChangeMethod(cycleKey: string, eventName: string): Function {
+    private _seekChangeMethod(cycleKey: string, eventName: string): Function {
         let state = cycleKey == ConfigureLifecycle.onAfter ? this.m_preState : this.m_curState;
 
         let methodKey = parseFuncName(cycleKey, state, eventName);
@@ -139,7 +139,7 @@ class StateMachine {
         return method;
     }
 
-    _seekTargetState(eventName: string): string {
+    private _seekTargetState(eventName: string): string {
         let ret = null;
 
         let targetTtransition = _.find(this.m_allTrasitionList, (transition: Transition) => {
