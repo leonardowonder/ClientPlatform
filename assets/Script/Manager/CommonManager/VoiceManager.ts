@@ -123,9 +123,9 @@ export default class VoiceManager {
             cc.find('persistRootNode').on('OnDownloadFile', this.OnDownloadFile,this);
             cc.find('persistRootNode').on('OnUploadFile', this.OnUploadFile,this);
             cc.find('persistRootNode').on('OnApplyMessageKey', this.OnApplyMessageKey,this);
-            var code = SetAppInfo('1283305356', '454ef32b5c8b28831283663fbb7f4642', 'd_' + PlayerData.getInstance().getPlaterData().uid.toString());
-            this.m_bIsInit = code == GotyeStatusCode.GCLOUD_VOICE_SUCC;
-            return code;
+            // var code = SetAppInfo('1283305356', '454ef32b5c8b28831283663fbb7f4642', 'd_' + PlayerData.getInstance().getPlaterData().uid.toString());
+            // this.m_bIsInit = code == GotyeStatusCode.GCLOUD_VOICE_SUCC;
+            // return code;
         }
     }
     //开始录音
@@ -134,7 +134,7 @@ export default class VoiceManager {
         if (cc.sys.isNative) {
             if (this.m_bIsInit) {
                 this.isRecording = true ;
-                return StartRecording(filePath);
+                // return StartRecording(filePath);
             } else {
                 // 未初始化
                 return this.initVoiceSDK();
@@ -152,7 +152,7 @@ export default class VoiceManager {
                     this.PlayRecordedFile(this.vPlayingQuene[0]);
                 }
 
-                return StopRecording();
+                // return StopRecording();
             } else {
                 // 未初始化
                 return this.initVoiceSDK();
@@ -174,7 +174,7 @@ export default class VoiceManager {
     protected DownloadRecordedFile(fileID: string, downloadFilePath: string, msTimeout: number = 6000) {
         if (cc.sys.isNative) {
             if (this.m_bIsInit) {
-                return DownloadRecordedFile(fileID, downloadFilePath, msTimeout);
+                // return DownloadRecordedFile(fileID, downloadFilePath, msTimeout);
             } else {
                 // 未初始化
                 return this.initVoiceSDK();
@@ -229,7 +229,7 @@ export default class VoiceManager {
                 pEvent.detail = { file : FilePath } ;
                 cc.systemEvent.dispatchEvent(pEvent);
                 this.isPlayering = true ;
-                return PlayRecordedFile(FilePath);
+                // return PlayRecordedFile(FilePath);
             } else {
                 // 未初始化
                 return this.initVoiceSDK();
@@ -282,7 +282,7 @@ export default class VoiceManager {
     protected UploadRecordedFile(filePath: string, msTimeout: number = 6000) {
         if (cc.sys.isNative) {
             if (this.m_bIsInit) {
-                return UploadRecordedFile(filePath, msTimeout);
+                // return UploadRecordedFile(filePath, msTimeout);
             } else {
                 // 未初始化
                 return this.initVoiceSDK();
