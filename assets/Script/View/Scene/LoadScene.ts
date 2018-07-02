@@ -42,7 +42,7 @@ class LoginScene extends cc.Component {
                 (next) => {
                     setTimeout(() => {
                         next();
-                    }, 10000);
+                    }, 2000);
                 }
             ],
             () => {
