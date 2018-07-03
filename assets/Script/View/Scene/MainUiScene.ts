@@ -8,8 +8,8 @@ import PrefabManager, { EmPrefabEnum } from '../../Manager/CommonManager/PrefabM
 @ccclass
 export default class MainUIScene extends cc.Component {
 
-    @property(cc.Node)
-    m_node: cc.Node = null;
+    // @property(cc.Node)
+    // m_node: cc.Node = null;
 
     onDestroy() {
     }
