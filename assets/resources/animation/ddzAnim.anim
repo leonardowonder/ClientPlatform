@@ -1,0 +1,229 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "ddzAnim",
+  "_objFlags": 0,
+  "_rawFiles": null,
+  "_duration": 2,
+  "sample": 60,
+  "speed": 1,
+  "wrapMode": 2,
+  "curveData": {
+    "paths": {
+      "tou": {
+        "props": {
+          "scaleY": [
+            {
+              "frame": 0,
+              "value": 1
+            },
+            {
+              "frame": 1,
+              "value": 1.01
+            },
+            {
+              "frame": 1.9833333333333334,
+              "value": 1
+            }
+          ],
+          "rotation": [
+            {
+              "frame": 0,
+              "value": 0
+            },
+            {
+              "frame": 1,
+              "value": 1.5
+            },
+            {
+              "frame": 1.9833333333333334,
+              "value": 0
+            }
+          ],
+          "position": [
+            {
+              "frame": 0,
+              "value": [
+                -94.3,
+                -31.799999999999997
+              ]
+            },
+            {
+              "frame": 1,
+              "value": [
+                -94.3,
+                -30
+              ]
+            },
+            {
+              "frame": 1.9833333333333334,
+              "value": [
+                -94.3,
+                -31.8
+              ]
+            }
+          ]
+        }
+      },
+      "shenti": {
+        "props": {
+          "scaleX": [
+            {
+              "frame": 0,
+              "value": 1
+            },
+            {
+              "frame": 1,
+              "value": 1.02
+            },
+            {
+              "frame": 1.9833333333333334,
+              "value": 1
+            }
+          ],
+          "scaleY": [
+            {
+              "frame": 0,
+              "value": 1
+            },
+            {
+              "frame": 1,
+              "value": 1.02
+            },
+            {
+              "frame": 1.9833333333333334,
+              "value": 1
+            }
+          ]
+        }
+      },
+      "youshou": {
+        "props": {
+          "rotation": [
+            {
+              "frame": 0,
+              "value": 0
+            },
+            {
+              "frame": 1,
+              "value": -3
+            },
+            {
+              "frame": 1.9833333333333334,
+              "value": 0
+            }
+          ]
+        }
+      },
+      "zuoshou": {
+        "props": {
+          "rotation": [
+            {
+              "frame": 0,
+              "value": 0
+            },
+            {
+              "frame": 1,
+              "value": 4
+            },
+            {
+              "frame": 2,
+              "value": 0
+            }
+          ]
+        }
+      },
+      "pai": {
+        "props": {
+          "scaleX": [
+            {
+              "frame": 0,
+              "value": 1
+            },
+            {
+              "frame": 0.5166666666666667,
+              "value": 1.01
+            },
+            {
+              "frame": 1,
+              "value": 1.01
+            },
+            {
+              "frame": 1.5166666666666666,
+              "value": 1
+            },
+            {
+              "frame": 2,
+              "value": 1
+            }
+          ],
+          "scaleY": [
+            {
+              "frame": 0,
+              "value": 1
+            },
+            {
+              "frame": 0.5166666666666667,
+              "value": 1
+            },
+            {
+              "frame": 1,
+              "value": 1.01
+            },
+            {
+              "frame": 2,
+              "value": 1
+            }
+          ]
+        }
+      },
+      "clipping/guang": {
+        "props": {
+          "position": [
+            {
+              "frame": 0,
+              "value": [
+                -247,
+                25.9
+              ],
+              "motionPath": []
+            },
+            {
+              "frame": 0.9833333333333333,
+              "value": [
+                187.8,
+                2.5
+              ],
+              "motionPath": []
+            }
+          ]
+        }
+      }
+    },
+    "props": {
+      "position": [
+        {
+          "frame": 0,
+          "value": [
+            0,
+            0
+          ]
+        },
+        {
+          "frame": 0.9833333333333333,
+          "value": [
+            0,
+            10
+          ]
+        },
+        {
+          "frame": 2,
+          "value": [
+            0,
+            0
+          ]
+        }
+      ]
+    }
+  },
+  "events": []
+}
