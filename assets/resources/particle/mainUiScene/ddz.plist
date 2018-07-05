@@ -9,9 +9,9 @@
     <key>blendAdditive</key>
     <integer>1</integer>
     <key>blendFuncDestination</key>
-    <integer>776</integer>
+    <integer>768</integer>
     <key>blendFuncSource</key>
-    <integer>776</integer>
+    <integer>768</integer>
     <key>duration</key>
     <integer>-1</integer>
     <key>emitterType</key>
@@ -21,19 +21,19 @@
     <key>finishColorAlpha</key>
     <integer>1</integer>
     <key>finishColorBlue</key>
-    <integer>1</integer>
+    <real>0.23529411764705882</real>
     <key>finishColorGreen</key>
-    <integer>1</integer>
+    <real>0.6549019607843137</real>
     <key>finishColorRed</key>
-    <integer>1</integer>
+    <real>0.9882352941176471</real>
     <key>finishColorVarianceAlpha</key>
-    <integer>1</integer>
+    <integer>0</integer>
     <key>finishColorVarianceBlue</key>
-    <integer>1</integer>
+    <integer>0</integer>
     <key>finishColorVarianceGreen</key>
-    <integer>1</integer>
+    <integer>0</integer>
     <key>finishColorVarianceRed</key>
-    <integer>1</integer>
+    <integer>0</integer>
     <key>rotationStart</key>
     <integer>2</integer>
     <key>rotationStartVariance</key>
@@ -43,15 +43,15 @@
     <key>rotationEndVariance</key>
     <integer>15</integer>
     <key>finishParticleSize</key>
-    <integer>-1</integer>
+    <integer>17</integer>
     <key>finishParticleSizeVariance</key>
-    <integer>0</integer>
+    <integer>10</integer>
     <key>gravityx</key>
     <integer>0</integer>
     <key>gravityy</key>
     <integer>0</integer>
     <key>maxParticles</key>
-    <integer>12</integer>
+    <integer>10</integer>
     <key>maxRadius</key>
     <integer>1</integer>
     <key>maxRadiusVariance</key>
@@ -61,7 +61,7 @@
     <key>minRadiusVariance</key>
     <integer>1</integer>
     <key>particleLifespan</key>
-    <integer>3</integer>
+    <integer>5</integer>
     <key>particleLifespanVariance</key>
     <integer>5</integer>
     <key>radialAccelVariance</key>
@@ -73,9 +73,9 @@
     <key>rotatePerSecondVariance</key>
     <integer>0</integer>
     <key>sourcePositionVariancex</key>
-    <integer>255</integer>
+    <integer>130</integer>
     <key>sourcePositionVariancey</key>
-    <integer>70</integer>
+    <integer>150</integer>
     <key>sourcePositionx</key>
     <integer>0</integer>
     <key>sourcePositiony</key>
@@ -87,30 +87,30 @@
     <key>startColorAlpha</key>
     <integer>1</integer>
     <key>startColorBlue</key>
-    <integer>1</integer>
+    <real>0.39215686274509803</real>
     <key>startColorGreen</key>
-    <integer>1</integer>
+    <real>0.6588235294117647</real>
     <key>startColorRed</key>
     <integer>1</integer>
     <key>startColorVarianceAlpha</key>
-    <integer>1</integer>
+    <integer>0</integer>
     <key>startColorVarianceBlue</key>
-    <integer>1</integer>
+    <integer>0</integer>
     <key>startColorVarianceGreen</key>
-    <integer>1</integer>
+    <integer>0</integer>
     <key>startColorVarianceRed</key>
-    <integer>1</integer>
+    <integer>0</integer>
     <key>startParticleSize</key>
-    <integer>10</integer>
+    <integer>17</integer>
     <key>startParticleSizeVariance</key>
-    <integer>5</integer>
+    <integer>10</integer>
     <key>tangentialAccelVariance</key>
     <integer>0</integer>
     <key>tangentialAcceleration</key>
     <integer>0</integer>
     <key>textureFileName</key>
-    <string>ddz</string>
+    <string>fk</string>
     <key>textureUuid</key>
-    <string>e345c0a4-6529-4da8-982c-c331b096e65d</string>
+    <string>8a6f7465-df74-4a3b-918d-05dd36417a74</string>
   </dict>
 </plist>

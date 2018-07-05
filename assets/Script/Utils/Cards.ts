@@ -8,10 +8,12 @@ const CardValueStrList: string[] = ['err', 'err', '2', '3', '4', '5', '6', '7', 
 export class Card {
     readonly type: EmCardTpye;
     readonly value: number;
+    readonly weight: number;
 
     constructor(number: number) {
         this.type = this._parseCardType(number);
         this.value = this._parseCardValue(number);
+        this.weight = this._parseCardWeight(number);
     }
 
     isCardValid(): boolean {
@@ -29,6 +31,10 @@ export class Card {
 
     private _parseCardValue(cardNum: number): number {
         return (cardNum >> 3);
+    }
+
+    private _parseCardWeight(cardNum: number): number {
+        return 100 * this._parseCardType(cardNum) + this._parseCardValue(cardNum);
     }
 }
 

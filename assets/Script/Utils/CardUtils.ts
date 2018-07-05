@@ -30,6 +30,10 @@ const findTypeOrder: EmGroupType[] = [
     EmGroupType.GroupType_Pair
 ];
 
+const cardWeightDigitCount: number = 4;
+const cardTypeWeightCoefficient: number = Math.floor(Math.pow(10, cardWeightDigitCount));
+const cardGroupWeightCoefficient: number = Math.floor(Math.pow(10, cardWeightDigitCount * 2));
+
 class CardUtils extends Singleton {
     getGroupType(cards: Card[]): EmGroupType {
         if (!this._checkCardsValid(cards)) {
@@ -54,7 +58,7 @@ class CardUtils extends Singleton {
             return 0;
         }
 
-        let weight = this._getWeight(cards, this.getGroupType(cards)); 
+        let weight = this._getGroupWeight(cards, this.getGroupType(cards)); 
 
         return weight;
     }
@@ -163,28 +167,30 @@ class CardUtils extends Singleton {
     }
 
     //get weight
-    private _getWeight(cards: Card[], type: EmGroupType): number {
-        let ret: number = type * 1000;
+    private _getGroupWeight(cards: Card[], type: EmGroupType): number {
+        let weight: number = type * cardGroupWeightCoefficient;
 
         switch (type) {
-            case EmGroupType.GroupType_AllSame:
+            case EmGroupType.GroupType_AllSame: {
+                weight += this._getMaxValue(cards);
+                break;
+            }
             case EmGroupType.GroupType_Flush:
             case EmGroupType.GroupType_None: {
-                ret += this._getMaxValue(cards);
-                break;
+                weight += this._getMaxWeight(cards);
             }
             case EmGroupType.GroupType_FlushStraight:
             case EmGroupType.GroupType_Straight: {
-                ret += this._getStraightWeight(cards);
+                weight += this._getStraightWeight(cards);
                 break;
             }
             case EmGroupType.GroupType_Pair: {
-                ret += this._getPairWeight(cards);
+                weight += this._getPairWeight(cards);
                 break;
             }
         }
 
-        return ret;
+        return weight;
     };
 
     private _getMaxValue(cards: Card[]): number {
@@ -195,25 +201,31 @@ class CardUtils extends Singleton {
         return _.max(cardValues);
     }
 
-    private _getStraightWeight(cards: Card[]): number {
-        let cardValues: number[] = _.map(cards, (card: Card) => {
-            return card.value;
+    private _getMaxWeight(cards: Card[]): number {
+        let cardWeights: number[] = _.map(cards, (card: Card) => {
+            return card.weight;
         });
 
-        return _.max(cardValues);
+        return _.max(cardWeights);
+    }
+
+    private _getStraightWeight(cards: Card[]): number {
+        let cardWeights: number[] = _.map(cards, (card: Card) => {
+            return card.weight;
+        });
+
+        return _.max(cardWeights);
     }
 
     private _getPairWeight(cards: Card[]): number {
-        let cardValues: number[] = _.map(cards, (card: Card) => {
-            return card.value;
+        let sortedCards: Card[] = _.sortBy(cards, (card1: Card, card2: Card) => {
+            return card1.weight - card2.weight;
         });
 
-        let sortedList = _.sortBy(cardValues);
+        let pairWeight = sortedCards[0].value == sortedCards[1].value ? sortedCards[1].weight : sortedCards[2].weight;
+        let singleWeight = sortedCards[0].value == sortedCards[1].value ? sortedCards[2].weight : sortedCards[1].weight;
 
-        let pairValue = sortedList[0] == sortedList[1] ? sortedList[0] : sortedList[2];
-        let singleValue = sortedList[0] == sortedList[1] ? sortedList[2] : sortedList[0];
-
-        return pairValue * 100 + singleValue;
+        return pairWeight * cardTypeWeightCoefficient + singleWeight;
     }
 }
 
