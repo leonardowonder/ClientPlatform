@@ -2,7 +2,7 @@ import * as async from 'async';
 import * as _ from 'lodash';
 
 import { eMsgPort, eMsgType } from '../../Define/MessageIdentifer';
-import clientDefine, { clientEventDefine } from '../../Define/clientDefine';
+import clientDefine, { clientEventDefine } from '../../Define/ClientDefine';
 
 import Network from '../../Utils/Network';
 import PlayerData from '../../Data/PlayerData';

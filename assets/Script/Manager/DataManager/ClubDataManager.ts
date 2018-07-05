@@ -4,7 +4,7 @@ import * as _ from 'lodash';
 import Network from '../../Utils/Network';
 import PlayerData from '../../Data/PlayerData';
 import { eMsgPort, eMsgType } from '../../Define/MessageIdentifer';
-import clientDefine, { clientEventDefine, eClubMemberLevel } from '../../Define/clientDefine';
+import clientDefine, { clientEventDefine, eClubMemberLevel } from '../../Define/ClientDefine';
 
 class ClubDataManager {
     private m_beenInit: boolean = false;

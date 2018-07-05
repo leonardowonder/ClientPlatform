@@ -1,4 +1,4 @@
-import clientDefine from '../Define/clientDefine';
+import clientDefine from '../Define/ClientDefine';
 import { eMsgPort, eMsgType } from '../Define/MessageIdentifer';
 
 class Network {
