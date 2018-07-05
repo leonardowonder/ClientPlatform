@@ -1,114 +1,116 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
   <dict>
     <key>angle</key>
-    <real>90</real>
+    <integer>90</integer>
     <key>angleVariance</key>
-    <real>0</real>
+    <integer>0</integer>
     <key>blendAdditive</key>
-    <real>1</real>
+    <integer>1</integer>
     <key>blendFuncDestination</key>
     <integer>776</integer>
     <key>blendFuncSource</key>
     <integer>776</integer>
     <key>duration</key>
-    <real>-1</real>
+    <integer>-1</integer>
     <key>emitterType</key>
-    <real>0</real>
+    <integer>0</integer>
     <key>emissionRate</key>
-    <real>6</real>
+    <integer>4</integer>
     <key>finishColorAlpha</key>
-    <real>1</real>
+    <integer>1</integer>
     <key>finishColorBlue</key>
-    <real>1</real>
+    <integer>1</integer>
     <key>finishColorGreen</key>
-    <real>1</real>
+    <integer>1</integer>
     <key>finishColorRed</key>
-    <real>1</real>
+    <integer>1</integer>
     <key>finishColorVarianceAlpha</key>
-    <real>1</real>
+    <integer>1</integer>
     <key>finishColorVarianceBlue</key>
-    <real>1</real>
+    <integer>1</integer>
     <key>finishColorVarianceGreen</key>
-    <real>1</real>
+    <integer>1</integer>
     <key>finishColorVarianceRed</key>
-    <real>1</real>
+    <integer>1</integer>
     <key>rotationStart</key>
-    <real>2</real>
+    <integer>2</integer>
     <key>rotationStartVariance</key>
-    <real>15</real>
+    <integer>15</integer>
     <key>rotationEnd</key>
-    <real>25</real>
+    <integer>25</integer>
     <key>rotationEndVariance</key>
-    <real>15</real>
+    <integer>15</integer>
     <key>finishParticleSize</key>
-    <real>-1</real>
+    <integer>-1</integer>
     <key>finishParticleSizeVariance</key>
-    <real>0</real>
+    <integer>0</integer>
     <key>gravityx</key>
-    <real>0</real>
+    <integer>0</integer>
     <key>gravityy</key>
-    <real>0</real>
+    <integer>0</integer>
     <key>maxParticles</key>
-    <real>12</real>
+    <integer>12</integer>
     <key>maxRadius</key>
-    <real>1</real>
+    <integer>1</integer>
     <key>maxRadiusVariance</key>
-    <real>2</real>
+    <integer>2</integer>
     <key>minRadius</key>
-    <real>0</real>
+    <integer>0</integer>
     <key>minRadiusVariance</key>
-    <real>1</real>
+    <integer>1</integer>
     <key>particleLifespan</key>
-    <real>3</real>
+    <integer>3</integer>
     <key>particleLifespanVariance</key>
-    <real>5</real>
+    <integer>5</integer>
     <key>radialAccelVariance</key>
-    <real>0</real>
+    <integer>0</integer>
     <key>radialAcceleration</key>
-    <real>0</real>
+    <integer>0</integer>
     <key>rotatePerSecond</key>
-    <real>1</real>
+    <integer>0</integer>
     <key>rotatePerSecondVariance</key>
-    <real>2</real>
+    <integer>0</integer>
     <key>sourcePositionVariancex</key>
-    <real>255</real>
+    <integer>255</integer>
     <key>sourcePositionVariancey</key>
-    <real>70</real>
+    <integer>70</integer>
     <key>sourcePositionx</key>
-    <real>0</real>
+    <integer>0</integer>
     <key>sourcePositiony</key>
-    <real>0</real>
+    <integer>0</integer>
     <key>speed</key>
-    <real>17</real>
+    <integer>17</integer>
     <key>speedVariance</key>
-    <real>0</real>
+    <integer>0</integer>
     <key>startColorAlpha</key>
-    <real>1</real>
+    <integer>1</integer>
     <key>startColorBlue</key>
-    <real>1</real>
+    <integer>1</integer>
     <key>startColorGreen</key>
-    <real>1</real>
+    <integer>1</integer>
     <key>startColorRed</key>
-    <real>1</real>
+    <integer>1</integer>
     <key>startColorVarianceAlpha</key>
-    <real>1</real>
+    <integer>1</integer>
     <key>startColorVarianceBlue</key>
-    <real>1</real>
+    <integer>1</integer>
     <key>startColorVarianceGreen</key>
-    <real>1</real>
+    <integer>1</integer>
     <key>startColorVarianceRed</key>
-    <real>1</real>
+    <integer>1</integer>
     <key>startParticleSize</key>
-    <real>10</real>
+    <integer>10</integer>
     <key>startParticleSizeVariance</key>
-    <real>5</real>
+    <integer>5</integer>
     <key>tangentialAccelVariance</key>
-    <real>0</real>
+    <integer>0</integer>
     <key>tangentialAcceleration</key>
-    <real>0</real>
+    <integer>0</integer>
     <key>textureFileName</key>
-    <string>snow.png</string>
+    <string>ddz</string>
+    <key>textureUuid</key>
+    <string>e345c0a4-6529-4da8-982c-c331b096e65d</string>
   </dict>
-</plist>>
+</plist>
