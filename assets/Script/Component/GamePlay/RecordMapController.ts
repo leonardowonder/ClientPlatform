@@ -1,6 +1,9 @@
 const { ccclass, property } = cc._decorator;
 
-import { EmRecordType } from '../../Define/GamePlayDefine';
+import * as _ from 'lodash';
+
+import { EmRecordType, Max_Record_Count } from '../../Define/GamePlayDefine';
+import RecordUnitInfo from '../../Data/GamePlay/RecordUnitInfo';
 
 import MapRoot from './MapRoot';
 import RecordRoot from './RecordRoot';
@@ -16,6 +19,8 @@ export default class RecordMapController extends cc.Component {
     @property
     recordGroupCountInOneMapItem: number = 1;
 
+    private m_recordUnitInfos: RecordUnitInfo[] = [];
+
     addRed() {
         this.addRecord(EmRecordType.Type_Red);
     }
@@ -26,6 +31,13 @@ export default class RecordMapController extends cc.Component {
 
     addRecord(type: EmRecordType) {
         this.m_recordRoot.addRecord(type);
+
+        let info: RecordUnitInfo = _.cloneDeep(this.m_recordRoot.getLatestRecordUnitInfo());
+        this.m_recordUnitInfos.push(info);
+
+        if (this._checkNeedRemoveFirstRecord()) {
+            this._doRemoveFirstRecord();
+        }
 
         if (this._needAddMap()) {
             this.m_mapRoot.addNewItem();
@@ -39,5 +51,27 @@ export default class RecordMapController extends cc.Component {
         let needAdd: boolean = recordItemGroupCount > mapItemCount * this.recordGroupCountInOneMapItem;
 
         return needAdd;
+    }
+
+    private _checkNeedRemoveFirstRecord(): boolean {
+        return this.m_recordUnitInfos.length > Max_Record_Count;
+    }
+
+    private _doRemoveFirstRecord() {
+        let firstInfo: RecordUnitInfo = this.m_recordUnitInfos.shift();
+
+        this.m_recordRoot.resetTargetItem(firstInfo.m_recordItemGroupIdx, firstInfo.m_recordUnitIdx);
+
+        let firstGroup = this.m_recordRoot.getFirstRecordItemGroup();
+        if (firstGroup && firstGroup.isEmpty()) {
+            let result = this.m_recordRoot.removeFirstRecordItemGroup();
+            if (result) {
+                this.m_recordUnitInfos.forEach((unitInfo: RecordUnitInfo) => {
+                    unitInfo && unitInfo.decreaseGroupIdx();
+                })
+
+                this.m_recordRoot.decreaseRedBlackIdx();
+            }
+        }
     }
 }

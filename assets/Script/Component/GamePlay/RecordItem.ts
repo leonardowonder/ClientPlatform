@@ -26,8 +26,13 @@ export default class RecordItem extends cc.Component {
     updateRecordUnit(type: EmRecordType): boolean {
         let ret = false;
 
-        if (this.m_recordUnit && this.m_recordUnit.isAvailable()) {
-            this.m_recordUnit.updateSprite(type);
+        if (this.m_recordUnit) {
+            if (type == EmRecordType.Type_None || this.m_recordUnit.isAvailable()) {
+                //update at next frame, item will not move from center to top
+                this.scheduleOnce(() => {
+                    this.m_recordUnit.updateSprite(type);
+                })
+            }
 
             ret = true;
         }
@@ -44,7 +49,7 @@ export default class RecordItem extends cc.Component {
         unitPrefab.setPosition(0, 0);
 
         this.m_recordUnit = unitPrefab.getComponent(RecordUnit);
-        
+
         this.node.addChild(unitPrefab);
     }
 }

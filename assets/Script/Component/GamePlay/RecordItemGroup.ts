@@ -18,7 +18,7 @@ export default class RecordItemGroup extends cc.Component {
         return this.m_initalRecordType;
     }
 
-    getRecordItemGroup(): RecordItem[] {
+    getRecordItems(): RecordItem[] {
         return this.m_recordItemGroup;
     }
 
@@ -26,9 +26,9 @@ export default class RecordItemGroup extends cc.Component {
         this.m_initalRecordType = type;
 
         //update at next frame, item will not move from center to top
-        this.scheduleOnce(() => {
-            this.m_recordItemGroup[0].updateRecordUnit(type);
-        })
+        // this.scheduleOnce(() => {
+        this.m_recordItemGroup[0].updateRecordUnit(type);
+        // })
     }
 
     updateRecord(type: EmRecordType, idx: number): boolean {
@@ -42,9 +42,9 @@ export default class RecordItemGroup extends cc.Component {
         let targetUnit: RecordItem = this.m_recordItemGroup[idx];
 
         //update at next frame, item will not move from center to top
-        this.scheduleOnce(() => {
-            targetUnit.updateRecordUnit(type);
-        })
+        // this.scheduleOnce(() => {
+        targetUnit.updateRecordUnit(type);
+        // })
 
         needIncreaseColIdx = idx < 1;
 
@@ -81,7 +81,7 @@ export default class RecordItemGroup extends cc.Component {
     }
 
     private _checkIdxValid(idx: number): boolean {
-        return idx < this.m_recordItemGroup.length;
+        return idx >= 0 && idx < this.m_recordItemGroup.length;
     }
 
     private _canExtend(type: EmRecordType): boolean {
@@ -92,7 +92,7 @@ export default class RecordItemGroup extends cc.Component {
         }
         else {
             let targetIdx: number = this.m_curIdx + 1;
-    
+
             ret = targetIdx < this.m_recordItemGroup.length && this.m_recordItemGroup[targetIdx].isAvailable();
         }
 
