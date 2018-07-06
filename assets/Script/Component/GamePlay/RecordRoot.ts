@@ -1,20 +1,15 @@
 const { ccclass, property } = cc._decorator;
 
-// import * as _ from 'lodash';
-
 import RecordItemGroup from './RecordItemGroup';
 import { EmRecordType, RecordUnitInfo } from '../../Define/GamePlayDefine';
 
 @ccclass
-export default class BaseMap extends cc.Component {
+export default class RecordRoot extends cc.Component {
     @property(cc.Prefab)
-    m_mapColUnitParentPrefab: cc.Prefab = null;
-
-    @property(cc.Node)
-    m_mapRootNode: cc.Node = null;
+    m_recordItemGroupPrefab: cc.Prefab = null;
 
     @property(RecordItemGroup)
-    m_mapColUnitList: RecordItemGroup[] = [];
+    m_recordItemGroups: RecordItemGroup[] = [];
 
     private _nodePool: cc.NodePool = null;
 
@@ -24,57 +19,36 @@ export default class BaseMap extends cc.Component {
     private _blackWinIdx: number = -1;
 
     onLoad() {
+        this._latestRecordUnitInfo = new RecordUnitInfo(EmRecordType.Type_None, 0, 0);
         this._nodePool = new cc.NodePool(RecordItemGroup);
     }
 
-    addRed() {
-        this.addRecord(EmRecordType.Type_Red);
-    }
-
-    addBlack() {
-        this.addRecord(EmRecordType.Type_Black);
+    getRecordItemGroupCount(): number {
+        return this.m_recordItemGroups.length;
     }
 
     addRecord(type: EmRecordType) {
         if (!this._checkTypeValid(type)) {
-            cc.warn(`BaseMap addRecord invalid type = ${type}`);
+            cc.warn(`RecordRoot addRecord invalid type = ${type}`);
             return;
         }
 
-        if (this._latestRecordUnitInfo == null) {
-            this._addFirstRecord(type);
-        }
-        else {
-            this._addRecordByLatestInfo(type);
-        }
+        this._addRecordByLatestInfo(type);
     }
 
     private _checkTypeValid(type: EmRecordType) {
         return type == EmRecordType.Type_Red || type == EmRecordType.Type_Black;
     }
 
-    private _addFirstRecord(type: EmRecordType) {
-        this.m_mapColUnitList[0].addFirstRecord(type);
-
-        this._latestRecordUnitInfo = new RecordUnitInfo(type, 0, 0);
-
-        if (type == EmRecordType.Type_Red) {
-            this._redWinIdx = 0;
-        }
-        else {
-            this._blackWinIdx = 0;
-        }
-    }
-
     private _addRecordByLatestInfo(type: EmRecordType) {
         let latestType: EmRecordType = this._latestRecordUnitInfo.m_recordType;
         if (type == latestType) {
             let colIdx: number = this._latestRecordUnitInfo.m_mapColUnitIdx;
-            let targetColUnit: RecordItemGroup = this.m_mapColUnitList[colIdx];
+            let targetGroup: RecordItemGroup = this.m_recordItemGroups[colIdx];
 
-            let extendResult = targetColUnit.tryExtend(type);
+            let extendResult = targetGroup.tryExtend(type);
             if (!extendResult) {
-                this._moveToNextColUnit();
+                this._moveToNextRecordItemGroup();
             }
             else {
                 let targetRecordIdx = this._latestRecordUnitInfo.m_recordUnitIdx + 1;
@@ -86,12 +60,12 @@ export default class BaseMap extends cc.Component {
         }
     }
 
-    private _moveToNextColUnit() {
+    private _moveToNextRecordItemGroup() {
         let curColIdx = this._latestRecordUnitInfo.m_mapColUnitIdx;
-        if (curColIdx + 1 < this.m_mapColUnitList.length) {
-            let targetColUnit: RecordItemGroup = this.m_mapColUnitList[curColIdx + 1];
+        if (curColIdx + 1 < this.m_recordItemGroups.length) {
+            let targetGroup: RecordItemGroup = this.m_recordItemGroups[curColIdx + 1];
 
-            let needIncreaseColIdx: boolean = targetColUnit.updateRecord(this._latestRecordUnitInfo.m_recordType, this._latestRecordUnitInfo.m_recordUnitIdx);
+            let needIncreaseColIdx: boolean = targetGroup.updateRecord(this._latestRecordUnitInfo.m_recordType, this._latestRecordUnitInfo.m_recordUnitIdx);
 
             if (needIncreaseColIdx) {
                 if (this._latestRecordUnitInfo.m_recordType == EmRecordType.Type_Red) {
@@ -105,14 +79,14 @@ export default class BaseMap extends cc.Component {
             this._latestRecordUnitInfo.setColIdx(curColIdx + 1);
         }
         else {
-            this._extendMapUnit();
-            this._moveToNextColUnit();
+            this._addNewRecordItemGroup();
+            this._moveToNextRecordItemGroup();
         }
     }
 
-    private _extendMapUnit() {
+    private _addNewRecordItemGroup() {
         if (this._nodePool.size() < 1) {
-            var prefab = cc.instantiate(this.m_mapColUnitParentPrefab);
+            var prefab = cc.instantiate(this.m_recordItemGroupPrefab);
 
             prefab.setPosition(0, 0);
 
@@ -129,17 +103,17 @@ export default class BaseMap extends cc.Component {
 
         let comp: RecordItemGroup = newColUnitParent.children[0].getComponent(RecordItemGroup);
 
-        this.m_mapColUnitList.push(comp);
+        this.m_recordItemGroups.push(comp);
 
-        this.m_mapRootNode.addChild(newColUnitParent);
+        this.node.addChild(newColUnitParent);
     }
 
     private _addNewTypeRecord(type: EmRecordType) {
         let curColIdx = type == EmRecordType.Type_Red ? this._blackWinIdx : this._redWinIdx;
-        if (curColIdx + 1 < this.m_mapColUnitList.length) {
-            let targetColUnit: RecordItemGroup = this.m_mapColUnitList[curColIdx + 1];
+        if (curColIdx + 1 < this.m_recordItemGroups.length) {
+            let targetGroup: RecordItemGroup = this.m_recordItemGroups[curColIdx + 1];
 
-            targetColUnit.addFirstRecord(type);
+            targetGroup.addFirstRecord(type);
 
             this._latestRecordUnitInfo.setType(type);
             this._latestRecordUnitInfo.setColIdx(curColIdx + 1);
@@ -153,7 +127,7 @@ export default class BaseMap extends cc.Component {
             }
         }
         else {
-            this._extendMapUnit();
+            this._addNewRecordItemGroup();
             this._addNewTypeRecord(type);
         }
     }
