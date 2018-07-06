@@ -25,10 +25,7 @@ export default class RecordItemGroup extends cc.Component {
     addFirstRecord(type: EmRecordType) {
         this.m_initalRecordType = type;
 
-        //update at next frame, item will not move from center to top
-        // this.scheduleOnce(() => {
         this.m_recordItemGroup[0].updateRecordUnit(type);
-        // })
     }
 
     updateRecord(type: EmRecordType, idx: number): boolean {
@@ -41,10 +38,7 @@ export default class RecordItemGroup extends cc.Component {
 
         let targetUnit: RecordItem = this.m_recordItemGroup[idx];
 
-        //update at next frame, item will not move from center to top
-        // this.scheduleOnce(() => {
         targetUnit.updateRecordUnit(type);
-        // })
 
         needIncreaseColIdx = idx < 1;
 
