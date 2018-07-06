@@ -34,10 +34,10 @@ export default class BaseMapColUnit extends cc.Component {
         targetUnit.updateRecordUnit(type);
     }
 
-    tryExtend(): boolean {
+    tryExtend(type: EmRecordType): boolean {
         let ret: boolean = true;
 
-        if (!this._canExtend()) {
+        if (!this._canExtend(type)) {
             ret = false;
         }
         else {
@@ -67,10 +67,17 @@ export default class BaseMapColUnit extends cc.Component {
         return idx < this.m_mapUnits.length;
     }
 
-    private _canExtend(): boolean {
-        let targetIdx: number = this.m_curIdx + 1;
+    private _canExtend(type: EmRecordType): boolean {
+        let ret: boolean = true;
 
-        let ret: boolean = targetIdx < this.m_mapUnits.length && this.m_mapUnits[targetIdx].isAvailable();
+        if (type != this.m_recordType) {
+            ret = false;
+        }
+        else {
+            let targetIdx: number = this.m_curIdx + 1;
+    
+            ret = targetIdx < this.m_mapUnits.length && this.m_mapUnits[targetIdx].isAvailable();
+        }
 
         return ret;
     }

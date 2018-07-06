@@ -73,7 +73,7 @@ export default class BaseMap extends cc.Component {
             let colIdx: number = this._latestRecordUnitInfo.m_mapColUnitIdx;
             let targetColUnit: BaseMapColUnit = this.m_mapColUnitList[colIdx];
 
-            let extendResult = targetColUnit.tryExtend();
+            let extendResult = targetColUnit.tryExtend(type);
             if (!extendResult) {
                 this._moveToNextColUnit();
             }
@@ -110,6 +110,7 @@ export default class BaseMap extends cc.Component {
 
             var node = new cc.Node();
             node.setAnchorPoint(0.5, 0.5);
+            node.setContentSize(prefab.getContentSize());
 
             node.addChild(prefab);
 
@@ -126,13 +127,15 @@ export default class BaseMap extends cc.Component {
     }
 
     private _addNewTypeRecord(type: EmRecordType) {
-        let curColIdx = this._latestRecordUnitInfo.m_mapColUnitIdx;
+        let curColIdx = type == EmRecordType.Type_Red ? this._blackWinIdx : this._redWinIdx;
         if (curColIdx + 1 < this.m_mapColUnitList.length) {
             let targetColUnit: BaseMapColUnit = this.m_mapColUnitList[curColIdx + 1];
 
             targetColUnit.addFirstRecord(type);
 
+            this._latestRecordUnitInfo.setType(type);
             this._latestRecordUnitInfo.setColIdx(curColIdx + 1);
+            this._latestRecordUnitInfo.setRecordIdx(0);
 
             if (type == EmRecordType.Type_Red) {
                 this._redWinIdx = curColIdx + 1;
