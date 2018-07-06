@@ -10,7 +10,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "recordUnit",
+    "_name": "RecordUnit",
     "_objFlags": 0,
     "_parent": null,
     "_children": [
@@ -150,7 +150,7 @@
       "__id__": 1
     },
     "asset": {
-      "__id__": 0
+      "__uuid__": "79b8a83a-abe7-41c0-9248-4aa165661b23"
     },
     "fileId": "52uX+1275Os64iB03kL/89",
     "sync": false
@@ -181,7 +181,7 @@
       "__id__": 1
     },
     "asset": {
-      "__id__": 0
+      "__uuid__": "79b8a83a-abe7-41c0-9248-4aa165661b23"
     },
     "fileId": "e8yVS91SpOk4NbVefLrZUv",
     "sync": false

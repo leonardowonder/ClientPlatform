@@ -1,9 +1,8 @@
 const { ccclass, property } = cc._decorator;
 
-import * as _ from 'lodash';
+// import * as _ from 'lodash';
 
-import BaseMapColUnit from './BaseMapColUnit';
-import BaseMapColUnitParent from './BaseMapColUnitParent';
+import RecordItemGroup from './RecordItemGroup';
 import { EmRecordType, RecordUnitInfo } from '../../Define/GamePlayDefine';
 
 @ccclass
@@ -14,8 +13,8 @@ export default class BaseMap extends cc.Component {
     @property(cc.Node)
     m_mapRootNode: cc.Node = null;
 
-    @property(BaseMapColUnit)
-    m_mapColUnitList: BaseMapColUnit[] = [];
+    @property(RecordItemGroup)
+    m_mapColUnitList: RecordItemGroup[] = [];
 
     private _nodePool: cc.NodePool = null;
 
@@ -25,7 +24,7 @@ export default class BaseMap extends cc.Component {
     private _blackWinIdx: number = -1;
 
     onLoad() {
-        this._nodePool = new cc.NodePool(BaseMapColUnitParent);
+        this._nodePool = new cc.NodePool(RecordItemGroup);
     }
 
     addRed() {
@@ -71,7 +70,7 @@ export default class BaseMap extends cc.Component {
         let latestType: EmRecordType = this._latestRecordUnitInfo.m_recordType;
         if (type == latestType) {
             let colIdx: number = this._latestRecordUnitInfo.m_mapColUnitIdx;
-            let targetColUnit: BaseMapColUnit = this.m_mapColUnitList[colIdx];
+            let targetColUnit: RecordItemGroup = this.m_mapColUnitList[colIdx];
 
             let extendResult = targetColUnit.tryExtend(type);
             if (!extendResult) {
@@ -90,9 +89,18 @@ export default class BaseMap extends cc.Component {
     private _moveToNextColUnit() {
         let curColIdx = this._latestRecordUnitInfo.m_mapColUnitIdx;
         if (curColIdx + 1 < this.m_mapColUnitList.length) {
-            let targetColUnit: BaseMapColUnit = this.m_mapColUnitList[curColIdx + 1];
+            let targetColUnit: RecordItemGroup = this.m_mapColUnitList[curColIdx + 1];
 
-            targetColUnit.updateRecord(this._latestRecordUnitInfo.m_recordType, this._latestRecordUnitInfo.m_recordUnitIdx);
+            let needIncreaseColIdx: boolean = targetColUnit.updateRecord(this._latestRecordUnitInfo.m_recordType, this._latestRecordUnitInfo.m_recordUnitIdx);
+
+            if (needIncreaseColIdx) {
+                if (this._latestRecordUnitInfo.m_recordType == EmRecordType.Type_Red) {
+                    this._redWinIdx++;
+                }
+                else {
+                    this._blackWinIdx++;
+                }
+            }
 
             this._latestRecordUnitInfo.setColIdx(curColIdx + 1);
         }
@@ -119,9 +127,9 @@ export default class BaseMap extends cc.Component {
 
         let newColUnitParent = this._nodePool.get();
 
-        let comp = newColUnitParent.children[0].getComponent(BaseMapColUnitParent);
+        let comp: RecordItemGroup = newColUnitParent.children[0].getComponent(RecordItemGroup);
 
-        this.m_mapColUnitList = _.concat(this.m_mapColUnitList, comp.getColUnits());
+        this.m_mapColUnitList.push(comp);
 
         this.m_mapRootNode.addChild(newColUnitParent);
     }
@@ -129,7 +137,7 @@ export default class BaseMap extends cc.Component {
     private _addNewTypeRecord(type: EmRecordType) {
         let curColIdx = type == EmRecordType.Type_Red ? this._blackWinIdx : this._redWinIdx;
         if (curColIdx + 1 < this.m_mapColUnitList.length) {
-            let targetColUnit: BaseMapColUnit = this.m_mapColUnitList[curColIdx + 1];
+            let targetColUnit: RecordItemGroup = this.m_mapColUnitList[curColIdx + 1];
 
             targetColUnit.addFirstRecord(type);
 

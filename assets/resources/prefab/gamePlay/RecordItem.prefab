@@ -10,7 +10,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "mapUnit",
+    "_name": "RecordItem",
     "_objFlags": 0,
     "_parent": null,
     "_children": [],
@@ -64,18 +64,15 @@
     "groupIndex": 0
   },
   {
-    "__type__": "65b59vpVTlIF4HfsKNO2QLB",
+    "__type__": "d8ec0g3t8lMeoIWwXsbY0DV",
     "_name": "",
     "_objFlags": 0,
     "node": {
       "__id__": 1
     },
     "_enabled": true,
-    "m_unitPrefab": {
+    "m_recordUnitPrefab": {
       "__uuid__": "79b8a83a-abe7-41c0-9248-4aa165661b23"
-    },
-    "m_layout": {
-      "__id__": 3
     }
   },
   {

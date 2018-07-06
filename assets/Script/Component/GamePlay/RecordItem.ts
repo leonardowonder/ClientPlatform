@@ -1,15 +1,13 @@
 const { ccclass, property } = cc._decorator;
 
-import * as _ from 'lodash';
-
 import RecordUnit from './RecordUnit';
 import { EmRecordType } from '../../Define/GamePlayDefine';
 
 @ccclass
-export default class BaseMapUnit extends cc.Component {
+export default class RecordItem extends cc.Component {
 
     @property(cc.Prefab)
-    m_unitPrefab: cc.Prefab = null;
+    m_recordUnitPrefab: cc.Prefab = null;
 
     private m_recordUnit: RecordUnit = null;
 
@@ -42,7 +40,7 @@ export default class BaseMapUnit extends cc.Component {
     }
 
     private _initView() {
-        let unitPrefab: cc.Node = cc.instantiate(this.m_unitPrefab);
+        let unitPrefab: cc.Node = cc.instantiate(this.m_recordUnitPrefab);
         unitPrefab.setPosition(0, 0);
 
         this.m_recordUnit = unitPrefab.getComponent(RecordUnit);
