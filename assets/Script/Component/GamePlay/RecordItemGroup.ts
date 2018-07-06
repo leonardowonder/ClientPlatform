@@ -14,6 +14,15 @@ export default class RecordItemGroup extends cc.Component {
     private m_curIdx: number = 0;
     private m_initalRecordType: EmRecordType = EmRecordType.Type_None;
 
+    //node pool
+    reuse() {
+        this._resetData();
+    }
+
+    unuse() {
+        // this._resetData();
+    }
+
     getInitRecordType(): EmRecordType {
         return this.m_initalRecordType;
     }
@@ -28,21 +37,15 @@ export default class RecordItemGroup extends cc.Component {
         this.m_recordItemGroup[0].updateRecordUnit(type);
     }
 
-    updateRecord(type: EmRecordType, idx: number): boolean {
-        let needIncreaseColIdx = false;
-
+    updateRecord(type: EmRecordType, idx: number) {
         if (!this._checkIdxValid(idx)) {
             cc.warn(`RecordItemGroup updateRecord invalid idx = ${idx}, length = ${this.m_recordItemGroup.length}`);
-            return needIncreaseColIdx;
+            return;
         }
 
         let targetUnit: RecordItem = this.m_recordItemGroup[idx];
 
         targetUnit.updateRecordUnit(type);
-
-        needIncreaseColIdx = idx < 1;
-
-        return needIncreaseColIdx;
     }
 
     tryExtend(type: EmRecordType): boolean {
@@ -97,5 +100,14 @@ export default class RecordItemGroup extends cc.Component {
         this.m_curIdx++;
 
         this.m_recordItemGroup[this.m_curIdx].updateRecordUnit(this.m_initalRecordType);
+    }
+
+    private _resetData() {
+        this.m_recordItemGroup.forEach((recordItem: RecordItem)=> {
+            recordItem && recordItem.resetData();
+        });
+
+        this.m_curIdx = 0;
+        this.m_initalRecordType = EmRecordType.Type_None;
     }
 }

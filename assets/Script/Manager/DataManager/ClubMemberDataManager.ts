@@ -4,7 +4,7 @@ import { NetMsg, praseMsg } from '../../Logic/LogicBasic';
 import Network from '../../Utils/Network';
 import PlayerData from '../../Data/PlayerData';
 import { eMsgPort, eMsgType } from '../../Define/MessageIdentifer';
-import clientDefine, { clientEventDefine } from '../../Define/ClientDefine';
+import ClientDefine, { clientEventDefine } from '../../Define/ClientDefine';
 
 class ClubMemberDataManager {
     private m_beenInit: boolean = false;
@@ -166,9 +166,9 @@ class ClubMemberDataManager {
     }
 
     _registEvent() {
-        cc.systemEvent.on(clientDefine.netEventClose, this._onNetClose, this);
-        cc.systemEvent.on(clientDefine.netEventReconnectd, this._onNetReconnected, this);
-        cc.systemEvent.on(clientDefine.netEventMsg, this._onMsg, this);
+        cc.systemEvent.on(ClientDefine.netEventClose, this._onNetClose, this);
+        cc.systemEvent.on(ClientDefine.netEventReconnectd, this._onNetReconnected, this);
+        cc.systemEvent.on(ClientDefine.netEventMsg, this._onMsg, this);
     }
 
     _getClubMemberList(clubID) {

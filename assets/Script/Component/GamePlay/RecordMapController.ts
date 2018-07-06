@@ -70,6 +70,14 @@ export default class RecordMapController extends cc.Component {
                     unitInfo && unitInfo.decreaseGroupIdx();
                 })
 
+                let latestInfo: RecordUnitInfo = this.m_recordRoot.getLatestRecordUnitInfo();
+                if (!latestInfo) {
+                    cc.warn('RecordMapController _doRemoveFirstRecord latestInfo null');
+                }
+                else {
+                    latestInfo.decreaseGroupIdx();
+                }
+
                 this.m_recordRoot.decreaseRedBlackIdx();
             }
         }

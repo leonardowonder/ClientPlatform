@@ -4,4 +4,4 @@ export enum EmRecordType {
     Type_Black
 };
 
-export const Max_Record_Count = 20;
+export const Max_Record_Count = 30;

@@ -28,16 +28,17 @@ export default class RecordItem extends cc.Component {
 
         if (this.m_recordUnit) {
             if (type == EmRecordType.Type_None || this.m_recordUnit.isAvailable()) {
-                //update at next frame, item will not move from center to top
-                this.scheduleOnce(() => {
-                    this.m_recordUnit.updateSprite(type);
-                })
+                this.m_recordUnit.updateViewByType(type);
             }
 
             ret = true;
         }
 
         return ret;
+    }
+
+    resetData() {
+        this.m_recordUnit && this.m_recordUnit.resetData();
     }
 
     private _init() {

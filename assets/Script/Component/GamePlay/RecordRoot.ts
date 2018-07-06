@@ -65,7 +65,7 @@ export default class RecordRoot extends cc.Component {
         let firstGroup: RecordItemGroup = this.m_recordItemGroups.shift();
 
         if (firstGroup) {
-            let targetNode = firstGroup.node.parent;
+            let targetNode = firstGroup.node;
 
             this._nodePool.put(targetNode);
         }
@@ -148,25 +148,16 @@ export default class RecordRoot extends cc.Component {
     private _addNewRecordItemGroup() {
         if (this._nodePool.size() < 1) {
             var prefab = cc.instantiate(this.m_recordItemGroupPrefab);
-
-            prefab.setPosition(0, 0);
-
-            var node = new cc.Node();
-            node.setAnchorPoint(0.5, 0.5);
-            node.setContentSize(prefab.getContentSize());
-
-            node.addChild(prefab);
-
-            this._nodePool.put(node);
+            this._nodePool.put(prefab);
         }
 
-        let newColUnitParent = this._nodePool.get();
+        let newItemGroup = this._nodePool.get();
 
-        let comp: RecordItemGroup = newColUnitParent.children[0].getComponent(RecordItemGroup);
+        let comp: RecordItemGroup = newItemGroup.getComponent(RecordItemGroup);
 
         this.m_recordItemGroups.push(comp);
 
-        this.node.addChild(newColUnitParent);
+        this.node.addChild(newItemGroup);
     }
 
     private _addNewTypeRecord(type: EmRecordType) {

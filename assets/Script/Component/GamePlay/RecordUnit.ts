@@ -13,7 +13,7 @@ export default class RecordUnit extends cc.Component {
     private _type: EmRecordType = EmRecordType.Type_None;
 
     onLoad() {
-        this.updateSprite(this._type);
+        this.resetData();
     }
 
     getType(): EmRecordType {
@@ -24,15 +24,23 @@ export default class RecordUnit extends cc.Component {
         return this._type == EmRecordType.Type_None;
     }
 
-    updateSprite(type: EmRecordType) {
+    resetData() {
+        this._type = EmRecordType.Type_None;
+        this.m_sprite.spriteFrame = null;
+    }
+
+    updateViewByType(type: EmRecordType) {
         this._type = type;
 
-        if (this._type == EmRecordType.Type_None) {
-            this.m_sprite.spriteFrame = null;
-        }
-        else {
-            let framIdx = this._type == EmRecordType.Type_Red ? 0 : 1;
-            this.m_sprite.spriteFrame = this.m_frames[framIdx];
-        }
+        //update at next frame, item will not move from center to top
+        this.scheduleOnce(() => {
+            if (this._type == EmRecordType.Type_None) {
+                this.m_sprite.spriteFrame = null;
+            }
+            else {
+                let framIdx = this._type == EmRecordType.Type_Red ? 0 : 1;
+                this.m_sprite.spriteFrame = this.m_frames[framIdx];
+            }
+        })
     }
 }

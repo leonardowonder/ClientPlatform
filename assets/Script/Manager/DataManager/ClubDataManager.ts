@@ -4,7 +4,7 @@ import * as _ from 'lodash';
 import Network from '../../Utils/Network';
 import PlayerData from '../../Data/PlayerData';
 import { eMsgPort, eMsgType } from '../../Define/MessageIdentifer';
-import clientDefine, { clientEventDefine, eClubMemberLevel } from '../../Define/ClientDefine';
+import ClientDefine, { clientEventDefine, eClubMemberLevel } from '../../Define/ClientDefine';
 
 class ClubDataManager {
     private m_beenInit: boolean = false;
@@ -184,8 +184,8 @@ class ClubDataManager {
     }
 
     _registEvent() {
-        cc.systemEvent.on(clientDefine.netEventClose, this._onNetClose, this);
-        cc.systemEvent.on(clientDefine.netEventReconnectd, this._onNetReconnected, this);
+        cc.systemEvent.on(ClientDefine.netEventClose, this._onNetClose, this);
+        cc.systemEvent.on(ClientDefine.netEventReconnectd, this._onNetReconnected, this);
     }
 
     _init() {

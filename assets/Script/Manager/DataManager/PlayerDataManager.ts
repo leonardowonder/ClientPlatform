@@ -2,7 +2,7 @@ import * as async from 'async';
 import * as _ from 'lodash';
 
 import { eMsgPort, eMsgType } from '../../Define/MessageIdentifer';
-import clientDefine, { clientEventDefine } from '../../Define/ClientDefine';
+import ClientDefine, { clientEventDefine } from '../../Define/ClientDefine';
 
 import Network from '../../Utils/Network';
 import PlayerData from '../../Data/PlayerData';
@@ -135,8 +135,8 @@ class PlayerDataManager {
     }
 
     _registEvent() {
-        cc.systemEvent.on(clientDefine.netEventClose, this._onNetClose, this);
-        cc.systemEvent.on(clientDefine.netEventReconnectd, this._onNetReconnected, this);
+        cc.systemEvent.on(ClientDefine.netEventClose, this._onNetClose, this);
+        cc.systemEvent.on(ClientDefine.netEventReconnectd, this._onNetReconnected, this);
     }
 
     _init() {

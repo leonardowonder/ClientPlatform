@@ -1,4 +1,4 @@
-let clientDefine = {
+let ClientDefine = {
     time_heat_bet: 3,
     netEventOpen: "open",
     netEventFialed: "failed",
@@ -10,7 +10,7 @@ let clientDefine = {
     msg: "msg",
 };
 
-export default clientDefine;
+export default ClientDefine;
 
 export enum eClubMemberLevel {
     eClubMemberLevel_None = 1, //普通玩家
