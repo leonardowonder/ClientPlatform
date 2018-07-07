@@ -1,5 +1,7 @@
 const { ccclass, property } = cc._decorator;
 
+import * as _ from 'lodash';
+
 import MapItem from './MapItem';
 
 @ccclass
@@ -22,29 +24,27 @@ export default class MapRoot extends cc.Component {
 
     addNewItem() {
         if (this._nodePool.size() < 1) {
-            var prefab = cc.instantiate(this.m_mapItemPrefab);
+            var prefab: cc.Node = cc.instantiate(this.m_mapItemPrefab);
 
-            prefab.setPosition(0, 0);
-
-            var node = new cc.Node();
-            node.setAnchorPoint(0.5, 0.5);
-            node.setContentSize(prefab.getContentSize());
-
-            node.addChild(prefab);
-
-            this._nodePool.put(node);
+            this._nodePool.put(prefab);
         }
 
-        let newColUnitParent = this._nodePool.get();
+        let newMapItem: cc.Node = this._nodePool.get();
 
-        let comp: MapItem = newColUnitParent.children[0].getComponent(MapItem);
+        let comp: MapItem = newMapItem.getComponent(MapItem);
 
         this.m_mapItemGroup.push(comp);
 
-        this.node.addChild(newColUnitParent);
+        this.node.addChild(newMapItem);
     }
 
-    removeFirstItem() {
+    removeLastItem() {
+        let targetItem = this.m_mapItemGroup.pop();
 
+        if (targetItem) {
+            let targetNode: cc.Node = targetItem.node;
+
+            this._nodePool.put(targetNode);
+        }
     }
 }

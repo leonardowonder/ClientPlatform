@@ -7,6 +7,7 @@ import RecordUnitInfo from '../../Data/GamePlay/RecordUnitInfo';
 
 import MapRoot from './MapRoot';
 import RecordRoot from './RecordRoot';
+import RecordItemGroup from './RecordItemGroup';
 
 @ccclass
 export default class RecordMapController extends cc.Component {
@@ -18,6 +19,9 @@ export default class RecordMapController extends cc.Component {
 
     @property
     recordGroupCountInOneMapItem: number = 1;
+
+    @property
+    mapItemCountMin: number = 5;
 
     private m_recordUnitInfos: RecordUnitInfo[] = [];
 
@@ -36,12 +40,31 @@ export default class RecordMapController extends cc.Component {
         this.m_recordUnitInfos.push(info);
 
         if (this._checkNeedRemoveFirstRecord()) {
-            this._doRemoveFirstRecord();
+            let groupIdx: number = this._doRemoveFirstRecord();
+
+            if (this._hasGroupToRemove(groupIdx)) {
+                this._doRemoveGroups(groupIdx);
+            }
+        }
+
+        while (this._needRemoveMap()) {
+            this.m_mapRoot.removeLastItem();
         }
 
         if (this._needAddMap()) {
             this.m_mapRoot.addNewItem();
         }
+    }
+
+    private _needRemoveMap(): boolean {
+        let recordItemGroupCount: number = this.m_recordRoot.getRecordItemGroupCount();
+        let mapItemCount: number = this.m_mapRoot.getMapItemCount();
+
+        let needRemove: boolean = recordItemGroupCount < mapItemCount * this.recordGroupCountInOneMapItem;
+
+        needRemove = needRemove && mapItemCount > this.mapItemCountMin;
+
+        return needRemove;
     }
 
     private _needAddMap(): boolean {
@@ -57,29 +80,62 @@ export default class RecordMapController extends cc.Component {
         return this.m_recordUnitInfos.length > Max_Record_Count;
     }
 
-    private _doRemoveFirstRecord() {
-        let firstInfo: RecordUnitInfo = this.m_recordUnitInfos.shift();
+    private _doRemoveFirstRecord(): number {
+        let targetInfo: RecordUnitInfo = this.m_recordUnitInfos.shift();
 
-        this.m_recordRoot.resetTargetItem(firstInfo.m_recordItemGroupIdx, firstInfo.m_recordUnitIdx);
+        let targetGroupIdx: number = targetInfo.m_recordItemGroupIdx;
+        this.m_recordRoot.resetTargetItem(targetInfo.m_recordItemGroupIdx, targetInfo.m_recordUnitIdx);
 
-        let firstGroup = this.m_recordRoot.getFirstRecordItemGroup();
-        if (firstGroup && firstGroup.isEmpty()) {
-            let result = this.m_recordRoot.removeFirstRecordItemGroup();
-            if (result) {
-                this.m_recordUnitInfos.forEach((unitInfo: RecordUnitInfo) => {
-                    unitInfo && unitInfo.decreaseGroupIdx();
-                })
+        return targetGroupIdx;
+    }
 
-                let latestInfo: RecordUnitInfo = this.m_recordRoot.getLatestRecordUnitInfo();
-                if (!latestInfo) {
-                    cc.warn('RecordMapController _doRemoveFirstRecord latestInfo null');
-                }
-                else {
-                    latestInfo.decreaseGroupIdx();
-                }
+    private _hasGroupToRemove(idx: number): boolean {
+        let ret = false;
 
-                this.m_recordRoot.decreaseRedBlackIdx();
+        let targetGroup = this.m_recordRoot.getRecordItemGroup(idx);
+        //only if group is empty, remove it by in some conditions
+        if (targetGroup && targetGroup.isEmpty()) {
+            //if targetGroup is first group, remove first empty group; if targetGroup is last group, remove last empty groups;
+            if (idx == 0 || idx >= this.m_recordRoot.getRecordItemGroupCount() - 1) {
+                ret = true;
             }
+        }
+
+        return ret;
+    }
+
+    private _doRemoveGroups(idx: number) {
+        let itemGroups: RecordItemGroup[] = this.m_recordRoot.getAllRecordItemGroups();
+        if (itemGroups && itemGroups.length > 0) {
+            if (idx == 0) {
+                let result = this.m_recordRoot.removeFirstRecordItemGroup();
+                if (result) {
+                    this.m_recordUnitInfos.forEach((unitInfo: RecordUnitInfo) => {
+                        unitInfo && unitInfo.decreaseGroupIdx();
+                    })
+
+                    let latestInfo: RecordUnitInfo = this.m_recordRoot.getLatestRecordUnitInfo();
+                    if (!latestInfo) {
+                        cc.warn('RecordMapController _doRemoveGroups latestInfo null');
+                    }
+                    else {
+                        latestInfo.decreaseGroupIdx();
+                    }
+
+                    this.m_recordRoot.decreaseRedBlackIdx();
+                }
+            }
+            else {
+                let lastGroup = _.last(itemGroups);
+
+                while (lastGroup && lastGroup.isEmpty()) {
+                    this.m_recordRoot.removeLastRecordItemGroup();
+                    lastGroup = _.last(itemGroups);
+                }
+            }
+        }
+        else {
+            cc.warn('RecordMapController _doRemoveGroups pre judge _hasGroupToRemove error');
         }
     }
 }

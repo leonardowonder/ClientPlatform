@@ -34,8 +34,13 @@ export default class RecordRoot extends cc.Component {
         return this.m_recordItemGroups.length;
     }
 
-    getFirstRecordItemGroup(): RecordItemGroup {
-        return _.first(this.m_recordItemGroups);
+    getRecordItemGroup(idx: number): RecordItemGroup {
+        let ret: RecordItemGroup = null;
+
+        if (idx >= 0 && idx < this.m_recordItemGroups.length) {
+            ret = this.m_recordItemGroups[idx];
+        }
+        return ret;
     }
 
     getAllRecordItemGroups(): RecordItemGroup[] {
@@ -72,6 +77,24 @@ export default class RecordRoot extends cc.Component {
         else {
             ret = false;
             cc.warn(`RecordRoot removeFirstRecordItemGroup firstGroup null`);
+        }
+
+        return ret;
+    }
+
+    removeLastRecordItemGroup(): boolean {
+        let ret: boolean = true;
+
+        let lastGropp: RecordItemGroup = this.m_recordItemGroups.pop();
+
+        if (lastGropp) {
+            let targetNode = lastGropp.node;
+
+            this._nodePool.put(targetNode);
+        }
+        else {
+            ret = false;
+            cc.warn(`RecordRoot removeFirstRecordItemGroup lastGropp null`);
         }
 
         return ret;
