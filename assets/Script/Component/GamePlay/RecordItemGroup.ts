@@ -37,15 +37,31 @@ export default class RecordItemGroup extends cc.Component {
         this.m_recordItemGroup[0].updateRecordUnit(type);
     }
 
-    updateRecord(type: EmRecordType, idx: number) {
+    updateRecord(type: EmRecordType, idx: number): boolean {
+        let needIcreaseColIdx: boolean = false;
         if (!this._checkIdxValid(idx)) {
             cc.warn(`RecordItemGroup updateRecord invalid idx = ${idx}, length = ${this.m_recordItemGroup.length}`);
-            return;
+            return needIcreaseColIdx;
         }
 
         let targetUnit: RecordItem = this.m_recordItemGroup[idx];
 
         targetUnit.updateRecordUnit(type);
+
+        needIcreaseColIdx = idx < 1;
+
+        return needIcreaseColIdx;
+    }
+
+    resetTargetItem(idx: number) {
+        if (!this._checkIdxValid(idx)) {
+            cc.warn(`RecordItemGroup resetTargetItem invalid idx = ${idx}, length = ${this.m_recordItemGroup.length}`);
+            return;
+        }
+
+        let targetUnit: RecordItem = this.m_recordItemGroup[idx];
+
+        targetUnit.updateRecordUnit(EmRecordType.Type_None);
     }
 
     tryExtend(type: EmRecordType): boolean {

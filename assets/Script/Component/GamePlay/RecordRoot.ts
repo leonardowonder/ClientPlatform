@@ -84,7 +84,7 @@ export default class RecordRoot extends cc.Component {
         }
 
         let targetGroup = this.m_recordItemGroups[groupIdx];
-        targetGroup.updateRecord(EmRecordType.Type_None, recordIdx);
+        targetGroup.resetTargetItem(recordIdx);
     }
 
     decreaseRedBlackIdx() {
