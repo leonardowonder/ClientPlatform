@@ -8,6 +8,7 @@ import RecordUnitInfo from '../../Data/GamePlay/RecordUnitInfo';
 import MapRoot from './MapRoot';
 import RecordRoot from './RecordRoot';
 import RecordItemGroup from './RecordItemGroup';
+import NextGameMarkerRoot from './NextGameMarkerRoot';
 
 @ccclass
 export default class RecordMapController extends cc.Component {
@@ -16,6 +17,9 @@ export default class RecordMapController extends cc.Component {
 
     @property(RecordRoot)
     m_recordRoot: RecordRoot = null;
+    
+    @property(NextGameMarkerRoot)
+    m_markerRoot: NextGameMarkerRoot = null;
 
     @property
     recordGroupCountInOneMapItem: number = 1;
@@ -54,6 +58,8 @@ export default class RecordMapController extends cc.Component {
         if (this._needAddMap()) {
             this.m_mapRoot.addNewItem();
         }
+
+        this.m_markerRoot.updateNextGameMarker(this.m_recordUnitInfos);
     }
 
     private _needRemoveMap(): boolean {

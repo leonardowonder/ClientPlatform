@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 
 import Singleton from '../../Utils/Singleton';
 
-import { EmRecordType, EmViceRoadType, EmActiveDeciderType } from '../../Define/GamePlayDefine';
+import { EmRecordType, EmViceRoadType, EmDeciderType } from '../../Define/GamePlayDefine';
 import RecordUnitInfo from '../../Data/GamePlay/RecordUnitInfo';
 
 const cViceRoadTypeList: EmViceRoadType[] = [EmViceRoadType.Type_Road1, EmViceRoadType.Type_Road2, EmViceRoadType.Type_Road3];
@@ -43,22 +43,22 @@ class RecordDataManager extends Singleton {
         return types;
     }
 
-    getActiveDeciderType(records: RecordUnitInfo[]): EmActiveDeciderType {
+    getActiveDeciderType(records: RecordUnitInfo[]): EmDeciderType {
         let lastRecordType: EmRecordType = this.getLastRecordType(records);
 
-        let type: EmActiveDeciderType = EmActiveDeciderType.Type_None;
-        switch(lastRecordType) {
+        let type: EmDeciderType = EmDeciderType.Type_None;
+        switch (lastRecordType) {
             case EmRecordType.Type_Black: {
-                type = EmActiveDeciderType.Type_Black;
+                type = EmDeciderType.Type_Black;
                 break;
             }
             case EmRecordType.Type_Red: {
-                type = EmActiveDeciderType.Type_Red;
+                type = EmDeciderType.Type_Red;
                 break;
             }
             default: {
                 cc.warn(`RecordDataManager getActiveDeciderType invalid type = ${lastRecordType}`);
-                type = EmActiveDeciderType.Type_Red;
+                type = EmDeciderType.Type_Red;
                 break;
             }
         }
@@ -80,7 +80,7 @@ class RecordDataManager extends Singleton {
 
         let curRecordType: EmRecordType = this.getLastRecordType(records);
 
-        for (let i = records.length - 1; i >= 0; ++i) {
+        for (let i = records.length - 1; i >= 0; --i) {
             if (records[i].getRecordType() != curRecordType) {
                 break;
             }
@@ -136,8 +136,9 @@ class RecordDataManager extends Singleton {
         let curRefrenceCnt: number = 0;
         let targetRefrenceCnt: number = this.getRefrenceCnt(type);
 
-        for (let i = records.length - 1; i >= 0; ++i) {
+        for (let i = records.length - 1; i >= 0; --i) {
             if (records[i].getRecordType() != curRecordType) {
+                curRecordType = records[i].getRecordType();
                 curRefrenceCnt++;
             }
 

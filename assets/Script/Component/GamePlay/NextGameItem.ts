@@ -2,7 +2,7 @@ const { ccclass, property } = cc._decorator;
 
 import * as _ from 'lodash';
 
-import { EmActiveDeciderType, EmViceRoadType, EmRecordType } from '../../Define/GamePlayDefine';
+import { EmDeciderType, EmViceRoadType, EmRecordType } from '../../Define/GamePlayDefine';
 import RecordUnit from './RecordUnit';
 
 @ccclass
@@ -17,7 +17,7 @@ export default class NextGameItem extends cc.Component {
     }
 
     updateNextGameMarkers(types: EmRecordType[]) {
-        if (types || types.length != this.m_recordUnits.length) {
+        if (types == null || types.length != this.m_recordUnits.length) {
             cc.warn(`NextGameItem updateNextGameMarkers invalid types = ${types}`);
             return;
         }

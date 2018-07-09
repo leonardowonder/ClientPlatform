@@ -14,7 +14,7 @@ export enum EmViceRoadType {
     Type_Max
 }
 
-export enum EmActiveDeciderType {
+export enum EmDeciderType {
     Type_None = 0,
     Type_Red,
     Type_Black,
