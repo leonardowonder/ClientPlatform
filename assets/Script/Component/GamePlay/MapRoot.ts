@@ -1,7 +1,5 @@
 const { ccclass, property } = cc._decorator;
 
-import * as _ from 'lodash';
-
 import MapItem from './MapItem';
 
 @ccclass

@@ -6,6 +6,35 @@ import RecordItemGroup from './RecordItemGroup';
 import { EmRecordType } from '../../Define/GamePlayDefine';
 import RecordUnitInfo from '../../Data/GamePlay/RecordUnitInfo';
 
+// export class RBRecordInfo {
+//     private _redStartColIdx: number = -1;
+//     private _blackStartColIdx: number = -1;
+//     private _redEndColIdx: number = -1;
+//     private _blackEndColId: number = -1;
+
+//     getStartColIdx(type: EmRecordType): number {
+//         if (!checkTypeValid(type)) {
+//             cc.warn(`RBRecordInfo getStartColIdx invalid type = ${type}`);
+//             return -1;
+//         }
+
+//         let idx = type == EmRecordType.Type_Red ? this._redStartColIdx : this._blackStartColIdx;
+
+//         return idx;
+//     }
+
+//     getEndColIdx(type: EmRecordType): number {
+//         if (!checkTypeValid(type)) {
+//             cc.warn(`RBRecordInfo getEndColIdx invalid type = ${type}`);
+//             return -1;
+//         }
+
+//         let idx = type == EmRecordType.Type_Red ? this._redEndColIdx : this._blackEndColId;
+
+//         return idx;
+//     }
+// };
+
 @ccclass
 export default class RecordRoot extends cc.Component {
     @property(cc.Prefab)
@@ -124,9 +153,9 @@ export default class RecordRoot extends cc.Component {
     }
 
     private _addRecordByLatestInfo(type: EmRecordType) {
-        let latestType: EmRecordType = this._latestRecordUnitInfo.m_recordType;
+        let latestType: EmRecordType = this._latestRecordUnitInfo.getRecordType();
         if (type == latestType) {
-            let colIdx: number = this._latestRecordUnitInfo.m_recordItemGroupIdx;
+            let colIdx: number = this._latestRecordUnitInfo.getRecordItemGroupIdx();
 
             let targetGroup: RecordItemGroup = this.m_recordItemGroups[colIdx];
 
@@ -135,7 +164,7 @@ export default class RecordRoot extends cc.Component {
                 this._moveToNextRecordItemGroup();
             }
             else {
-                let targetRecordIdx = this._latestRecordUnitInfo.m_recordUnitIdx + 1;
+                let targetRecordIdx = this._latestRecordUnitInfo.getRecordUnitRowIdx() + 1;
                 this._latestRecordUnitInfo.setRecordIdx(targetRecordIdx);
             }
         }
@@ -145,14 +174,14 @@ export default class RecordRoot extends cc.Component {
     }
 
     private _moveToNextRecordItemGroup() {
-        let curGroupIdx = this._latestRecordUnitInfo.m_recordItemGroupIdx;
+        let curGroupIdx = this._latestRecordUnitInfo.getRecordItemGroupIdx();
         if (curGroupIdx + 1 < this.m_recordItemGroups.length) {
             let targetGroup: RecordItemGroup = this.m_recordItemGroups[curGroupIdx + 1];
 
-            let needIncreaseColIdx: boolean = targetGroup.updateRecord(this._latestRecordUnitInfo.m_recordType, this._latestRecordUnitInfo.m_recordUnitIdx);
+            let needIncreaseColIdx: boolean = targetGroup.updateRecord(this._latestRecordUnitInfo.getRecordType(), this._latestRecordUnitInfo.getRecordUnitRowIdx());
 
             if (needIncreaseColIdx) {
-                if (this._latestRecordUnitInfo.m_recordType == EmRecordType.Type_Red) {
+                if (this._latestRecordUnitInfo.getRecordType() == EmRecordType.Type_Red) {
                     this._redWinIdx++;
                 }
                 else {
@@ -190,7 +219,7 @@ export default class RecordRoot extends cc.Component {
 
             targetGroup.addFirstRecord(type);
 
-            this._latestRecordUnitInfo.setType(type);
+            this._latestRecordUnitInfo.setRecordType(type);
             this._latestRecordUnitInfo.setGroupIdx(curGroupIdx + 1);
             this._latestRecordUnitInfo.setRecordIdx(0);
 

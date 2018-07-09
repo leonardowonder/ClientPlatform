@@ -83,8 +83,8 @@ export default class RecordMapController extends cc.Component {
     private _doRemoveFirstRecord(): number {
         let targetInfo: RecordUnitInfo = this.m_recordUnitInfos.shift();
 
-        let targetGroupIdx: number = targetInfo.m_recordItemGroupIdx;
-        this.m_recordRoot.resetTargetItem(targetInfo.m_recordItemGroupIdx, targetInfo.m_recordUnitIdx);
+        let targetGroupIdx: number = targetInfo.getRecordItemGroupIdx();
+        this.m_recordRoot.resetTargetItem(targetInfo.getRecordItemGroupIdx(), targetInfo.getRecordUnitRowIdx());
 
         return targetGroupIdx;
     }

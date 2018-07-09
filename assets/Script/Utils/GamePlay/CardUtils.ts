@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 
-import Singleton from './Singleton';
+import Singleton from '../Singleton';
 import { Card } from './Cards';
 
 export enum EmCardTpye {
