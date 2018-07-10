@@ -10,7 +10,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "RecordItem",
+    "_name": "ViceRoad2RecordItem",
     "_objFlags": 0,
     "_parent": null,
     "_children": [],
@@ -72,7 +72,7 @@
     },
     "_enabled": true,
     "m_recordUnitPrefab": {
-      "__uuid__": "79b8a83a-abe7-41c0-9248-4aa165661b23"
+      "__uuid__": "114b9021-dc92-4972-8c68-c781d6cc66ca"
     }
   },
   {
@@ -112,9 +112,9 @@
       "__id__": 1
     },
     "asset": {
-      "__uuid__": "b4260f24-b7de-4632-84ae-a847e9c2a448"
+      "__uuid__": "99588a3a-3202-40c3-8980-e759db7a4056"
     },
-    "fileId": "d3sNOvnHxMAZA6TZjtGERg",
+    "fileId": "8az5Ng6CdJpqX7D0pCojBe",
     "sync": false
   }
 ]

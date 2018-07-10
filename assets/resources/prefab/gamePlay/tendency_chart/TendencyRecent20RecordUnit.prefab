@@ -10,7 +10,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "MainRoad1RecordUnit",
+    "_name": "TendencyRecent20RecordUnit",
     "_objFlags": 0,
     "_parent": null,
     "_children": [
@@ -55,7 +55,7 @@
     "_position": {
       "__type__": "cc.Vec2",
       "x": -5.5,
-      "y": 4.5
+      "y": 0
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -150,9 +150,9 @@
       "__id__": 1
     },
     "asset": {
-      "__uuid__": "79b8a83a-abe7-41c0-9248-4aa165661b23"
+      "__uuid__": "31901628-b1cc-4de5-a907-885bc9dbfafc"
     },
-    "fileId": "52uX+1275Os64iB03kL/89",
+    "fileId": "d2YTfgkoFFO4wBIGv9ZRJl",
     "sync": false
   },
   {
@@ -181,9 +181,9 @@
       "__id__": 1
     },
     "asset": {
-      "__uuid__": "79b8a83a-abe7-41c0-9248-4aa165661b23"
+      "__uuid__": "31901628-b1cc-4de5-a907-885bc9dbfafc"
     },
-    "fileId": "e8yVS91SpOk4NbVefLrZUv",
+    "fileId": "2604W3dlxDj5LbcFPAyLz0",
     "sync": false
   }
 ]

@@ -10,7 +10,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "MapItem",
+    "_name": "ViceRoadMapItem",
     "_objFlags": 0,
     "_parent": null,
     "_children": [
@@ -159,9 +159,9 @@
       "__id__": 1
     },
     "asset": {
-      "__uuid__": "8ee8b7a4-f9e0-4370-a939-539beccdf5d7"
+      "__id__": 0
     },
-    "fileId": "16pkb2N61OS7O2iWeQgfMb",
+    "fileId": "a4hktwzr1CsLebKSCuGRJl",
     "sync": false
   },
   {
@@ -250,9 +250,9 @@
       "__id__": 1
     },
     "asset": {
-      "__uuid__": "8ee8b7a4-f9e0-4370-a939-539beccdf5d7"
+      "__id__": 0
     },
-    "fileId": "39rUnLAQ1CXaQmzNlEsW4l",
+    "fileId": "95K/WpuEREGbVn7W87sk39",
     "sync": false
   },
   {
@@ -341,9 +341,9 @@
       "__id__": 1
     },
     "asset": {
-      "__uuid__": "8ee8b7a4-f9e0-4370-a939-539beccdf5d7"
+      "__id__": 0
     },
-    "fileId": "3aB5K6rdRAuJLWRt3xT2kC",
+    "fileId": "e26kEiGC5OSLplEj5Rf/z8",
     "sync": false
   },
   {
@@ -392,9 +392,9 @@
       "__id__": 1
     },
     "asset": {
-      "__uuid__": "8ee8b7a4-f9e0-4370-a939-539beccdf5d7"
+      "__id__": 0
     },
-    "fileId": "cde7u7nddFL5VT2yvwrlY6",
+    "fileId": "5ccBIgS75PgpW0Thxqrva3",
     "sync": false
   }
 ]
