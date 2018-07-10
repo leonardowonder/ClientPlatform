@@ -152,6 +152,7 @@ export default class RecordRoot extends cc.Component {
         }
         else {
             let targetRecordIdx = this._latestRecordUnitInfo.getRecordUnitRowIdx() + 1;
+            this._latestRecordUnitInfo.setRecordType(type);
             this._latestRecordUnitInfo.setRecordIdx(targetRecordIdx);
         }
     }

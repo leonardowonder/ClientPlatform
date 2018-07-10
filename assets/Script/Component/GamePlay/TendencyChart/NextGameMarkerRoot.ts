@@ -12,10 +12,21 @@ export default class NextGameMarkerRoot extends cc.Component {
     @property(NextGameItem)
     m_nextGameItems: NextGameItem[] = [];
 
+    m_activeNextGameTypes: EmRecordType[] = [];
+    m_passiveNextGameTypes: EmRecordType[] = [];
+
     clearAllInfos() {
         _.forEach(this.m_nextGameItems, (item: NextGameItem) => {
             item.clearAllMarkers();
         })        
+    }
+
+    getActiveNextGameRecordTypes(): EmRecordType[] {
+        return this.m_activeNextGameTypes;
+    }
+
+    getPassiveNextGameRecordTypes(): EmRecordType[] {
+        return this.m_passiveNextGameTypes;
     }
 
     updateNextGameMarker(records: RecordUnitInfo[]) {
@@ -28,11 +39,11 @@ export default class NextGameMarkerRoot extends cc.Component {
 
         let idx: number = this._getItemIdx(deciderType);
 
-        let types: EmRecordType[] = RecordDataManager.getInstance().getActiveRecordTypes(records);
-        this.m_nextGameItems[idx].updateNextGameMarkers(types);
+        this.m_activeNextGameTypes = RecordDataManager.getInstance().getActiveRecordTypes(records);
+        this.m_nextGameItems[idx].updateNextGameMarkers(this.m_activeNextGameTypes);
 
-        types = RecordDataManager.getInstance().getPassiveRecordTypes(records);
-        this.m_nextGameItems[1 - idx].updateNextGameMarkers(types);
+        this.m_passiveNextGameTypes = RecordDataManager.getInstance().getPassiveRecordTypes(records);
+        this.m_nextGameItems[1 - idx].updateNextGameMarkers(this.m_passiveNextGameTypes);
     }
     
     private _checkDeciderTypeValid(type: EmDeciderType): boolean {

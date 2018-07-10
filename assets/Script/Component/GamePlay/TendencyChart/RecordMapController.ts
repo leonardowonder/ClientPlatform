@@ -8,7 +8,6 @@ import RecordUnitInfo from '../../../Data/GamePlay/RecordUnitInfo';
 import MapRoot from './MapRoot';
 import RecordRoot from './RecordRoot';
 import RecordItemGroup from './RecordItemGroup';
-import NextGameMarkerRoot from './NextGameMarkerRoot';
 
 @ccclass
 export default class RecordMapController extends cc.Component {
@@ -17,9 +16,6 @@ export default class RecordMapController extends cc.Component {
 
     @property(RecordRoot)
     m_recordRoot: RecordRoot = null;
-    
-    @property(NextGameMarkerRoot)
-    m_markerRoot: NextGameMarkerRoot = null;
 
     @property
     recordGroupCountInOneMapItem: number = 1;
@@ -29,20 +25,13 @@ export default class RecordMapController extends cc.Component {
 
     private m_recordUnitInfos: RecordUnitInfo[] = [];
 
-    addRedMustSame() {
-        this.addRecord(EmRecordType.Type_Red);
+    getRecordUnitInfos(): RecordUnitInfo[] {
+        return this.m_recordUnitInfos;
     }
 
-    addBlackMustSame() {
-        this.addRecord(EmRecordType.Type_Black);
-    }
-
-    addRedNeedNotSame() {
-        this.addRecord(EmRecordType.Type_Red, false);
-    }
-
-    addBlackNeedNotSame() {
-        this.addRecord(EmRecordType.Type_Black, false);
+    getLastGameRecordType(): EmRecordType {
+        let record: RecordUnitInfo = this.m_recordRoot.getLatestRecordUnitInfo();
+        return record.getRecordType();
     }
 
     addRecord(type: EmRecordType, mustSameType: boolean = true) {
@@ -66,8 +55,6 @@ export default class RecordMapController extends cc.Component {
         if (this._needAddMap()) {
             this.m_mapRoot.addNewItem();
         }
-
-        // this.m_markerRoot.updateNextGameMarker(this.m_recordUnitInfos);
     }
 
     private _needRemoveMap(): boolean {
