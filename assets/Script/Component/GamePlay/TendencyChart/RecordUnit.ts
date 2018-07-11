@@ -12,6 +12,10 @@ export default class RecordUnit extends cc.Component {
 
     private _type: EmRecordType = EmRecordType.Type_None;
 
+    unuse() {
+        this.resetData();
+    }
+
     onLoad() {
         this.resetData();
     }

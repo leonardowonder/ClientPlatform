@@ -114,7 +114,7 @@ export default class RecordRoot extends cc.Component {
     }
 
     private _checkTypeValid(type: EmRecordType) {
-        return type == EmRecordType.Type_Red || type == EmRecordType.Type_Black;
+        return type > EmRecordType.Type_None && type < EmRecordType.Type_Max;
     }
 
     private _checkGroupIdxValid(groupIdx: number): boolean {

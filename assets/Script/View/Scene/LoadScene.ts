@@ -25,6 +25,10 @@ class LoginScene extends cc.Component {
         SceneManager.changeScene(SceneIdConfigManager.getSceneIdByKey(EmSceneID.SceneID_MainScene));
     }
 
+    private _jumpToTestScene() {
+        SceneManager.changeScene('test');
+    }
+
     private _loadConfigs(callback: Function) {
         ConfigData.loadAllConfigs(callback);
     }
@@ -47,7 +51,7 @@ class LoginScene extends cc.Component {
             ],
             () => {
                 PrefabManager.getInstance().hidePrefab(EmPrefabEnum.Loading);
-                this._jumpToMainScene();
+                this._jumpToTestScene();
             }
         )
     }
