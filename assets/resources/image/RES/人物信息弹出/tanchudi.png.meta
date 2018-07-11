@@ -1,0 +1,30 @@
+{
+  "ver": "1.0.0",
+  "uuid": "8d39a6ee-2f4b-4980-83b9-61fc65c4fdf8",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "subMetas": {
+    "tanchudi": {
+      "ver": "1.0.3",
+      "uuid": "c403fc52-3a8e-4f9b-98d4-0bd3694bd8b7",
+      "rawTextureUuid": "8d39a6ee-2f4b-4980-83b9-61fc65c4fdf8",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0,
+      "trimX": 0,
+      "trimY": 0,
+      "width": 187,
+      "height": 168,
+      "rawWidth": 187,
+      "rawHeight": 168,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}

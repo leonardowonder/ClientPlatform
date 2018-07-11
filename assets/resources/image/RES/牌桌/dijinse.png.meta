@@ -1,0 +1,30 @@
+{
+  "ver": "1.0.0",
+  "uuid": "77079c95-74e2-4176-8a1f-8c8c13c5c1b2",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "subMetas": {
+    "dijinse": {
+      "ver": "1.0.3",
+      "uuid": "218e86b1-fbd9-45e5-bf45-4188749a437e",
+      "rawTextureUuid": "77079c95-74e2-4176-8a1f-8c8c13c5c1b2",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": -0.5,
+      "trimX": 0,
+      "trimY": 1,
+      "width": 208,
+      "height": 42,
+      "rawWidth": 208,
+      "rawHeight": 43,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}

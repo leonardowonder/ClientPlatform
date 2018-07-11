@@ -31,7 +31,7 @@ export default class RoadsRootLayer extends cc.Component {
         this.m_redWinNode.setContentSize(redWinAddLength + this.m_redMinLength, this.m_redWinNode.height);
         this.m_blackWinNode.setContentSize(this.m_100PercentLenght - redWinAddLength + this.m_blackMinLength, this.m_redWinNode.height);
 
-        this.m_redWinLabel.string = (redWinRate * 100) + '%';
-        this.m_blackWinLabel.string = (100 - redWinRate * 100) + '%';
+        this.m_redWinLabel.string = Math.floor(redWinRate * 100) + '%';
+        this.m_blackWinLabel.string = (100 - Math.floor(redWinRate * 100)) + '%';
     }
 }

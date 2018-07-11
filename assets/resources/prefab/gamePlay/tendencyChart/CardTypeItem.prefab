@@ -23,9 +23,13 @@
     ],
     "_tag": -1,
     "_active": true,
-    "_components": [],
+    "_components": [
+      {
+        "__id__": 8
+      }
+    ],
     "_prefab": {
-      "__id__": 8
+      "__id__": 9
     },
     "_id": "",
     "_opacity": 255,
@@ -44,7 +48,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 110,
+      "width": 108,
       "height": 40
     },
     "_rotationX": 0,
@@ -126,7 +130,7 @@
     },
     "_enabled": true,
     "_spriteFrame": {
-      "__uuid__": "12a39c64-001c-4dc9-b5ef-95ff7afe404d"
+      "__uuid__": "e6cc7ee0-1a69-4079-a31f-2907bffb7007"
     },
     "_type": 1,
     "_sizeMode": 0,
@@ -149,7 +153,7 @@
       "__id__": 1
     },
     "asset": {
-      "__id__": 0
+      "__uuid__": "3ca8cff8-73ba-45bc-a590-7af8ee52692b"
     },
     "fileId": "1dkWr+aXVBGavMvGh45JAt",
     "sync": false
@@ -189,7 +193,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 48,
+      "width": 0,
       "height": 25
     },
     "_rotationX": 0,
@@ -224,7 +228,7 @@
     "_N$file": null,
     "_isSystemFontUsed": true,
     "_spacingX": 0,
-    "_N$string": "对子",
+    "_N$string": "",
     "_N$horizontalAlign": 1,
     "_N$verticalAlign": 1,
     "_N$fontFamily": "Microsoft Yahei",
@@ -236,10 +240,33 @@
       "__id__": 1
     },
     "asset": {
-      "__id__": 0
+      "__uuid__": "3ca8cff8-73ba-45bc-a590-7af8ee52692b"
     },
     "fileId": "afAerVHXpKZq+hzoUpmPhM",
     "sync": false
+  },
+  {
+    "__type__": "06a2ahgFLlN9q+2PSGC6aNc",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 1
+    },
+    "_enabled": true,
+    "m_bgSprite": {
+      "__id__": 3
+    },
+    "m_cardTypeLabel": {
+      "__id__": 6
+    },
+    "m_bgs": [
+      {
+        "__uuid__": "e6cc7ee0-1a69-4079-a31f-2907bffb7007"
+      },
+      {
+        "__uuid__": "12a39c64-001c-4dc9-b5ef-95ff7afe404d"
+      }
+    ]
   },
   {
     "__type__": "cc.PrefabInfo",
@@ -247,7 +274,7 @@
       "__id__": 1
     },
     "asset": {
-      "__id__": 0
+      "__uuid__": "3ca8cff8-73ba-45bc-a590-7af8ee52692b"
     },
     "fileId": "9aqrBSMhFHkpdiCwPKGOAH",
     "sync": false

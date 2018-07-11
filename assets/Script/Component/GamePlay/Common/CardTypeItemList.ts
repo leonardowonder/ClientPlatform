@@ -26,6 +26,10 @@ export default class CardTypeItemList extends cc.Component {
         this.addGroupType(EmGroupType.GroupType_Pair);
     }
 
+    addNone() {
+        this.addGroupType(EmGroupType.GroupType_None);
+    }
+
     addGroupType(type: EmGroupType) {
         let node: cc.Node = addNewNodeFunc(this.m_parentNode, this.m_itemPrefab, this._nodePool);
         let comp: CardTypeItem = node.getComponent(CardTypeItem);

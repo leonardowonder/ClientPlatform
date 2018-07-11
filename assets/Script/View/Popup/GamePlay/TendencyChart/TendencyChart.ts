@@ -10,11 +10,11 @@ import { EmRecordType } from '../../../../Define/GamePlayDefine';
 
 import RecordMapController from '../../../../Component/GamePlay/TendencyChart/RecordMapController';
 import NextGameMarkerRoot from '../../../../Component/GamePlay/TendencyChart/NextGameMarkerRoot';
-import RecentRecordsLayer from './RecentRecordsLayer';
-import WinRateLayer from './WinRateLayer';
+import RecentRecordsLayer from '../../../Layer/GamePlay/TendencyChart/RecentRecordsLayer';
+import WinRateLayer from '../../../Layer/GamePlay/TendencyChart/WinRateLayer';
 
 @ccclass
-export default class RoadsRootLayer extends cc.Component {
+export default class TendencyChart extends cc.Component {
 
     @property(RecordMapController)
     m_mainRoad1Controller: RecordMapController = null;
@@ -68,13 +68,9 @@ export default class RoadsRootLayer extends cc.Component {
 
         this._updateLabels(types);
     }
-
-    addRed() {
-        this.addRecord(EmRecordType.Type_Red);
-    }
-
-    addBlack() {
-        this.addRecord(EmRecordType.Type_Black);
+    
+    hide() {
+        this.node.active = false;
     }
 
     private _addRecordToChartData(type: EmRecordType) {
