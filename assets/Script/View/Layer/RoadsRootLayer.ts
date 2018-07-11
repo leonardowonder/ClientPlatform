@@ -2,14 +2,14 @@ const { ccclass, property } = cc._decorator;
 
 import * as _ from 'lodash';
 
-import { EmRecordType } from '../../../Define/GamePlayDefine';
-import RecordUnitInfo from '../../../Data/GamePlay/RecordUnitInfo';
+import { EmRecordType } from '../../Define/GamePlayDefine';
+import RecordUnitInfo from '../../Data/GamePlay/RecordUnitInfo';
 
-import RecordMapController from './RecordMapController';
-import NextGameMarkerRoot from './NextGameMarkerRoot';
+import RecordMapController from '../../Component/GamePlay/TendencyChart/RecordMapController';
+import NextGameMarkerRoot from '../../Component/GamePlay/TendencyChart/NextGameMarkerRoot';
 
 @ccclass
-export default class TendencyChartController extends cc.Component {
+export default class RoadsRootLayer extends cc.Component {
 
     @property(RecordMapController)
     m_mainRoad1Controller: RecordMapController = null;
@@ -22,7 +22,6 @@ export default class TendencyChartController extends cc.Component {
 
     @property(NextGameMarkerRoot)
     m_markerRoot: NextGameMarkerRoot = null;
-
 
     addRecord(type: EmRecordType) {
         let lastGameType: EmRecordType = this.m_mainRoad1Controller.getLastGameRecordType();

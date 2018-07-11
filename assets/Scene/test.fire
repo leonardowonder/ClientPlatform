@@ -59186,7 +59186,7 @@
     "_N$horizontalDirection": 0
   },
   {
-    "__type__": "1cfcdKQNcRCKLnEZrjqyQ64",
+    "__type__": "7b807W3CYhJUbCEXI5X6XVB",
     "_name": "",
     "_objFlags": 0,
     "node": {
@@ -60039,7 +60039,7 @@
     "target": {
       "__id__": 60
     },
-    "component": "TendencyChartController",
+    "component": "RoadsRootLayer",
     "handler": "addRed",
     "customEventData": ""
   },
@@ -60275,7 +60275,7 @@
     "target": {
       "__id__": 60
     },
-    "component": "TendencyChartController",
+    "component": "RoadsRootLayer",
     "handler": "addBlack",
     "customEventData": ""
   },
