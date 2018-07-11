@@ -1,0 +1,30 @@
+{
+  "ver": "1.0.0",
+  "uuid": "5c0f2f86-38e6-44cd-bc76-65f2a1699b77",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "subMetas": {
+    "chouma_zi": {
+      "ver": "1.0.3",
+      "uuid": "4942c875-f702-4b2b-9947-21afb2634223",
+      "rawTextureUuid": "5c0f2f86-38e6-44cd-bc76-65f2a1699b77",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0.5,
+      "trimX": 1,
+      "trimY": 0,
+      "width": 107,
+      "height": 110,
+      "rawWidth": 109,
+      "rawHeight": 111,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}
