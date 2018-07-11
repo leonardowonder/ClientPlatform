@@ -5,7 +5,7 @@ export enum EmRecordType {
     Type_Max
 };
 
-export const Max_Record_Count = 30;
+export const Max_Record_Count = 70;
 
 export enum EmViceRoadType {
     Type_None = 0,
