@@ -7,7 +7,6 @@ import StringUtils from '../../../../Utils/StringUtils';
 import TendencyChartData from '../../../../Data/GamePlay/TendencyChartData';
 
 import { EmRecordType } from '../../../../Define/GamePlayDefine';
-import RecordUnitInfo from '../../../../Data/GamePlay/RecordUnitInfo';
 
 import RecordMapController from '../../../../Component/GamePlay/TendencyChart/RecordMapController';
 import NextGameMarkerRoot from '../../../../Component/GamePlay/TendencyChart/NextGameMarkerRoot';
@@ -62,8 +61,6 @@ export default class RoadsRootLayer extends cc.Component {
         this.m_mainRoad1Controller.addRecord(type, false);
         this.m_mainRoad2Controller.addRecord(type);
         this.m_recentRecordsLayer.addRecord(type);
-
-        // let records: RecordUnitInfo[] = this.m_mainRoad1Controller.getRecordUnitInfos();
 
         let types: EmRecordType[] = TendencyChartData.getInstance().getRecords();
 

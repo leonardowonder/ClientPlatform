@@ -1,6 +1,8 @@
 import * as _ from 'lodash';
 
-import CardUtils, { EmCardTpye, EmGroupType } from './CardUtils';
+import { EmCardTpye, EmGroupType } from '../../Define/GamePlayDefine';
+
+import CardUtils from './CardUtils';
 
 const CardTypeStrList: string[] = ['♦', '♣', '♥', '♠'];
 const CardValueStrList: string[] = ['err', 'err', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A'];

@@ -1,26 +1,11 @@
 import * as _ from 'lodash';
 
 import Singleton from '../Singleton';
+
+import { EmCardTpye, EmGroupType } from '../../Define/GamePlayDefine';
+
 import { Card } from './Cards';
-
-export enum EmCardTpye {
-    CardType_None = 0,
-    CardType_Diamond,
-    CardType_club,
-    CardType_Heart,
-    CardType_Spade,
-    CardType_Max
-}
-
-export enum EmGroupType {
-    GroupType_None = 0,
-    GroupType_Pair,
-    GroupType_Straight,
-    GroupType_Flush,
-    GroupType_FlushStraight,
-    GroupType_AllSame,
-    GroupType_Max
-};
+import StringUtils from '../StringUtils';
 
 const findTypeOrder: EmGroupType[] = [
     EmGroupType.GroupType_AllSame,
@@ -33,6 +18,50 @@ const findTypeOrder: EmGroupType[] = [
 const cardWeightDigitCount: number = 4;
 const cardTypeWeightCoefficient: number = Math.floor(Math.pow(10, cardWeightDigitCount));
 const cardGroupWeightCoefficient: number = Math.floor(Math.pow(10, cardWeightDigitCount * 2));
+
+export function getGroupTypeStrFunc(groupType: EmGroupType): string {
+    const baseKey: string = 'group_type_';
+
+    let ret: string = '';
+    let key: string = '';
+
+    switch(groupType) {
+        case EmGroupType.GroupType_None: {
+            key = baseKey + 'none';
+            break;
+        }
+        case EmGroupType.GroupType_Pair: {
+            key = baseKey + 'pair';
+            break;
+        }
+        case EmGroupType.GroupType_Straight: {
+            key = baseKey + 'straight';
+            break;
+        }
+        case EmGroupType.GroupType_Flush: {
+            key = baseKey + 'flush';
+            break;
+        }
+        case EmGroupType.GroupType_FlushStraight: {
+            key = baseKey + 'flush_straight';
+            break;
+        }
+        case EmGroupType.GroupType_AllSame: {
+            key = baseKey + 'all_same';
+            break;
+        }
+        default: {
+            cc.warn(`CardUtils getGroupTypeStr invalid group type =${groupType}`);
+            break;
+        }
+    }
+
+    if (key.length > 0) {
+        ret = StringUtils.getInstance().formatByKey(key);
+    }
+    
+    return ret;
+};
 
 class CardUtils extends Singleton {
     getGroupType(cards: Card[]): EmGroupType {
@@ -58,7 +87,7 @@ class CardUtils extends Singleton {
             return 0;
         }
 
-        let weight = this._getGroupWeight(cards, this.getGroupType(cards)); 
+        let weight = this._getGroupWeight(cards, this.getGroupType(cards));
 
         return weight;
     }

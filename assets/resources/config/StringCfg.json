@@ -10,5 +10,23 @@
     },
     "total_games": {
         "cn": "总局数 {0}"
+    },
+    "group_type_none": {
+        "cn": "高牌"
+    },
+    "group_type_pair": {
+        "cn": "对子"
+    },
+    "group_type_straight": {
+        "cn": "顺子"
+    },
+    "group_type_flush": {
+        "cn": "同花"
+    },
+    "group_type_flush_straight": {
+        "cn": "同花顺"
+    },
+    "group_type_all_same": {
+        "cn": "豹子"
     }
 }
