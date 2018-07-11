@@ -34,6 +34,7 @@ export default class RecordItemGroup extends cc.Component {
     addFirstRecord(type: EmRecordType) {
         this.m_initalRecordType = type;
 
+        this.m_curIdx++;
         this.m_recordItemGroup[0].updateRecordUnit(type);
     }
 
@@ -130,7 +131,7 @@ export default class RecordItemGroup extends cc.Component {
             recordItem && recordItem.resetData();
         });
 
-        this.m_curIdx = 0;
+        this.m_curIdx = -1;
         this.m_initalRecordType = EmRecordType.Type_None;
     }
 }
