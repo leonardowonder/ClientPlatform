@@ -4,6 +4,8 @@ import * as _ from 'lodash';
 
 import StringUtils from '../../../../Utils/StringUtils';
 
+import TendencyChartData from '../../../../Data/GamePlay/TendencyChartData';
+
 import { EmRecordType } from '../../../../Define/GamePlayDefine';
 import RecordUnitInfo from '../../../../Data/GamePlay/RecordUnitInfo';
 
@@ -41,29 +43,33 @@ export default class RoadsRootLayer extends cc.Component {
     m_totalGamesLabel: cc.Label = null;
 
     addRecord(type: EmRecordType) {
+        this._addRecordToChartData(type);
+
         let lastGameType: EmRecordType = this.m_mainRoad1Controller.getLastGameRecordType();
 
-        let types: EmRecordType[] = null;
+        let nextGameTypes: EmRecordType[] = null;
         if (type == lastGameType) {
-            types = this.m_markerRoot.getActiveNextGameRecordTypes();
+            nextGameTypes = this.m_markerRoot.getActiveNextGameRecordTypes();
         }
         else {
-            types = this.m_markerRoot.getPassiveNextGameRecordTypes();
+            nextGameTypes = this.m_markerRoot.getPassiveNextGameRecordTypes();
         }
 
         _.forEach(this.m_viceRoadControllers, (controller: RecordMapController, idx: number) => {
-            controller.addRecord(types[idx]);
+            controller.addRecord(nextGameTypes[idx]);
         });
 
         this.m_mainRoad1Controller.addRecord(type, false);
         this.m_mainRoad2Controller.addRecord(type);
         this.m_recentRecordsLayer.addRecord(type);
 
-        let records: RecordUnitInfo[] = this.m_mainRoad1Controller.getRecordUnitInfos();
+        // let records: RecordUnitInfo[] = this.m_mainRoad1Controller.getRecordUnitInfos();
 
-        this.m_markerRoot.updateNextGameMarker(records);
+        let types: EmRecordType[] = TendencyChartData.getInstance().getRecords();
 
-        this._updateLabels(records);
+        this.m_markerRoot.updateNextGameMarker(types);
+
+        this._updateLabels(types);
     }
 
     addRed() {
@@ -74,11 +80,15 @@ export default class RoadsRootLayer extends cc.Component {
         this.addRecord(EmRecordType.Type_Black);
     }
 
-    private _updateLabels(records: RecordUnitInfo[]) {
-        let redWinCount: number = this._getWinCnt(records, EmRecordType.Type_Red);
-        let blackWinCount: number = this._getWinCnt(records, EmRecordType.Type_Black);
+    private _addRecordToChartData(type: EmRecordType) {
+        TendencyChartData.getInstance().addRecord(type);
+    }
 
-        let totalCount: number = records.length;
+    private _updateLabels(types: EmRecordType[]) {
+        let redWinCount: number = this._getWinCnt(types, EmRecordType.Type_Red);
+        let blackWinCount: number = this._getWinCnt(types, EmRecordType.Type_Black);
+
+        let totalCount: number = types.length;
 
         this.m_redWinCountLabel.string = StringUtils.getInstance().formatByKey('red_win', redWinCount);
         this.m_blackWinCountLabel.string = StringUtils.getInstance().formatByKey('black_win', blackWinCount);
@@ -88,10 +98,10 @@ export default class RoadsRootLayer extends cc.Component {
         this.m_winRateLayer.updateRateNode(redWinCount, blackWinCount);
     }
 
-    private _getWinCnt(records: RecordUnitInfo[], type: EmRecordType): number {
+    private _getWinCnt(types: EmRecordType[], targetType: EmRecordType): number {
         let cnt: number = 0;
-        _.forEach(records, (record: RecordUnitInfo) => {
-            if (record && record.getRecordType() == type) {
+        _.forEach(types, (type: EmRecordType) => {
+            if (type == targetType) {
                 cnt++;
             }
         });

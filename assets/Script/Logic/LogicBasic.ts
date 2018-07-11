@@ -1,5 +1,3 @@
-import Network from '../Utils/Network';
-import { eMsgPort, eMsgType } from '../Define/MessageIdentifer';
 import ClientDefine from '../Define/ClientDefine';
 
 export class NetMsg {

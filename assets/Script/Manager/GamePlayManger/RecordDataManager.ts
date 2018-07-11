@@ -3,48 +3,47 @@ import * as _ from 'lodash';
 import Singleton from '../../Utils/Singleton';
 
 import { EmRecordType, EmViceRoadType, EmDeciderType } from '../../Define/GamePlayDefine';
-import RecordUnitInfo from '../../Data/GamePlay/RecordUnitInfo';
 
 const cViceRoadTypeList: EmViceRoadType[] = [EmViceRoadType.Type_Road1, EmViceRoadType.Type_Road2, EmViceRoadType.Type_Road3];
 
 class RecordDataManager extends Singleton {
 
-    getActiveRecordTypes(records: RecordUnitInfo[]): EmRecordType[] {
-        let types: EmRecordType[] = [];
+    getActiveRecordTypes(types: EmRecordType[]): EmRecordType[] {
+        let activeRocordTypes: EmRecordType[] = [];
 
-        let baseRecords: RecordUnitInfo[] = this.getBaseRecords(records);
-        let targetRowIdx: number = baseRecords.length;
+        let baseTypes: EmRecordType[] = this.getBaseTypes(types);
+        let targetRowIdx: number = baseTypes.length;
 
-        let refrenceRecordsList: RecordUnitInfo[][] = this.getAllRefrenceRecordsList(records);
+        let refrenceTypesList: EmRecordType[][] = this.getAllRefrenceTypesList(types);
 
-        _.forEach(refrenceRecordsList, (records: RecordUnitInfo[]) => {
-            let deciderType: EmRecordType = this.getActiveRecordType(records, targetRowIdx);
+        _.forEach(refrenceTypesList, (types: EmRecordType[]) => {
+            let deciderType: EmRecordType = this.getActiveRecordType(types, targetRowIdx);
 
-            types.push(deciderType);
+            activeRocordTypes.push(deciderType);
         })
 
-        return types;
+        return activeRocordTypes;
     }
 
-    getPassiveRecordTypes(records: RecordUnitInfo[]): EmRecordType[] {
-        let types: EmRecordType[] = [];
+    getPassiveRecordTypes(types: EmRecordType[]): EmRecordType[] {
+        let passiveTypes: EmRecordType[] = [];
 
-        let baseRecords: RecordUnitInfo[] = this.getBaseRecords(records);
-        let targetRowIdx: number = baseRecords.length;
+        let baseTypes: EmRecordType[] = this.getBaseTypes(types);
+        let targetRowIdx: number = baseTypes.length;
 
-        let refrenceRecordsList: RecordUnitInfo[][] = this.getAllRefrenceRecordsList(records);
+        let refrenceTypesList: EmRecordType[][] = this.getAllRefrenceTypesList(types);
 
-        _.forEach(refrenceRecordsList, (records: RecordUnitInfo[]) => {
-            let deciderType: EmRecordType = this.getPassiveRecordType(records, targetRowIdx);
+        _.forEach(refrenceTypesList, (types: EmRecordType[]) => {
+            let deciderType: EmRecordType = this.getPassiveRecordType(types, targetRowIdx);
 
-            types.push(deciderType);
+            passiveTypes.push(deciderType);
         })
 
-        return types;
+        return passiveTypes;
     }
 
-    getActiveDeciderType(records: RecordUnitInfo[]): EmDeciderType {
-        let lastRecordType: EmRecordType = this.getLastRecordType(records);
+    getActiveDeciderType(types: EmRecordType[]): EmDeciderType {
+        let lastRecordType: EmRecordType = this.getLastRecordType(types);
 
         let type: EmDeciderType = EmDeciderType.Type_None;
         switch (lastRecordType) {
@@ -66,39 +65,39 @@ class RecordDataManager extends Singleton {
         return type;
     }
 
-    getAllRefrenceRecordsList(records: RecordUnitInfo[]): RecordUnitInfo[][] {
-        let list: RecordUnitInfo[][] = [];
+    getAllRefrenceTypesList(types: EmRecordType[]): EmRecordType[][] {
+        let list: EmRecordType[][] = [];
         _.forEach(cViceRoadTypeList, (type: EmViceRoadType) => {
-            list.push(this.getRefrenceRecordsByViceRoadType(records, type));
+            list.push(this.getRefrenceRecordsByViceRoadType(types, type));
         })
 
         return list;
     }
 
-    getBaseRecords(records: RecordUnitInfo[]): RecordUnitInfo[] {
-        let list: RecordUnitInfo[] = [];
+    getBaseTypes(types: EmRecordType[]): EmRecordType[] {
+        let baseTypes: EmRecordType[] = [];
 
-        let curRecordType: EmRecordType = this.getLastRecordType(records);
+        let curRecordType: EmRecordType = this.getLastRecordType(types);
 
-        for (let i = records.length - 1; i >= 0; --i) {
-            if (records[i].getRecordType() != curRecordType) {
+        for (let i = types.length - 1; i >= 0; --i) {
+            if (types[i] != curRecordType) {
                 break;
             }
 
-            list.push(records[i]);
+            baseTypes.push(types[i]);
         }
 
-        return list;
+        return baseTypes;
     }
 
-    getActiveRecordType(refrenceRecords: RecordUnitInfo[], rowIdx: number): EmRecordType {
+    getActiveRecordType(refrenceTypes: EmRecordType[], rowIdx: number): EmRecordType {
         let type = EmRecordType.Type_Red;
         if (rowIdx < 1) {
             cc.warn(`RecordDataManager getActiveDeciderType invalide rowIdx = ${rowIdx}`);
             return type;
         }
 
-        if (refrenceRecords.length != rowIdx) {
+        if (refrenceTypes.length != rowIdx) {
             type = EmRecordType.Type_Red;
         }
         else {
@@ -108,8 +107,8 @@ class RecordDataManager extends Singleton {
         return type;
     }
 
-    getPassiveRecordType(refrenceRecords: RecordUnitInfo[], rowIdx: number): EmRecordType {
-        let activeDeciderType = this.getActiveRecordType(refrenceRecords, rowIdx);
+    getPassiveRecordType(refrenceTypes: EmRecordType[], rowIdx: number): EmRecordType {
+        let activeDeciderType = this.getActiveRecordType(refrenceTypes, rowIdx);
 
         let type: EmRecordType = EmRecordType.Type_Black;
         if (activeDeciderType == EmRecordType.Type_Black) {
@@ -122,35 +121,34 @@ class RecordDataManager extends Singleton {
         return type;
     }
 
-    getLastRecordType(records: RecordUnitInfo[]): EmRecordType {
-        let lastRecordInfo: RecordUnitInfo = _.last(records);
-        let lastRecordType: EmRecordType = lastRecordInfo.getRecordType();
+    getLastRecordType(types: EmRecordType[]): EmRecordType {
+        let lastRecordType: EmRecordType = _.last(types);
 
         return lastRecordType;
     }
 
-    getRefrenceRecordsByViceRoadType(records: RecordUnitInfo[], type: EmViceRoadType): RecordUnitInfo[] {
-        let list: RecordUnitInfo[] = [];
+    getRefrenceRecordsByViceRoadType(types: EmRecordType[], type: EmViceRoadType): EmRecordType[] {
+        let refrenceTypes: EmRecordType[] = [];
 
-        let curRecordType: EmRecordType = this.getLastRecordType(records);
+        let curRecordType: EmRecordType = this.getLastRecordType(types);
         let curRefrenceCnt: number = 0;
         let targetRefrenceCnt: number = this.getRefrenceCnt(type);
 
-        for (let i = records.length - 1; i >= 0; --i) {
-            if (records[i].getRecordType() != curRecordType) {
-                curRecordType = records[i].getRecordType();
+        for (let i = types.length - 1; i >= 0; --i) {
+            if (types[i] != curRecordType) {
+                curRecordType = types[i];
                 curRefrenceCnt++;
             }
 
             if (curRefrenceCnt == targetRefrenceCnt) {
-                list.push(records[i]);
+                refrenceTypes.push(types[i]);
             }
             else if (curRefrenceCnt > targetRefrenceCnt) {
                 break;
             }
         }
 
-        return list;
+        return refrenceTypes;
     }
 
     getRefrenceCnt(type: EmViceRoadType): number {

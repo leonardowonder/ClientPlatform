@@ -29,20 +29,20 @@ export default class NextGameMarkerRoot extends cc.Component {
         return this.m_passiveNextGameTypes;
     }
 
-    updateNextGameMarker(records: RecordUnitInfo[]) {
-        if (records == null || records.length < 1) {
+    updateNextGameMarker(types: EmRecordType[]) {
+        if (types == null || types.length < 1) {
             this.clearAllInfos();
             return;
         }
 
-        let deciderType: EmDeciderType = RecordDataManager.getInstance().getActiveDeciderType(records);
+        let deciderType: EmDeciderType = RecordDataManager.getInstance().getActiveDeciderType(types);
 
         let idx: number = this._getItemIdx(deciderType);
 
-        this.m_activeNextGameTypes = RecordDataManager.getInstance().getActiveRecordTypes(records);
+        this.m_activeNextGameTypes = RecordDataManager.getInstance().getActiveRecordTypes(types);
         this.m_nextGameItems[idx].updateNextGameMarkers(this.m_activeNextGameTypes);
 
-        this.m_passiveNextGameTypes = RecordDataManager.getInstance().getPassiveRecordTypes(records);
+        this.m_passiveNextGameTypes = RecordDataManager.getInstance().getPassiveRecordTypes(types);
         this.m_nextGameItems[1 - idx].updateNextGameMarkers(this.m_passiveNextGameTypes);
     }
     
