@@ -2,9 +2,8 @@ const { ccclass, property } = cc._decorator;
 
 import * as async from 'async';
 
-import SceneManager from '../../Manager/CommonManager/SceneManager';
+import SceneManager, { EmSceneID } from '../../Manager/CommonManager/SceneManager';
 import ConfigData from '../../Data/ConfigData';
-import SceneIdConfigManager, { EmSceneID } from '../../Manager/ConfigManager/SceneIdConfigManager';
 import PrefabManager, { EmPrefabEnum } from '../../Manager/CommonManager/PrefabManager';
 
 @ccclass
@@ -21,14 +20,6 @@ class LoginScene extends cc.Component {
         this._doLoadings();
     }
 
-    private _jumpToMainScene() {
-        SceneManager.changeScene(SceneIdConfigManager.getSceneIdByKey(EmSceneID.SceneID_MainScene));
-    }
-
-    private _jumpToTestScene() {
-        SceneManager.changeScene('test');
-    }
-
     private _loadConfigs(callback: Function) {
         ConfigData.loadAllConfigs(callback);
     }
@@ -37,7 +28,7 @@ class LoginScene extends cc.Component {
         async.waterfall(
             [
                 (next) => {
-                    PrefabManager.getInstance().showPrefab(EmPrefabEnum.Loading);
+                    PrefabManager.getInstance().showPrefab(EmPrefabEnum.Prefab_Loading);
                     next();
                 },
                 (next) => {
@@ -50,9 +41,8 @@ class LoginScene extends cc.Component {
                 }
             ],
             () => {
-                PrefabManager.getInstance().hidePrefab(EmPrefabEnum.Loading);
-                // this._jumpToTestScene();
-                this._jumpToTestScene();
+                PrefabManager.getInstance().hidePrefab(EmPrefabEnum.Prefab_Loading);
+                SceneManager.changeScene(EmSceneID.SceneID_MainScene);
             }
         )
     }

@@ -44,7 +44,13 @@ export default class PlayerItem extends cc.Component {
     m_initCptLayoutPstX: number = -10;
 
     onLoad() {
-        this._updateLeftRight(this.m_isLeft);
+
+    }
+
+    updateLeftRight(isLeft: boolean) {
+        this.m_isLeft = isLeft;
+        
+        this._updateLeftRight(isLeft);
     }
 
     updateHeadIcon(frame: cc.SpriteFrame) {

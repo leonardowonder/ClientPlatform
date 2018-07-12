@@ -1,18 +1,13 @@
 import Singleton from '../../Utils/Singleton';
 
 import ConfigData, { EmConfigKey } from '../../Data/ConfigData';
-
-export enum EmSceneID {
-    SceneID_LoadScene = 0,
-    SceneID_MainScene,
-    SceneID_Max
-}
+import { EmSceneID } from '../CommonManager/SceneManager';
 
 class SceneIdConfigManager extends Singleton {
 
-    getSceneIdByKey(key: EmSceneID) {
+    getSceneKeyBySceneID(key: EmSceneID): string {
         if (!this._checkConfigKeyValid(key)) {
-            cc.warn(`SceneIdConfigManager getSceneIdByKey invalid key = ${key}`)
+            cc.warn(`SceneIdConfigManager getSceneKeyBySceneID invalid key = ${key}`)
         }
         
         let ret = null;

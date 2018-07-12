@@ -3,7 +3,8 @@ import * as _ from 'lodash';
 import Singleton from '../../Utils/Singleton';
 
 export enum EmPrefabEnum {
-    Loading = 0,
+    Prefab_Loading = 0,
+    Prefab_TendencyChart,
     Prefab_Max
 }
 
@@ -20,6 +21,7 @@ class PrefabHistory {
 class PrefabManager extends Singleton {
     private static s_prefabConfig = [
         { path: 'prefab/common/Loading', componentName: 'Loading' },
+        { path: 'prefab/gamePlay/tendencyChart/TendencyChart', componentName: 'TendencyChart' },
     ];
 
     private _loadingList: EmPrefabEnum[] = [];
