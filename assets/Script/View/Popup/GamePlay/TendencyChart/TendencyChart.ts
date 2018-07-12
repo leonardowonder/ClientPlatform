@@ -10,7 +10,7 @@ import { EmRecordType } from '../../../../Define/GamePlayDefine';
 
 import RecordMapController from '../../../../Component/GamePlay/TendencyChart/RecordMapController';
 import NextGameMarkerRoot from '../../../../Component/GamePlay/TendencyChart/NextGameMarkerRoot';
-import RecentRecordsLayer from '../../../Layer/GamePlay/TendencyChart/RecentRecordsLayer';
+import RecentRecordsLayer from '../../../Layer/GamePlay/RecentRecordsLayer';
 import WinRateLayer from '../../../Layer/GamePlay/TendencyChart/WinRateLayer';
 
 @ccclass

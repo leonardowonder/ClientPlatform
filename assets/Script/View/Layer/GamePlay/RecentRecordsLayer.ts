@@ -2,9 +2,9 @@ const { ccclass, property } = cc._decorator;
 
 import * as _ from 'lodash';
 
-import { EmRecordType } from '../../../../Define/GamePlayDefine';
+import { EmRecordType } from '../../../Define/GamePlayDefine';
 
-import RecordUnit from '../../../../Component/GamePlay/TendencyChart/RecordUnit';
+import RecordUnit from '../../../Component/GamePlay/TendencyChart/RecordUnit';
 
 @ccclass
 export default class RecentRecordsLayer extends cc.Component {

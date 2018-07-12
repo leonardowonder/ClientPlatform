@@ -51,6 +51,7 @@ class LoginScene extends cc.Component {
             ],
             () => {
                 PrefabManager.getInstance().hidePrefab(EmPrefabEnum.Loading);
+                // this._jumpToTestScene();
                 this._jumpToTestScene();
             }
         )

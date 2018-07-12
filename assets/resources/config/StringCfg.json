@@ -28,5 +28,11 @@
     },
     "group_type_all_same": {
         "cn": "豹子"
+    },
+    "game_play_red_cap": {
+        "cn": "红方队长"
+    },
+    "game_play_black_cap": {
+        "cn": "黑方队长"
     }
 }
