@@ -16,9 +16,6 @@ export default class CardDisplay extends cc.Component {
     @property(cc.Sprite)
     cardType: cc.Sprite = null;
 
-    @property
-    m_numberValue: number = 0;
-
     @property(cc.SpriteAtlas)
     m_spriteAtlas: cc.SpriteAtlas = null;
 
@@ -37,13 +34,11 @@ export default class CardDisplay extends cc.Component {
             return;
         }
 
-        this.m_numberValue = num;
-
         this._updateView();
     }
 
-    getCardNumber(): number {
-        return this.m_numberValue;
+    getCard(): Card {
+        return this._card;
     }
 
     setGray(isGray: boolean) {

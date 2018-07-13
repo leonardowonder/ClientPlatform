@@ -4,7 +4,7 @@ import * as _ from 'lodash';
 
 import StringUtils from '../../../../Utils/StringUtils';
 
-import TendencyChartData from '../../../../Data/GamePlay/TendencyChartData';
+import GameRecordData from '../../../../Data/GamePlay/GameRecordData';
 
 import { EmRecordType } from '../../../../Define/GamePlayDefine';
 
@@ -62,7 +62,7 @@ export default class TendencyChart extends cc.Component {
         this.m_mainRoad2Controller.addRecord(type);
         this.m_recentRecordsLayer.addRecord(type);
 
-        let types: EmRecordType[] = TendencyChartData.getInstance().getRecords();
+        let types: EmRecordType[] = GameRecordData.getInstance().getRecords();
 
         this.m_markerRoot.updateNextGameMarker(types);
 
@@ -74,7 +74,7 @@ export default class TendencyChart extends cc.Component {
     }
 
     private _addRecordToChartData(type: EmRecordType) {
-        TendencyChartData.getInstance().addRecord(type);
+        GameRecordData.getInstance().addRecord(type);
     }
 
     private _updateLabels(types: EmRecordType[]) {

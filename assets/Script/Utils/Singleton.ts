@@ -3,7 +3,7 @@ class Singleton {
 
     getInstance() {
         if (!this.beenInit()) {
-            this._init();
+            this.init();
         }
 
         return this;
@@ -13,7 +13,7 @@ class Singleton {
         return this.m_beenInit;
     }
 
-    _init() {
+    init() {
         this.m_beenInit = true;
     }
 }

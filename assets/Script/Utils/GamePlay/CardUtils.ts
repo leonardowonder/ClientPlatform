@@ -67,7 +67,7 @@ class CardUtils extends Singleton {
     getGroupType(cards: Card[]): EmGroupType {
         if (!this._checkCardsValid(cards)) {
             cc.warn(`CardUtils getGroupType invalid cards = ${cards}`);
-            return;
+            return EmGroupType.GroupType_None;
         }
 
         let type: EmGroupType = _.find(findTypeOrder, (type: EmGroupType) => {

@@ -8,14 +8,27 @@ const CardTypeStrList: string[] = ['♦', '♣', '♥', '♠'];
 const CardValueStrList: string[] = ['err', 'err', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A'];
 
 export class Card {
-    readonly type: EmCardTpye;
-    readonly value: number;
-    readonly weight: number;
+    orgNum: number = 0;
+    type: EmCardTpye = EmCardTpye.CardType_None;
+    value: number = 0;
+    weight: number = 0;
 
-    constructor(number: number) {
-        this.type = this._parseCardType(number);
-        this.value = this._parseCardValue(number);
-        this.weight = this._parseCardWeight(number);
+    constructor(num: number = 0) {
+        this.setCard(num);
+    }
+
+    setCard(num: number) {
+        this.orgNum = num;
+        this.type = this._parseCardType(num);
+        this.value = this._parseCardValue(num);
+        this.weight = this._parseCardWeight(num);
+    }
+
+    reset() {
+        this.orgNum = 0;
+        this.type = 0;
+        this.value = 0;
+        this.weight = 0;
     }
 
     isCardValid(): boolean {
@@ -41,20 +54,49 @@ export class Card {
 }
 
 export class CardGroup {
-    private readonly _cards: Card[] = [];
-    private readonly _groupType: EmGroupType = EmGroupType.GroupType_None;
-    private readonly _groupWeight: number = 0;
+    private _cards: Card[] = [];
+    private _groupType: EmGroupType = EmGroupType.GroupType_None;
+    private _groupWeight: number = 0;
 
-    constructor(numbers: number[]) {
+    constructor() {
+        let cnt: number = 0;
+
+        while(cnt++ < 3) {
+            let newCard: Card = new Card();
+            this._cards.push(newCard);
+        }
+
+        this.reset();
+    }
+
+    setGroupByNumbers(numbers: number[]) {
         this._cards = _.map(numbers, (number) => {
             return new Card(number);
         });
 
-        this._groupType = CardUtils.getInstance().getGroupType(this._cards);
-        this._groupWeight = CardUtils.getInstance().getGroupWeight(this._cards);
+        this._updateTypeAndWeight();
+    }
+
+    setGroupByCards(cards: Card[]) {
+        this._cards = cards;
+
+        this._updateTypeAndWeight();
     }
 
     getCards(): Card[] { return this._cards; }
     getGroupType(): EmGroupType { return this._groupType; }
     getWeight(): number { return this._groupWeight; }
+
+    reset() {
+        _.forEach(this._cards, (card: Card) => {
+            card && card.reset();
+        });
+
+        this._updateTypeAndWeight();
+    }
+
+    private _updateTypeAndWeight() {
+        this._groupType = CardUtils.getInstance().getGroupType(this._cards);
+        this._groupWeight = CardUtils.getInstance().getGroupWeight(this._cards);
+    }
 }

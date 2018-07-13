@@ -4,8 +4,7 @@ import * as _ from 'lodash';
 
 import { EmDeciderType, EmRecordType } from '../../../Define/GamePlayDefine';
 import NextGameItem from './NextGameItem';
-import RecordUnitInfo from '../../../Data/GamePlay/RecordUnitInfo';
-import RecordDataManager from '../../../Manager/GamePlayManger/RecordDataManager';
+import GameRecordUtils from '../../../Utils/GamePlay/GameRecordUtils';
 
 @ccclass
 export default class NextGameMarkerRoot extends cc.Component {
@@ -35,14 +34,14 @@ export default class NextGameMarkerRoot extends cc.Component {
             return;
         }
 
-        let deciderType: EmDeciderType = RecordDataManager.getInstance().getActiveDeciderType(types);
+        let deciderType: EmDeciderType = GameRecordUtils.getInstance().getActiveDeciderType(types);
 
         let idx: number = this._getItemIdx(deciderType);
 
-        this.m_activeNextGameTypes = RecordDataManager.getInstance().getActiveRecordTypes(types);
+        this.m_activeNextGameTypes = GameRecordUtils.getInstance().getActiveRecordTypes(types);
         this.m_nextGameItems[idx].updateNextGameMarkers(this.m_activeNextGameTypes);
 
-        this.m_passiveNextGameTypes = RecordDataManager.getInstance().getPassiveRecordTypes(types);
+        this.m_passiveNextGameTypes = GameRecordUtils.getInstance().getPassiveRecordTypes(types);
         this.m_nextGameItems[1 - idx].updateNextGameMarkers(this.m_passiveNextGameTypes);
     }
     

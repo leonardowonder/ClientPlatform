@@ -42,3 +42,19 @@ export enum EmGroupType {
     GroupType_AllSame,
     GroupType_Max
 };
+
+export enum EmCaptainType {
+    Type_None = 0,
+    Type_Red,
+    Type_Black,
+    Type_Max
+}
+
+export enum EmCampType {
+    Type_None = 0,
+    Type_Red,
+    Type_Black,
+    Type_Max
+}
+
+export const Game_Room_Seat_Max_Count = 9;

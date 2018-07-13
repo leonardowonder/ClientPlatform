@@ -33,15 +33,15 @@ export default class Loading extends cc.Component {
 
     private _loadingfunc() {
         let suffix = '';
-        let docCnt = this._initCount++ % (this.m_dotCount + 1);
+        let dotCnt = this._initCount++ % (this.m_dotCount + 1);
 
         if (this._initCount > this.m_dotCount) {
             this._initCount = 0;
         }
 
-        while(docCnt > 0) {
+        while(dotCnt > 0) {
             suffix += '.';
-            docCnt--;
+            dotCnt--;
         } 
 
         this.m_loadingLabel.string = StringUtils.getInstance().formatByKey('loading', suffix);
