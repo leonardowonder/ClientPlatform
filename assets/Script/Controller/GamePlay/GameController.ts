@@ -8,6 +8,10 @@ class GameController extends Singleton {
 
     private m_Basefsm: StateMachine = null;
 
+    getBaseFsm(): StateMachine {
+        return this.m_Basefsm;
+    }
+
     clearAll() {
         this.m_Basefsm = null;
         this.m_gameRoomScene = null;
