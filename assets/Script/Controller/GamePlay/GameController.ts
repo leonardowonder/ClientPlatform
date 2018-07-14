@@ -3,6 +3,8 @@ import Singleton from '../../Utils/Singleton';
 import StateMachine, { Transition, Method } from '../../Utils/StateMachine';
 import GameRoomScene from '../../View/Scene/GameRoomScene';
 
+import { EmChipType } from '../../Define/GamePlayDefine';
+
 class GameController extends Singleton {
     private m_gameRoomScene: GameRoomScene = null;
 
@@ -38,8 +40,30 @@ class GameController extends Singleton {
         );
     }
 
+    //state machine
     onGameStart() {
         this.m_Basefsm.changeState('Restart');
+    }
+
+    onGameStartBet() {
+        this.m_Basefsm.changeState('Bet');
+    }
+
+    onGameStopBet() {
+        this.m_Basefsm.changeState('Account');
+    }
+
+    //scene
+    distributeCards() {
+        this.m_gameRoomScene.distributeCards();
+    }
+
+    getCurChipType(): EmChipType {
+        return this.m_gameRoomScene.getCurChipType();
+    }
+
+    getPlayerHeadWorldPos(clientIdx: number): cc.Vec2 {
+        return this.m_gameRoomScene.getPlayerHeadWorldPos(clientIdx);
     }
 };
 

@@ -12,6 +12,9 @@ export default class PlayerRootLayer extends cc.Component {
     @property(cc.Vec2)
     m_itemPositions: cc.Vec2[] = [];
 
+    @property(cc.Node)
+    m_othersNode: cc.Node = null;
+
     @property
     m_itemCount: number = 9;
 
@@ -48,5 +51,23 @@ export default class PlayerRootLayer extends cc.Component {
                 }
             }
         })
+    }
+
+    getPlayerHeadWorldPos(clientIdx: number): cc.Vec2 {
+        let pos: cc.Vec2 = new cc.Vec2(0, 0);
+        if (clientIdx < 0) {
+            cc.warn(`PlayerRootLayer getPlayerHeadWorldPos invalid idx = ${clientIdx}`);
+            return pos;
+        }
+
+        if (clientIdx < this.m_playerItems.length) {
+            let selfPlayerItem: PlayerItem = this.m_playerItems[clientIdx];
+            pos = selfPlayerItem.getHeadWorldPos();
+        }
+        else {
+            pos = this.m_othersNode.parent.convertToWorldSpaceAR(this.m_othersNode.getPosition());
+        }
+
+        return pos;
     }
 }

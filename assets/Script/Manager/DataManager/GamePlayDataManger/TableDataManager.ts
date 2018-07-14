@@ -13,11 +13,15 @@ class TableDataManager extends Singleton {
         return tableData;
     }
 
-    svrIdxToClientIdx(svrIdx: number): number {
+    getSelfClientIdx(): number {
+        return 0;
+    }
+
+    private _svrIdxToClientIdx(svrIdx: number): number {
         return (svrIdx - tableData.clientIdxZeroPosSvrIdx + Game_Room_Seat_Max_Count) % Game_Room_Seat_Max_Count;
     }
 
-    clientIdxToSvrIdx(clientIdx: number): number {
+    private _clientIdxToSvrIdx(clientIdx: number): number {
         return (clientIdx + tableData.clientIdxZeroPosSvrIdx) % Game_Room_Seat_Max_Count;
     }
 };

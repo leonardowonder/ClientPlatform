@@ -66,7 +66,7 @@ export function getGroupTypeStrFunc(groupType: EmGroupType): string {
 class CardUtils extends Singleton {
     getGroupType(cards: Card[]): EmGroupType {
         if (!this._checkCardsValid(cards)) {
-            cc.warn(`CardUtils getGroupType invalid cards = ${cards}`);
+            // cc.warn(`CardUtils getGroupType invalid cards = ${cards}`);
             return EmGroupType.GroupType_None;
         }
 
@@ -83,13 +83,25 @@ class CardUtils extends Singleton {
 
     getGroupWeight(cards: Card[]): number {
         if (!this._checkCardsValid(cards)) {
-            cc.warn(`CardUtils getGroupWeight invalid cards = ${cards}`);
+            // cc.warn(`CardUtils getGroupWeight invalid cards = ${cards}`);
             return 0;
         }
 
         let weight = this._getGroupWeight(cards, this.getGroupType(cards));
 
         return weight;
+    }
+
+    getGroupPairValue(cards: Card[], groupType: EmGroupType): number {
+        let value: number = 0;
+        if (groupType != EmGroupType.GroupType_Pair || !this._checkCardsValid(cards)) {
+            // cc.warn(`CardUtils getGroupWeight invalid cards = ${cards}`);
+            return value;
+        }
+
+        value = this._getPairValue(cards);
+
+        return value;
     }
 
     private _checkCardsValid(cards: Card[]): boolean {
@@ -255,6 +267,16 @@ class CardUtils extends Singleton {
         let singleWeight = sortedCards[0].value == sortedCards[1].value ? sortedCards[2].weight : sortedCards[1].weight;
 
         return pairWeight * cardTypeWeightCoefficient + singleWeight;
+    }
+
+    private _getPairValue(cards: Card[]): number {
+        let sortedCards: Card[] = _.sortBy(cards, (card1: Card, card2: Card) => {
+            return card1.value - card2.value;
+        });
+
+        let pairValue = sortedCards[0].value == sortedCards[1].value ? sortedCards[1].value : sortedCards[2].value;
+
+        return pairValue;
     }
 }
 

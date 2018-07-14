@@ -58,3 +58,20 @@ export enum EmCampType {
 }
 
 export const Game_Room_Seat_Max_Count = 9;
+
+export enum EmBetAreaType {
+    Type_None = 0,
+    Type_Red,
+    Type_Black,
+    Type_Special,
+    Type_Max
+}
+
+export enum EmChipType {
+    Type_None = 0,
+    Type_Ten,
+    Type_Hundred,
+    Type_Thousand,
+    Type_TenTh,
+    Type_Max
+}

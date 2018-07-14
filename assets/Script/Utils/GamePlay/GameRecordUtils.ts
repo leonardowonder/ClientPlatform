@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 
-import Singleton from '../../Utils/Singleton';
+import Singleton from '../Singleton';
 
 import { EmRecordType, EmViceRoadType, EmDeciderType } from '../../Define/GamePlayDefine';
 

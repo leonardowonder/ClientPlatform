@@ -55,8 +55,10 @@ export class Card {
 
 export class CardGroup {
     private _cards: Card[] = [];
-    private _groupType: EmGroupType = EmGroupType.GroupType_None;
-    private _groupWeight: number = 0;
+    
+    groupType: EmGroupType = EmGroupType.GroupType_None;
+    groupWeight: number = 0;
+    groupPairValue: number = 0;
 
     constructor() {
         let cnt: number = 0;
@@ -84,8 +86,6 @@ export class CardGroup {
     }
 
     getCards(): Card[] { return this._cards; }
-    getGroupType(): EmGroupType { return this._groupType; }
-    getWeight(): number { return this._groupWeight; }
 
     reset() {
         _.forEach(this._cards, (card: Card) => {
@@ -96,7 +96,8 @@ export class CardGroup {
     }
 
     private _updateTypeAndWeight() {
-        this._groupType = CardUtils.getInstance().getGroupType(this._cards);
-        this._groupWeight = CardUtils.getInstance().getGroupWeight(this._cards);
+        this.groupType = CardUtils.getInstance().getGroupType(this._cards);
+        this.groupWeight = CardUtils.getInstance().getGroupWeight(this._cards);
+        this.groupPairValue = CardUtils.getInstance().getGroupPairValue(this._cards, this.groupType);
     }
 }

@@ -5,7 +5,6 @@ import ClientDefine from '../../Define/ClientDefine';
 
 import Network from '../../Utils/Network';
 import { NetMsg, praseMsg } from '../LogicBasic';
-import StateMachine from '../../Utils/StateMachine';
 
 import UserData from '../../Data/UserData';
 
@@ -15,7 +14,7 @@ import CardDataManager from '../../Manager/DataManager/GamePlayDataManger/CardDa
 import GameRecordDataManager from '../../Manager/DataManager/GamePlayDataManger/GameRecordDataManager';
 
 let gameController = GameController.getInstance();
-let baseFsm: StateMachine = gameController.getBaseFsm();
+
 let playerDataManger = PlayerDataManger.getInstance();
 let cardDataManager = CardDataManager.getInstance();
 let recordManager = GameRecordDataManager.getInstance();
@@ -55,6 +54,9 @@ class ClubDetailsLayerLogic extends Singleton {
             case 2: {
                 this._onMsgGameStartRsp(msg.jsMsg);
             }
+            case 2: {
+                this._onMsgGameDistributeCardsRsp(msg.jsMsg);
+            }
             case 3: {
                 this._onMsgGameStartBetRsp(msg.jsMsg);
             }
@@ -79,23 +81,29 @@ class ClubDetailsLayerLogic extends Singleton {
 
     _onMsgGameStartRsp(jsMsg) {
         if (jsMsg.ret == 0) {
-            baseFsm.changeState('Restart');
+            gameController.onGameStart();
+        }
+    }
 
+    _onMsgGameDistributeCardsRsp(jsMsg) {
+        if (jsMsg.ret == 0) {
             let type = jsMsg.type;
             let nums = jsMsg.nums;
             cardDataManager.udpateCardData(type, nums);
+
+            gameController.distributeCards();
         }
     }
 
     _onMsgGameStartBetRsp(jsMsg) {
         if (jsMsg.ret == 0) {
-            baseFsm.changeState('Bet');
+            gameController.onGameStartBet();
         }
     }
 
     _onMsgGameStopBetRsp(jsMsg) {
         if (jsMsg.ret == 0) {
-            baseFsm.changeState('Account');
+            gameController.onGameStopBet();
         }
     }
 

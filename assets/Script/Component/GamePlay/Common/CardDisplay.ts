@@ -19,12 +19,21 @@ export default class CardDisplay extends cc.Component {
     @property(cc.SpriteAtlas)
     m_spriteAtlas: cc.SpriteAtlas = null;
 
+    @property(cc.Node)
+    m_cardBackNode: cc.Node = null;
+    @property(cc.Node)
+    m_cardFaceRootNode: cc.Node = null;
+
     @property(cc.Size)
     m_numberSize: cc.Size = new cc.Size(50, 50);
     @property(cc.Size)
     m_peopleSize: cc.Size = new cc.Size(60, 70);
 
     private _card: Card = null;
+
+    onLoad() {
+        this.displayCardBack();
+    }
 
     setNum(num: number) {
         this._card = new Card(num);
@@ -34,29 +43,31 @@ export default class CardDisplay extends cc.Component {
             return;
         }
 
-        this._updateView();
+        this._updateCardFace();
     }
 
-    getCard(): Card {
-        return this._card;
+    displayCardFace() {
+        this.m_cardFaceRootNode.active = true;
+        this.m_cardBackNode.active = false;
     }
 
-    setGray(isGray: boolean) {
-        let val = isGray ? 128 : 255;
-        let clr = new cc.Color(val, val, val);
-        this.cardNum.node.color = clr;
-        this.cardType.node.color = clr;
-        this.cardImg.node.color = clr;
-        this.node.color = clr;
+    displayCardBack() {
+        this.m_cardFaceRootNode.active = false;
+        this.m_cardBackNode.active = true;
     }
 
-    private _updateView() {
+    flip() {
+        this._doFlipCard();
+    }
+
+    private _updateCardFace() {
         if (!this._card) {
-            cc.warn(`CardDisplay _updateView this._card null`);
+            cc.warn(`CardDisplay _updateCardFace this._card null`);
             return;
         }
         let type: EmCardTpye = this._card.type;
         let value: number = this._card.value;
+        let tagIdx: number = type - 1;
 
         let isBlack: boolean = (type == EmCardTpye.CardType_club || type == EmCardTpye.CardType_Spade);
         let vCardType: string[] = ['D', 'C', 'B', 'A'];
@@ -67,11 +78,11 @@ export default class CardDisplay extends cc.Component {
 
         // num
         strNum = 'card_num_' + (isBlack ? 'b' : 'r') + '_' + value;
-        strMiniType = 'card_miniTag_' + vCardType[type] + '_1';
+        strMiniType = 'card_miniTag_' + vCardType[tagIdx] + '_1';
 
         // card img
         if (value < 11 || value == 14) {
-            strCardImg = 'card_tag_' + vCardType[type] + '_1';
+            strCardImg = 'card_tag_' + vCardType[tagIdx] + '_1';
             this.cardImg.node.setContentSize(this.m_numberSize);
         }
         else  // j q k 
@@ -94,8 +105,37 @@ export default class CardDisplay extends cc.Component {
         if (null != cardImgFrame) {
             this.cardImg.spriteFrame = cardImgFrame;
         }
+        
         this.cardNum.node.active = null != numFrame;
         this.cardType.node.active = null != miniTypeFrame;
         this.cardImg.node.active = null != cardImgFrame;
     }
-}
+
+    private _doFlipCard() {
+        this.m_cardFaceRootNode.active = true;
+        this.m_cardBackNode.active = true;
+
+        this.m_cardBackNode.scaleX = 1;
+        this.m_cardFaceRootNode.scaleX = 0;
+
+        let scaleActionSmaller: cc.ActionInterval = cc.scaleTo(0.5, 0, 1);
+        let scaleActionBigger: cc.ActionInterval = cc.scaleTo(0.5, 1, 1);
+
+        let callbackSmaller = cc.callFunc(() => {
+            this.m_cardBackNode.runAction(scaleActionSmaller);
+        });
+        callbackSmaller.setDuration(scaleActionSmaller.getDuration());
+
+        let callbackBigger = cc.callFunc(() => {
+            this.m_cardFaceRootNode.runAction(scaleActionBigger);
+        });
+        callbackBigger.setDuration(scaleActionBigger.getDuration());
+
+        let endCallback = cc.callFunc(() => {
+            this.m_cardBackNode.scaleX = 1;
+            this.displayCardFace();
+        })
+
+        this.node.runAction(cc.sequence(callbackSmaller, callbackBigger, endCallback));
+    }
+ }

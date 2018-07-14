@@ -18,6 +18,8 @@ export default class PlayerItem extends cc.Component {
     m_captainRootNode: cc.Node = null;
     @property(cc.Node)
     m_resultRootNode: cc.Node = null;
+    @property(cc.Node)
+    m_headRootNode: cc.Node = null;
 
     @property(cc.Sprite)
     m_headIcon: cc.Sprite = null;
@@ -88,6 +90,12 @@ export default class PlayerItem extends cc.Component {
         this.hideCaptain();
         this.hideResult();
         this._updateLeftRight(this.m_isLeft);
+    }
+
+    getHeadWorldPos(): cc.Vec2 {
+        let worldPos: cc.Vec2 = this.node.convertToWorldSpaceAR(this.m_headRootNode.getPosition());
+
+        return worldPos;
     }
 
     private _updateLeftRight(isLeft: boolean) {

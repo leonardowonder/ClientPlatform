@@ -1222,6 +1222,9 @@
     "m_resultRootNode": {
       "__id__": 24
     },
+    "m_headRootNode": {
+      "__id__": 2
+    },
     "m_headIcon": {
       "__id__": 7
     },

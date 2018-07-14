@@ -1,18 +1,18 @@
-var _searchMaskParent = function (node: cc.Node) {
-    var Mask = cc.Mask;
-    if (Mask) {
-        var index = 0;
-        for (var curr = node; curr; curr = curr.parent, ++index) {
-            if (curr.getComponent(Mask)) {
-                return {
-                    index: index,
-                    node: curr
-                };
-            }
-        }
-    }
-    return null;
-};
+// var _searchMaskParent = function (node: cc.Node) {
+//     var Mask = cc.Mask;
+//     if (Mask) {
+//         var index = 0;
+//         for (var curr = node; curr; curr = curr.parent, ++index) {
+//             if (curr.getComponent(Mask)) {
+//                 return {
+//                     index: index,
+//                     node: curr
+//                 };
+//             }
+//         }
+//     }
+//     return null;
+// };
 
 function quickSort(arr, cb) {
     //如果数组<=1,则直接返回
@@ -147,13 +147,13 @@ export default class TableView extends cc.ScrollView {
     }
 
     onDestroy() {
-        cc.eventManager.removeListener(this._touchListener);
+        // cc.eventManager.removeListener(this._touchListener);
         // if (CC_JSB) {
         //     this._touchListener.release();
         // }
-        this._tableView.forEach((value, idx, array) => {
+        // this._tableView.forEach((value, idx, array) => {
 
-        })
+        // })
 
         _.takeWhile(this._tableView, (view) => {
             return view == this;
