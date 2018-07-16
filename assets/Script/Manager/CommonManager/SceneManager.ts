@@ -4,6 +4,7 @@ import SceneIdConfigManager from '../ConfigManager/SceneIdConfigManager';
 
 export enum EmSceneID {
     SceneID_LoadScene = 0,
+    SceneID_LoginScene,
     SceneID_MainScene,
     SceneID_GameRoomScene,
     SceneID_Test,

@@ -1,5 +1,6 @@
 [
     "LoadScene",
+    "LoginScene",
     "MainScene",
     "GameRoomScene",
     "test"

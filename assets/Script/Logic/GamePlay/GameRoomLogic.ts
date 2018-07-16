@@ -19,7 +19,7 @@ let playerDataManger = PlayerDataManger.getInstance();
 let cardDataManager = CardDataManager.getInstance();
 let recordManager = GameRecordDataManager.getInstance();
 
-class ClubDetailsLayerLogic extends Singleton {
+class GameRoomLogic extends Singleton {
 
     //net work
     requestUpdateSearchLimit() {
@@ -121,4 +121,4 @@ class ClubDetailsLayerLogic extends Singleton {
     }
 };
 
-export default new ClubDetailsLayerLogic();
+export default new GameRoomLogic();

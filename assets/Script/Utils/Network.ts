@@ -1,23 +1,17 @@
+import Singleton from './Singleton';
+
 import ClientDefine from '../Define/ClientDefine';
+
 import { eMsgPort, eMsgType } from '../Define/MessageIdentifer';
 
-class Network {
-    private m_beenInit: boolean = false;
+class Network extends Singleton {
 
-    public static s_pNetwork: Network = null;
     protected mWebSocket: WebSocket = null;
     protected mDstIP: string;
     protected vMsgCallBack: any[] = [];
     protected nSessionID: number = 0;
     protected isRecievedHeatBet: boolean = false;
     protected nTimeoutHandleNum: number = -1;
-    getInstance() {
-        if (!this.m_beenInit) {
-            this._init();
-        }
-
-        return this;
-    }
 
     setSessionID(newSessionID: number) {
         this.nSessionID = newSessionID;
@@ -206,10 +200,6 @@ class Network {
                 self.doSendHeatBet();
             }
         }, ClientDefine.time_heat_bet * 1000);
-    }
-
-    _init() {
-        this.m_beenInit = true;
     }
 }
 
