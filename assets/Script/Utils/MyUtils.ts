@@ -20,6 +20,17 @@ export enum PlatForm {
 class MyUtils extends Singleton {
     private m_bIsCheck: boolean = false;//是否正在审核
 
+    parePortTypte(nRoomID: number) {
+        var nComNum = nRoomID % 100;
+        var portTypeCrypt = (Math.floor(nRoomID / 100)) % 100;
+        if (nComNum >= 50) {
+            portTypeCrypt = portTypeCrypt + 100 - nComNum;
+        } else {
+            portTypeCrypt = portTypeCrypt + 100 + nComNum;
+        }
+        return (portTypeCrypt %= 100);
+    }
+
     public reqConfig() {
         var xhr = new XMLHttpRequest();
         xhr.onload = function () {

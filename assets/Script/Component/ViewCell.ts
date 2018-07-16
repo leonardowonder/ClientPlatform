@@ -2,7 +2,7 @@ const {
     ccclass
 } = cc._decorator;
 
-import TableView from './TableView'
+import TableView from './TableView';
 
 @ccclass
 export default class ViewCell extends cc.Component {
