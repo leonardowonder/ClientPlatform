@@ -1081,3 +1081,15 @@ MSG_ROOM_SZ_GAME_OVER, // 苏州麻将结束
 
 	MSG_GOLDEN_ROOM_RESULT,
 };
+
+let keyMap =  Object.keys(eMsgType);
+let strMap = {};
+
+let cnt = Object.keys(eMsgType).length;
+for (let i=0; i<cnt/2; ++i) {
+	strMap[keyMap[i]] = keyMap[cnt/2+i];
+}
+
+export function getMsgStr(num: number) {
+	return strMap[num];
+}

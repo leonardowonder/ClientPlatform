@@ -3,19 +3,22 @@ const { ccclass, property } = cc._decorator;
 import SceneManager, { EmSceneID } from '../../Manager/CommonManager/SceneManager';
 import MainUiSceneLogic from '../../Logic/MainUiSceneLogic';
 
-// import * as async from 'async';
-
 @ccclass
 export default class MainUIScene extends cc.Component {
 
-    // @property(cc.Node)
-    // m_node: cc.Node = null;
+    @property(cc.EditBox)
+    m_roomId: cc.EditBox = null;
 
     onDestroy() {
     }
 
     onLoad() {
 
+    }
+
+    onEnterClick() {
+        let roomId = this.m_roomId.string;
+        MainUiSceneLogic.getInstance().requestEnterRoom(parseInt(roomId));
     }
 
     onDDZClick() {

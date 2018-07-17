@@ -27,7 +27,7 @@ export default class CommonLoading extends cc.Component {
             case eMsgPort.ID_MSG_PORT_DOU_DI_ZHU:
             {
                 pathList = resDDZPathList;
-                realUrl1 = cc.url.raw("resources/ddz/image/loadImg.jpg");
+                realUrl1 = cc.url.raw('resources/image/singleColor.png');
             }
                 break;
             case eMsgPort.ID_MSG_PORT_GOLDEN:

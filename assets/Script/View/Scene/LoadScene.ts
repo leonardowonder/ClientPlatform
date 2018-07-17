@@ -18,8 +18,6 @@ export default class LoginScene extends cc.Component {
     m_persistRootNode: cc.Node = null;
 
     test() {
-        cc.log('test start');
-
         //test
     }
 
@@ -51,7 +49,7 @@ export default class LoginScene extends cc.Component {
 
     private _registEvent() {
         // cc.game.addPersistRootNode(this.m_persistRootNode);
-        
+
         cc.systemEvent.on(ClientDefine.netEventOpen, this.onNetWorkOpen, this);
         LoadSceneLogic.getInstance().setCurView(this);
     }
