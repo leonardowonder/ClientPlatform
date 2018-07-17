@@ -1,34 +1,47 @@
-var PlayerData = require('PlayerData');
-var CClientApp = require("CClientApp");
-var ResMgrIns = require('ResManager').ResManager.instance;
-var DDZDataMgrIns = require('DDZGameDataLogic').DDZGameLogic.instance;
-let DDZPlayerDataLogic = require('DDZPlayerData').DDZPlayerData.instance;
-var MyUtils = require('MyUtils');
-cc.Class({
-    extends: cc.Component,
+const { ccclass, property } = cc._decorator;
 
-    properties: {
-        m_headSprite: cc.Sprite,
-        m_LandlordTag: cc.Node,
-        m_shareTag: cc.Node,
-        m_stateSprite: cc.Sprite,
-        m_nickName: cc.Label,
-        m_localChairID: -1,
-        m_serverChairID: -1,
-        
-    },
+import Network from '../../../../Script/Utils/Network';
+import UserData from '../../../../Script/Data/UserData';
+import { eMsgType, eMsgPort } from '../../../../Script/Define/MessageIdentifer';
+import ResManager from '../Module/Custom/ResManager';
+import DDZGameDataLogic from '../Data/DDZGameDataLogic';
+import { eRoomPeerState, eRoomState } from '../Define/DDZDefine';
 
-    init: function() {
+let userData = UserData.getInstance();
+let ResMgrIns = ResManager.getInstance();
+let DDZDataMgrIns = DDZGameDataLogic.getInstance();
+
+@ccclass
+export default class PlayerUINode extends cc.Component {
+    @property(cc.Sprite)
+    m_headSprite: cc.Sprite = null;
+    @property(cc.Node)
+    m_LandlordTag: cc.Node = null;
+    @property(cc.Node)
+    m_shareTag: cc.Node = null;
+    @property(cc.Sprite)
+    m_stateSprite: cc.Sprite = null;
+    @property(cc.Label)
+    m_nickName: cc.Label = null;
+
+    @property
+    m_localChairID: number = -1;
+    @property
+    m_serverChairID: number = -1;
+
+    _data = null;
+
+    init() {
         this.m_LandlordTag.active = false;
         this.m_shareTag.active = false;
         this.m_stateSprite.node.active = false;
-    },
+    }
 
-    standUp: function() {
+    standUp() {
         this.node.active = false;
-    },
+    }
 
-    sitDown: function (data) {
+    sitDown(data) {
         this.node.active = true;
         this._data = data;
         this.m_nickName.string = data.name;
@@ -46,9 +59,9 @@ cc.Class({
         // }
         this.m_shareTag.active = false;
         this.setState(0);
-        if (data.state == MyUtils.eRoomPeerState.eRoomPeer_Ready && DDZDataMgrIns._roomState == MyUtils.eRoomState.eRoomSate_WaitReady) {
+        if (data.state == eRoomPeerState.eRoomPeer_Ready && DDZDataMgrIns._roomState == eRoomState.eRoomSate_WaitReady) {
             this.setState(1);
-        } 
+        }
         //else if (DDZGameData.roomState == MyUtils.eRoomState.eRoomState_RobotBanker && DDZGameData.readyPlayers && DDZGameData.readyPlayers.length) {
         //     for (let i = 0; i < DDZGameData.readyPlayers.length; i++) {
         //         if (DDZGameData.players[DDZGameData.readyPlayers[i].idx].uid == data.uid) {
@@ -80,30 +93,26 @@ cc.Class({
         // this.setShowDiZhuIcon(data.idx == DDZGameData.dzIdx && DDZGameData.roomState == MyUtils.eRoomState.eRoomState_DDZ_Chu);
         // this.m_pCountDownSprite.node.active = false;
         var message = {
-            msgID: CClientApp.usMsgType.MSG_REQUEST_PLAYER_DATA,
+            msgID: eMsgType.MSG_REQUEST_PLAYER_DATA,
             nReqID: data.uid,
             isDetail: false,
         };
-        CClientApp.sendMsg(JSON.stringify(message), CClientApp.usMsgType.MSG_REQUEST_PLAYER_DATA, CClientApp.eMsgPort.ID_MSG_PORT_DATA, PlayerData.uid);
-    },
+        Network.getInstance().sendMsg(JSON.stringify(message), eMsgType.MSG_REQUEST_PLAYER_DATA, eMsgPort.ID_MSG_PORT_DATA, userData.uid);
+    }
 
-    setLocalChairID: function(localID) {
+    setLocalChairID(localID) {
         this.m_localChairID = localID;
-    },
+    }
 
-    setServerChairID: function(serverID) {
+    setServerChairID(serverID) {
         this.m_serverChairID = serverID;
-    },
+    }
 
-    setShareTagActive: function(active) {
+    setShareTagActive(active) {
         this.m_shareTag.active = active;
-    },
+    }
 
-    setShareTagActive: function(active) {
-        this.m_shareTag.active = active;
-    },
-
-    setHead: function (headUrl) {
+    setHead(headUrl) {
         if (headUrl && headUrl.length && headUrl != 'undefine') {
             if (cc.sys.isNative) {
                 // NativeWXHeadDonload.donloadHead(headUrl, this._data.uid.toString() + ".png", (event) => {
@@ -118,9 +127,9 @@ cc.Class({
                 // });
             } else {
                 cc.loader.load({ url: headUrl, type: 'png' }, (err, texture) => {
-                    if (!err) {
+                    if(!err) {
                         this.m_headSprite.spriteFrame = new cc.SpriteFrame(texture);
-                        this.m_headSprite.node.setContentSize(cc.size(96,96));
+                        this.m_headSprite.node.setContentSize(cc.size(96, 96));
                     } else {
                         this.m_headSprite.spriteFrame = null;
                     }
@@ -128,17 +137,17 @@ cc.Class({
             }
         } else {
             var realUrl = cc.url.raw("resources/NewDDZ/image/room_default_none.png");
-            var texture = cc.textureCache.addImage(realUrl);
+            var texture = cc.textureCache.addImage(realUrl, null, null);
             this.m_headSprite.spriteFrame = new cc.SpriteFrame(texture);
-            this.m_headSprite.node.setContentSize(cc.size(96,96));
+            this.m_headSprite.node.setContentSize(cc.size(96, 96));
         }
-    },
+    }
 
-    setName: function(name) {
+    setName(name) {
         this.m_nickName.string = name;
-    },
+    }
 
-    setState: function(stateTag) {
+    setState(stateTag) {
         //0:隐藏,1:准备,2:1分,3:2分,4:3分,5:不叫,6:不抢,7:明牌,8:不出,9:加倍
         console.log("setState : " + stateTag);
         let spriteAtlas = ResMgrIns.getRes('CaoZuo');
@@ -173,7 +182,6 @@ cc.Class({
                 break;
         }
 
-    },
+    }
 
-
-});
+};

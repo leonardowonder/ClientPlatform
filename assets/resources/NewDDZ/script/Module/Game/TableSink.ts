@@ -3,7 +3,7 @@ const { ccclass } = cc._decorator;
 import ClientDefine from '../../../../../Script/Define/ClientDefine';
 import { eMsgPort, eMsgType } from '../../../../../Script/Define/MessageIdentifer';
 import Network from '../../../../../Script/Utils/Network';
-import { eRoomPeerState } from '../../../Define/DDZDefine';
+import { eRoomPeerState } from '../../Define/DDZDefine';
 import UserData from '../../../../../Script/Data/UserData';
 import DDZGameDataLogic from '../../Data/DDZGameDataLogic';
 import GameLogic from './GameLogic';

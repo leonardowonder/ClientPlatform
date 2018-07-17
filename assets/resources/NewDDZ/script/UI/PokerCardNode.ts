@@ -1,29 +1,32 @@
-var GameLogicIns = require('GameLogic').GameLogic.instance;
-var DDZGameDefine = require('DDZGameDefine');
-var ResMgrIns = require('ResManager').ResManager.instance;
-var PockerType = DDZGameDefine.EPokerType;
+const { ccclass, property } = cc._decorator;
+
+import ResManager from '../Module/Custom/ResManager';
+import GameLogic from '../Data/../Module/Game/GameLogic';
+import { EPokerType } from '../Module/DDZGameDefine';
+
+let ResMgrIns = ResManager.getInstance();
+let GameLogicIns = GameLogic.getInstance();
 var StandOffset = 20.0;
 
-cc.Class({
-    extends: cc.Component,
+@ccclass
+export default class PokerCardNode extends cc.Component {
+    @property(cc.Sprite)
+    m_jokerSprite: cc.Sprite = null;
+    @property(cc.SpriteFrame)
+    m_jokerSpriteFrames: cc.SpriteFrame[] = [];
+    @property(cc.Sprite)
+    m_cardNumSprite: cc.Sprite = null;
+    @property(cc.Sprite)
+    m_cardColorSprite: cc.Sprite = null;
+    @property(cc.Node)
+    m_cardBgNode: cc.Node = null;
 
-    properties: {
-        m_jokerSprite: cc.Sprite,
-        m_jokerSpriteFrames: [cc.SpriteFrame],
-        m_cardNumSprite: cc.Sprite,
-        m_cardColorSprite: cc.Sprite,
-        m_cardBgNode: cc.Node,
+    _cardData: number = -1;
+    _selectedState: boolean = false;
+    _isGray: boolean = false;
 
-        _cardData: -1,
-        _selectedState: false,
-        _isGray: false,
-    },
 
-    start () {
-
-    },
-
-    initWithCardData: function(cardData) {
+    initWithCardData (cardData) {
         this.setCardGray(false);
         this._cardData = cardData;
 
@@ -42,23 +45,23 @@ cc.Class({
             this.m_cardColorSprite.spriteFrame = spriteAtlas.getSpriteFrame(spriteFrameStruct.cardColorSp);
 
         }
-    },
+    }
 
-    getCardSpriteFrameName: function(cardData) {//{cardNum, cardColor, JokerNum}
+    getCardSpriteFrameName (cardData) {//{cardNum, cardColor, JokerNum}
         let cardValue = GameLogicIns.getCardValue(cardData);
         let cardColor = GameLogicIns.getCardColor(cardData);
         var imageName = "LargeCard_commom_shuzi";
         let typeName = '';
         switch (cardColor) {
-            case PockerType.ePoker_Heart:
-            case PockerType.ePoker_Diamond:
+            case EPokerType.ePoker_Heart:
+            case EPokerType.ePoker_Diamond:
                 imageName += "_hong";
                 break;
-            case PockerType.ePoker_Sword:
-            case PockerType.ePoker_Club:
+            case EPokerType.ePoker_Sword:
+            case EPokerType.ePoker_Club:
                 imageName += "_hei";
                 break;
-            case PockerType.ePoker_Joker:
+            case EPokerType.ePoker_Joker:
                 if (cardValue == 18) {
                     imageName = "LargeCard_king_14";
                 } else {
@@ -79,16 +82,16 @@ cc.Class({
         }
 
         switch (cardColor) {
-            case PockerType.ePoker_Heart:
+            case EPokerType.ePoker_Heart:
                 typeName = "LargeCard_huase_2";
                 break;
-            case PockerType.ePoker_Diamond:
+            case EPokerType.ePoker_Diamond:
                 typeName = "LargeCard_huase_4";
                 break;
-            case PockerType.ePoker_Sword:
+            case EPokerType.ePoker_Sword:
                 typeName = "LargeCard_huase_1";
                 break;
-            case PockerType.ePoker_Club:
+            case EPokerType.ePoker_Club:
                 typeName = "LargeCard_huase_3";
                 break;
         }
@@ -98,9 +101,9 @@ cc.Class({
             cardColorSp: typeName,
             JokerNum: null,
         };
-    },
+    }
 
-    setCardGray: function(grayTag) {
+    setCardGray (grayTag) {
         if (this._isGray == grayTag) {
             return;
         }
@@ -111,23 +114,23 @@ cc.Class({
         this.m_cardColorSprite.node.color = color;
         this.m_jokerSprite.node.color = color;
 
-    },
+    }
 
-    standCard: function() {
+    standCard () {
         if (this._selectedState) {
             return;
         }
         var pos = this.node.getPosition();
         this.node.setPosition(cc.p(pos.x, pos.y + StandOffset));
         this._selectedState = true;
-    },
+    }
 
-    sitCard: function() {
+    sitCard () {
         if (!this._selectedState) {
             return;
         }
         var pos = this.node.getPosition();
         this.node.setPosition(cc.p(pos.x, pos.y - StandOffset));
         this._selectedState = false;
-    },
-});
+    }
+};

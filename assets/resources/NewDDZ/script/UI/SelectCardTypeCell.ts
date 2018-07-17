@@ -1,21 +1,28 @@
-var GameLogicIns = require('GameLogic').GameLogic.instance;
-var ResMgrIns = require('ResManager').ResManager.instance;
-var DDZGameDefine = require('DDZGameDefine');
-var DDZCardType = DDZGameDefine.DDZCardType;
-var SortType = DDZGameDefine.SortType;
+const { ccclass, property } = cc._decorator;
+
+import ResManager from '../Module/Custom/ResManager';
+import GameLogic from '../Data/../Module/Game/GameLogic';
+import { SortType } from '../Module/DDZGameDefine';
+
+let ResMgrIns = ResManager.getInstance();
+let GameLogicIns = GameLogic.getInstance();
+
 var CardNodeScale = 0.5;
 
-cc.Class({
-    extends: cc.Component,
+@ccclass
+export default class SelectCardTypeCell extends cc.Component {
+    @property(cc.Button)
+    m_btn: cc.Button = null;
+    @property(cc.Node)
+    m_startNode: cc.Node = null;
+    @property(cc.Label)
+    m_cardLabel: cc.Label = null;
 
-    properties: {
-        m_btn: cc.Button,
-        m_startNode: cc.Node,
-        m_cardLabel: cc.Label,
-        _cardType: 0,
-    },
-
-    init: function(cardDataVec, localCardType, selectedResp) {
+    _cardType: number = 0;
+    _cardArray = [];
+    _resp = null;
+    
+    init (cardDataVec, localCardType, selectedResp) {
         this.m_cardLabel.node.setLocalZOrder(10);
         this._cardType = localCardType;
         this._cardArray = [];
@@ -26,9 +33,9 @@ cc.Class({
         let parseCardVec = GameLogicIns.parseToCardType(this._cardArray, localCardType);
         this.showCardArray(parseCardVec);
         this._resp = selectedResp;
-    },
+    }
 
-    showCardArray: function(cardDataVec) {
+    showCardArray (cardDataVec) {
         this.m_cardLabel.string = GameLogicIns.debugShowCardType(this._cardType);
         var cardPrefab = ResMgrIns.getRes('PokerCardNode');
         let demoNode = cc.instantiate(cardPrefab);
@@ -45,13 +52,12 @@ cc.Class({
             n.setScale(CardNodeScale);
             n.setPosition(cc.p(startPos.x + n.width / 3.5 * CardNodeScale * i, startPos.y));
         }
-    },
+    }
 
-    onSelected: function (event, customData) {
+    onSelected (event, customData) {
         let btn = event.target.getComponent(cc.Button);
         if (btn == this.m_btn) {
             this._resp(this._cardType);
         }
-    },
-
-});
+    }
+};
