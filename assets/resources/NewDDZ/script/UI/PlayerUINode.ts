@@ -97,7 +97,7 @@ export default class PlayerUINode extends cc.Component {
             nReqID: data.uid,
             isDetail: false,
         };
-        Network.getInstance().sendMsg(JSON.stringify(message), eMsgType.MSG_REQUEST_PLAYER_DATA, eMsgPort.ID_MSG_PORT_DATA, userData.uid);
+        Network.getInstance().sendMsg(message, eMsgType.MSG_REQUEST_PLAYER_DATA, eMsgPort.ID_MSG_PORT_DATA, userData.uid);
     }
 
     setLocalChairID(localID) {

@@ -103,10 +103,10 @@ class GameLogic extends Singleton {
                 cbSameCount++;
             }
             let cbIndex = tagResult.cbBlockCount[cbSameCount - 1];
-            tagResult.cbBlockCount.set(cbSameCount - 1, cbIndex + 1);
+            tagResult.cbBlockCount[cbSameCount - 1] = cbIndex + 1;
             let curCardDataMap = tagResult.cbCardData[cbSameCount - 1];
             for (let j = 0; j < cbSameCount; j++) {
-                curCardDataMap.set(cbIndex * cbSameCount + j, cardDataVec[i + j]);
+                curCardDataMap[cbIndex * cbSameCount + j] = cardDataVec[i + j];
             }
             i += cbSameCount - 1;
         }
@@ -147,14 +147,22 @@ class GameLogic extends Singleton {
             let cbCardIndex = 0;
             let tagResult = this.analyseCard(cardDataVec);
             var countMap = tagResult.cbBlockCount;
-            countMap.forEach(function (item, key) {
-                let cbIndex = 4 - key - 1;
+            let cnt1 = 0;
+            for (let key in countMap) {
+                let cbIndex = 4 - cnt1 - 1;
                 let curCardDataMap = tagResult.cbCardData[cbIndex];
-                curCardDataMap.forEach(function (item, key) {
-                    cardDataVec[cbCardIndex + key] = item;
-                });
+
+                let cnt2 = 0;
+                for (let key in curCardDataMap) {
+                    let item = curCardDataMap[key];
+                    cardDataVec[cbCardIndex + cnt2] = item;
+                    
+                    cnt2++;
+                }
                 cbCardIndex += tagResult.cbBlockCount[cbIndex] * (cbIndex + 1);
-            });
+
+                cnt1++;
+            }
         }
         return cardDataVec;
     }

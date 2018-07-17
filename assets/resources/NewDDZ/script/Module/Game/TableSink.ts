@@ -9,6 +9,7 @@ import DDZGameDataLogic from '../../Data/DDZGameDataLogic';
 import GameLogic from './GameLogic';
 import DDZPlayerData from '../../Data/DDZPlayerData';
 import DDZLanguage from '../../Data/DDZLanguage';
+import PrefabManager, { EmPrefabEnum } from '../../../../../Script/Manager/CommonManager/PrefabManager';
 
 let userData = UserData.getInstance();
 let DDZDataMgrIns = DDZGameDataLogic.getInstance();
@@ -100,10 +101,10 @@ export default class TableSink extends cc.Component {
 
 
     //receive
-    onMsg(event) {
-        var jsonMessage = JSON.parse(event);
-        DDZDataMgrIns.onMessage(event);
-        DDZPlayerDataLogic.onMessage(event);
+    onMsg(event: cc.Event.EventCustom) {
+        let jsonMessage = event.detail.msg;
+        DDZDataMgrIns.onMessage(jsonMessage);
+        DDZPlayerDataLogic.onMessage(jsonMessage);
         if (jsonMessage.msgID == eMsgType.MSG_VIP_ROOM_DO_CLOSED) {
             // svr : { isDismiss : 0 , roomID : 2345 , eType : eroomType }  
             // if (this._DDZGameOver == null) {
@@ -113,7 +114,6 @@ export default class TableSink extends cc.Component {
             return true;
         }
         if (jsonMessage.msgID == eMsgType.MSG_PLAYER_BASE_DATA) {
-            cc.find("persistRootNode").getComponent('persistRootNode').closeWaitMasLayer();
             userData.setPlayerBaseData(jsonMessage);
             if (DDZPlayerDataLogic.getPlayerDataByUID(userData.uid) && DDZPlayerDataLogic.getPlayerDataByUID(userData.uid).uid > 0) {
                 var enterRoomMessage = {
@@ -134,19 +134,16 @@ export default class TableSink extends cc.Component {
             }
             return true;
         } else if (jsonMessage.msgID == eMsgType.MSG_ENTER_ROOM) {
-            cc.find("persistRootNode").getComponent('persistRootNode').closeWaitMasLayer();
             if (jsonMessage.ret != 0) {
                 this._delegate.exitGame(DDZLanguage.donotFindRoom);
             }
             return true;
         } else if (jsonMessage.msgID == eMsgType.MSG_REQUEST_ROOM_INFO) {
-            cc.find("persistRootNode").getComponent('persistRootNode').closeWaitMasLayer();
             if (jsonMessage.ret != 0) {
                 this._delegate.exitGame();
             }
             return true;
         } else if (jsonMessage.msgID == eMsgType.MSG_ROOM_INFO) {
-            cc.find("persistRootNode").getComponent('persistRootNode').closeWaitMasLayer();
             this.node.stopAllActions();
             // 房间的基本信息
             //this.showLayer();
@@ -183,7 +180,6 @@ export default class TableSink extends cc.Component {
             this._delegate.setStateTag(jsonMessage.idx, 1);
             return true;
         } else if (jsonMessage.msgID == eMsgType.MSG_PLAYER_SIT_DOWN) {
-            cc.find("persistRootNode").getComponent('persistRootNode').closeWaitMasLayer();
             var text = null;
             if (jsonMessage.ret == 0) {
 
@@ -197,12 +193,12 @@ export default class TableSink extends cc.Component {
                 text = "坐下失败,code = " + jsonMessage.ret;
             }
             if (text) {
-                // MyUtils.clonePromptDialogLayer(text, jsonMessage.ret == 0);
+                PrefabManager.getInstance().showPrefab(EmPrefabEnum.Prefab_PromptDialogLayer, [text]);
             }
             return false;
         } else if (jsonMessage.msgID == eMsgType.MSG_ROOM_SIT_DOWN) {
-            let userData = DDZPlayerDataLogic._players.get(jsonMessage.idx);
-            if (userData.uid == userData.uid) {
+            let player = DDZPlayerDataLogic._players[jsonMessage.idx];
+            if (userData.uid == player.uid) {
                 if (jsonMessage.state == eRoomPeerState.eRoomPeer_WaitNextGame) {
                     //auto sendReady
                     // var enterRoomMessage = {
@@ -212,9 +208,9 @@ export default class TableSink extends cc.Component {
                     // Network.getInstance().sendMsg(enterRoomMessage), eMsgType.MSG_PLAYER_SET_READY, eMsgPort.ID_MSG_PORT_DOU_DI_ZHU, DDZGameData.roomID)
                 }
                 for (let idx = 0; idx < DDZDataMgrIns._seatCnt; idx++) {
-                    let userData = DDZPlayerDataLogic._players.get(idx);
-                    if (userData && userData.uid > 0) {
-                        this._delegate.sitDown(userData, idx);
+                    let player = DDZPlayerDataLogic._players[idx];
+                    if (player && player.uid > 0) {
+                        this._delegate.sitDown(player, idx);
                     } else {
                         this._delegate.standUp(idx);
                     }
@@ -222,15 +218,15 @@ export default class TableSink extends cc.Component {
 
             } else {
                 //AudioManager.playerEffect("resources/ddz/sound/Player_Come_In.mp3");
-                let userData = DDZPlayerDataLogic._players.get(jsonMessage.idx);
-                this._delegate.sitDown(userData, jsonMessage.idx);
+                let player = DDZPlayerDataLogic._players[jsonMessage.idx];
+                this._delegate.sitDown(player, jsonMessage.idx);
             }
             //this.updateShowNotStartButton();
             return true;
         } else if (jsonMessage.msgID == eMsgType.MSG_REQUEST_PLAYER_DATA) {
             for (let idx = 0; idx < DDZDataMgrIns._seatCnt; idx++) {
-                let userData = DDZPlayerDataLogic._players.get(idx);
-                if (userData.uid == jsonMessage.uid) {
+                let player = DDZPlayerDataLogic._players[idx];
+                if (player.uid == jsonMessage.uid) {
                     this._delegate.setName(idx, jsonMessage.name);
                     this._delegate.setHead(idx, jsonMessage.headIcon);
                     break;
@@ -250,7 +246,7 @@ export default class TableSink extends cc.Component {
                 errorText = "退出失败,code = " + jsonMessage.ret;
             }
             if (errorText) {
-                // MyUtils.clonePromptDialogLayer(errorText, jsonMessage.ret == 0);
+                PrefabManager.getInstance().showPrefab(EmPrefabEnum.Prefab_PromptDialogLayer, [errorText]);
             }
             return true;
         } else if (jsonMessage.msgID == eMsgType.MSG_ROOM_STAND_UP) {
@@ -270,7 +266,7 @@ export default class TableSink extends cc.Component {
                 errorText = "开始失败,code = " + jsonMessage.ret;
             }
             if (errorText) {
-                // MyUtils.clonePromptDialogLayer(errorText, jsonMessage.ret == 0);
+                PrefabManager.getInstance().showPrefab(EmPrefabEnum.Prefab_PromptDialogLayer, [errorText]);
             }
             return true;
         } else if (jsonMessage.msgID == eMsgType.MSG_ROOM_DO_OPEN) {

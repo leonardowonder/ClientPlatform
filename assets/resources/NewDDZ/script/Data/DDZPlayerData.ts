@@ -2,14 +2,14 @@ import Singleton from '../../../../Script/Utils/Singleton';
 import { eMsgType } from '../../../../Script/Define/MessageIdentifer';
 
 import DDZGameDataLogic from './DDZGameDataLogic';
-import { eRoomState, eRoomPeerState } from '../../Define/DDZDefine';
+import { eRoomState, eRoomPeerState } from '../Define/DDZDefine';
 import UserData from '../../../../Script/Data/UserData';
 var PlayerCount = 3;
 
 let DDZDataMgrIns = DDZGameDataLogic.getInstance();
 let userData = UserData.getInstance();
 
-class DDZPlayerData extends Singleton { 
+class DDZPlayerData extends Singleton {
 
     _players: any = null;
     _meServerID: number = -1;
@@ -36,7 +36,7 @@ class DDZPlayerData extends Singleton {
         }
     }
 
-    clearData () {
+    clearData() {
         for (let idx = 0; idx < PlayerCount; idx++) {
             let player = this._players[idx];
             if (player) {
@@ -59,7 +59,7 @@ class DDZPlayerData extends Singleton {
         }
     }
 
-    getPlayerDataByUID (uid) {
+    getPlayerDataByUID(uid) {
         var data = null;
         if (this._players != null) {
             for (let idx = 0; idx < DDZDataMgrIns._seatCnt; idx++) {
@@ -73,8 +73,8 @@ class DDZPlayerData extends Singleton {
         return data;
     }
 
-    onMessage (event) {
-        var jsonMessage = JSON.parse(event);
+    onMessage(event) {
+        var jsonMessage = event;
         if (jsonMessage.msgID == eMsgType.MSG_ROOM_PLAYER_INFO) {
             this.clearData();
             if (jsonMessage.players && jsonMessage.players.length) {
@@ -186,11 +186,11 @@ class DDZPlayerData extends Singleton {
         }
     }
 
-    showMeServerID () {
+    showMeServerID() {
         console.log('meServerID:' + this._meServerID);
     }
 
-    onceGameOver () {
+    onceGameOver() {
         for (let idx = 0; idx < PlayerCount; idx++) {
             let playerData = this._players[idx];
             playerData.cards = new Array();

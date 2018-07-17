@@ -28,7 +28,6 @@ export default class CommonLoading extends cc.Component {
             {
                 pathList = resDDZPathList;
                 realUrl1 = cc.url.raw("resources/ddz/image/loadImg.jpg");
-                //DDZGameData.onMessage(event);
             }
                 break;
             case eMsgPort.ID_MSG_PORT_GOLDEN:

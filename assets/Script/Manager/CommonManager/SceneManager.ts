@@ -3,11 +3,12 @@ import Singleton from '../../Utils/Singleton';
 import SceneIdConfigManager from '../ConfigManager/SceneIdConfigManager';
 
 export enum EmSceneID {
-    SceneID_LoadScene = 0,
+    SceneID_Test = 0,
+    SceneID_LoadScene,
     SceneID_LoginScene,
     SceneID_MainScene,
     SceneID_GameRoomScene,
-    SceneID_Test,
+    SceneID_DDZScene,
     SceneID_Max
 }
 

@@ -171,7 +171,7 @@
     "groupIndex": 0
   },
   {
-    "__type__": "d1f75exz3tNXa9XlNFLaGYF",
+    "__type__": "2a416qDZ+JI8pUEVip6LMKm",
     "_name": "",
     "_objFlags": 0,
     "node": {
@@ -921,7 +921,7 @@
     "groupIndex": 0
   },
   {
-    "__type__": "21fbf2SMXhAiYdAhmTKpmKd",
+    "__type__": "62b1fdZ5qVB9bBxb9KyPbvk",
     "_name": "",
     "_objFlags": 0,
     "node": {
@@ -954,8 +954,7 @@
     "m_touchBegan": false,
     "m_startGrayIDX": -1,
     "m_endGrayIDX": -1,
-    "m_moveCards": false,
-    "_delegate": null
+    "m_moveCards": false
   },
   {
     "__type__": "cc.Widget",
@@ -1152,7 +1151,7 @@
       "__id__": 20
     },
     "_enabled": true,
-    "transition": 2,
+    "transition": 3,
     "pressedColor": {
       "__type__": "cc.Color",
       "r": 255,
@@ -3167,7 +3166,7 @@
     "_N$overflow": 0
   },
   {
-    "__type__": "a46d1kDQfdN0KRmW1yTz4pT",
+    "__type__": "492cftHCOpDZLaqpzyAg4Gw",
     "_name": "",
     "_objFlags": 0,
     "node": {
@@ -3178,7 +3177,7 @@
     "m_serverChairID": -1
   },
   {
-    "__type__": "0aea8erBoNJqpqDhGfkG6Ez",
+    "__type__": "38c873T3kpE7Y8HKbEhEmcp",
     "_name": "",
     "_objFlags": 0,
     "node": {
@@ -3663,7 +3662,7 @@
     "_N$overflow": 0
   },
   {
-    "__type__": "a46d1kDQfdN0KRmW1yTz4pT",
+    "__type__": "492cftHCOpDZLaqpzyAg4Gw",
     "_name": "",
     "_objFlags": 0,
     "node": {
@@ -3674,7 +3673,7 @@
     "m_serverChairID": -1
   },
   {
-    "__type__": "0aea8erBoNJqpqDhGfkG6Ez",
+    "__type__": "38c873T3kpE7Y8HKbEhEmcp",
     "_name": "",
     "_objFlags": 0,
     "node": {
@@ -3682,19 +3681,19 @@
     },
     "_enabled": true,
     "m_headSprite": {
-      "__id__": 78
+      "__id__": 65
     },
     "m_LandlordTag": {
-      "__id__": 81
+      "__id__": 68
     },
     "m_shareTag": {
-      "__id__": 83
+      "__id__": 70
     },
     "m_stateSprite": {
-      "__id__": 80
+      "__id__": 67
     },
     "m_nickName": {
-      "__id__": 86
+      "__id__": 73
     },
     "m_localChairID": 1,
     "m_serverChairID": -1
@@ -4159,7 +4158,7 @@
     "_N$overflow": 0
   },
   {
-    "__type__": "a46d1kDQfdN0KRmW1yTz4pT",
+    "__type__": "492cftHCOpDZLaqpzyAg4Gw",
     "_name": "",
     "_objFlags": 0,
     "node": {
@@ -4170,7 +4169,7 @@
     "m_serverChairID": -1
   },
   {
-    "__type__": "0aea8erBoNJqpqDhGfkG6Ez",
+    "__type__": "38c873T3kpE7Y8HKbEhEmcp",
     "_name": "",
     "_objFlags": 0,
     "node": {
@@ -4178,19 +4177,19 @@
     },
     "_enabled": true,
     "m_headSprite": {
-      "__id__": 91
+      "__id__": 65
     },
     "m_LandlordTag": {
-      "__id__": 94
+      "__id__": 68
     },
     "m_shareTag": {
-      "__id__": 96
+      "__id__": 70
     },
     "m_stateSprite": {
-      "__id__": 93
+      "__id__": 67
     },
     "m_nickName": {
-      "__id__": 99
+      "__id__": 73
     },
     "m_localChairID": 2,
     "m_serverChairID": -1
@@ -4407,18 +4406,13 @@
     "customEventData": ""
   },
   {
-    "__type__": "c41e2aJ3nNLCIoJAQbxMbib",
+    "__type__": "9d538Klk7xNcZt/50Oo7spO",
     "_name": "",
     "_objFlags": 0,
     "node": {
       "__id__": 110
     },
-    "_enabled": true,
-    "_delegate": null,
-    "_curTipID": 0,
-    "_searchResult": null,
-    "_sendCardType": 0,
-    "_serverCardType": -1
+    "_enabled": true
   },
   {
     "__type__": "cc.Node",
@@ -4473,14 +4467,13 @@
     "groupIndex": 0
   },
   {
-    "__type__": "3e945/84MtNArMg7h5j3DDp",
+    "__type__": "591b6K1Xp1DxJ626rQZa8/e",
     "_name": "",
     "_objFlags": 0,
     "node": {
       "__id__": 112
     },
-    "_enabled": true,
-    "_delegate": null
+    "_enabled": true
   },
   {
     "__type__": "cc.Node",

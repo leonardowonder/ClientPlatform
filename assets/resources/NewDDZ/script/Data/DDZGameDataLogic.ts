@@ -2,7 +2,7 @@
 import Singleton from '../../../../Script/Utils/Singleton';
 import { eMsgType } from '../../../../Script/Define/MessageIdentifer';
 
-import { eRoomState } from '../../Define/DDZDefine';
+import { eRoomState } from '../Define/DDZDefine';
 
 class DDZGameLogic extends Singleton {
     _roomID: number = 0
@@ -44,8 +44,8 @@ class DDZGameLogic extends Singleton {
 
     }
 
-    onMessage(event) {
-        var jsonMessage = JSON.parse(event);
+    onMessage(msg) {
+        var jsonMessage = msg;
         if (jsonMessage.msgID == eMsgType.MSG_ROOM_INFO) {
             this.setRoomInfo(jsonMessage);
         } else if (jsonMessage.msgID == eMsgType.MSG_ROOM_CHANGE_STATE) {

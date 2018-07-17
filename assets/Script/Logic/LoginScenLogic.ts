@@ -5,8 +5,10 @@ import ClientDefine from '../Define/ClientDefine';
 
 import Network from '../Utils/Network';
 import { NetMsg, praseMsg } from './LogicBasic';
+import UserData from '../Data/UserData';
 
 import SceneManager, { EmSceneID } from '../Manager/CommonManager/SceneManager';
+import MainUiSceneLogic from './MainUiSceneLogic';
 
 class LoginScenLogic extends Singleton {
 
@@ -72,7 +74,7 @@ class LoginScenLogic extends Singleton {
 
     //net msg rsp
     private _onMsgPlayeLoginRsp(jsMsg) {
-        cc.log('wd debug _onMsgPlayeLoginRsp jsMsg =', jsMsg);
+        
     }
 
     private _onPlayerRegisterRsp(jsMsg) {
@@ -89,8 +91,14 @@ class LoginScenLogic extends Singleton {
     }
 
     private _onPlayerBaseDataRsp(jsMsg) {
-        cc.log('wd debug _onPlayerBaseDataRsp jsMsg =', jsMsg);
-        SceneManager.getInstance().changeScene(EmSceneID.SceneID_MainScene);
+        UserData.getInstance().setPlayerBaseData(jsMsg);
+        
+        if (jsMsg.stayRoomID && jsMsg.stayRoomID > 0) {
+            MainUiSceneLogic.getInstance().requestEnterRoom(jsMsg.stayRoomID);
+        }
+        else {
+            SceneManager.getInstance().changeScene(EmSceneID.SceneID_MainScene);
+        }
     }
 
     //private

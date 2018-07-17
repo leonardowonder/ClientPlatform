@@ -22,7 +22,8 @@ class ResManager extends Singleton {
         obj.name = name;
         obj.resData = resData;
         obj.type = type;
-        this.m_ResDataArray[this.m_ResDataArray.length] = obj;
+        
+        this.m_ResDataArray.push(obj);
         this.m_ResDataMap[name] = obj;
     }
 
@@ -64,18 +65,17 @@ class ResManager extends Singleton {
                     this.loadOnceRes();
                 }.bind(this));
             } else if (this.m_loadArray[this.m_loadIdx].type == ResType.ResType_SpriteAtlas) {
-                // cc.loader.loadRes(this.m_loadArray[this.m_loadIdx].dir, cc.SpriteAtlas, function (err, spriteFrames) {
-                cc.loader.loadRes(this.m_loadArray[this.m_loadIdx].dir, function (err, spriteFrames) {
+                cc.loader.loadRes(this.m_loadArray[this.m_loadIdx].dir, cc.SpriteAtlas, (err: Error, spriteAtlas: any) => {
                     if (err) {
                         console.log("load[" + this.m_loadArray[this.m_loadIdx].name + "] failed");
                     }
-                    this.addRes(this.m_loadArray[this.m_loadIdx].name, spriteFrames, ResType.ResType_SpriteAtlas);
+                    this.addRes(this.m_loadArray[this.m_loadIdx].name, spriteAtlas, ResType.ResType_SpriteAtlas);
                     if (this._callback) {
                         this._callback(this.m_loadIdx / this.m_loadArray.length);
                     }
                     this.m_loadIdx++;
                     this.loadOnceRes();
-                }.bind(this));
+                });
             }
         } else {
             if (this._callback) {

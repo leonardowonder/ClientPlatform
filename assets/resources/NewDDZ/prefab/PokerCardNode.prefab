@@ -447,7 +447,7 @@
     "sync": false
   },
   {
-    "__type__": "f1990wLVT1DFqlBltB6UZk8",
+    "__type__": "c0477AIpo5D46k7JgB9bZ2J",
     "_name": "",
     "_objFlags": 0,
     "node": {
@@ -466,10 +466,7 @@
     },
     "m_cardBgNode": {
       "__id__": 2
-    },
-    "_cardData": -1,
-    "_selectedState": false,
-    "_isGray": false
+    }
   },
   {
     "__type__": "cc.PrefabInfo",

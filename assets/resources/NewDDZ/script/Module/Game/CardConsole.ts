@@ -69,7 +69,7 @@ export default class CardConsole extends cc.Component {
         let demoNode = cc.instantiate(cardNodePrefab);
         let cardNum = handCardData.length;
         let cardNodesLength = demoNode.width / 3.5 * (cardNum - 1) + demoNode.width;
-        let curHandCardNodeVec = this.m_handCardNodeMap.get(localChairID);
+        let curHandCardNodeVec = this.m_handCardNodeMap[localChairID];
         let startPosNode = this.m_startCardPosNode[localChairID];
         let startPos = startPosNode.getPosition();
         for (let i = 0; i < cardNum; i++) {
@@ -77,7 +77,7 @@ export default class CardConsole extends cc.Component {
             n.getComponent('PokerCardNode').initWithCardData(handCardData[i]);
             this.node.addChild(n);
             curHandCardNodeVec.push(n);
-            this.m_handCardNodeMap.set(localChairID, curHandCardNodeVec);
+            this.m_handCardNodeMap[localChairID] = curHandCardNodeVec;
             n.setPosition(cc.p(startPos.x, startPos.y));
         }
         this.sortZOrder(localChairID);
@@ -93,7 +93,7 @@ export default class CardConsole extends cc.Component {
         let startPosNode = this.m_startCardPosNode[localChairID];
         let startPos = startPosNode.getPosition();
         let cardNum = handCardData.length;
-        let curHandCardNodeVec = this.m_handCardNodeMap.get(localChairID);
+        let curHandCardNodeVec = this.m_handCardNodeMap[localChairID];
         let demoNode = curHandCardNodeVec[0];
         let act = [];
         let step = cardNum - 1;
@@ -143,7 +143,7 @@ export default class CardConsole extends cc.Component {
             return;
         }
         this.m_moveCards = true;
-        let curHandCardNodeVec = this.m_handCardNodeMap.get(localChairID);
+        let curHandCardNodeVec = this.m_handCardNodeMap[localChairID];
         let demoNode = curHandCardNodeVec[0];
         let cardNodesLength = demoNode.width / 3.5 * (handCardData.length - 1) + demoNode.width;
         let startPosNode = this.m_startCardPosNode[localChairID];
@@ -178,7 +178,7 @@ export default class CardConsole extends cc.Component {
             return;
         }
         this.m_moveCards = true;
-        let curHandCardNodeVec = this.m_handCardNodeMap.get(localChairID);
+        let curHandCardNodeVec = this.m_handCardNodeMap[localChairID];
         let demoNode = curHandCardNodeVec[0];
         let cardNodesLength = demoNode.width / 3.5 * (handCardData.length - 1) + demoNode.width;
         let startPosNode = this.m_startCardPosNode[localChairID];
@@ -227,7 +227,7 @@ export default class CardConsole extends cc.Component {
         var cardNodePrefab = ResMgrIns.getRes('PokerCardNode');
         let demoNode = cc.instantiate(cardNodePrefab);
         let cardNodesLength = demoNode.width / 3.5 * (handCardData.length - 1) + demoNode.width;
-        let curHandCardNodeVec = this.m_handCardNodeMap.get(localChairID);
+        let curHandCardNodeVec = this.m_handCardNodeMap[localChairID];
         let startPosNode = this.m_startCardPosNode[localChairID];
         let startPos = startPosNode.getPosition();
         startPos.x -= cardNodesLength / 2.0 - demoNode.width / 2.0;
@@ -239,11 +239,11 @@ export default class CardConsole extends cc.Component {
                 curHandCardNodeVec.push(n);
                 n.setPosition(cc.p(startPos.x + n.width / 3.5 * i, startPos.y));
             }
-            this.m_handCardNodeMap.set(localChairID, curHandCardNodeVec);
+            this.m_handCardNodeMap[localChairID] = curHandCardNodeVec;
         } else {
             //need move act
             //same card checkPos
-            let curHandCardNodeVec = this.m_handCardNodeMap.get(localChairID);
+            let curHandCardNodeVec = this.m_handCardNodeMap[localChairID];
             if (curHandCardNodeVec.length == handCardData.length) {
                 for (let i = 0; i < handCardData.length; i++) {
                     let n = curHandCardNodeVec[i];
@@ -260,7 +260,7 @@ export default class CardConsole extends cc.Component {
     }
 
     sortZOrder (localChairID) {
-        let curHandCardNodeVec = this.m_handCardNodeMap.get(localChairID);
+        let curHandCardNodeVec = this.m_handCardNodeMap[localChairID];
         for (let i = 0; i < curHandCardNodeVec.length; i++) {
             curHandCardNodeVec[i].setLocalZOrder(i);
         }
@@ -297,7 +297,7 @@ export default class CardConsole extends cc.Component {
     checkTouchPosContainCardNode (touchPos) {
         this.m_startGrayIDX = -1;
         this.m_endGrayIDX = -1;
-        let curCardNodeVec = this.m_handCardNodeMap.get(0);
+        let curCardNodeVec = this.m_handCardNodeMap[0];
         for (let i = curCardNodeVec.length - 1; i >= 0; i--) {
             let n = curCardNodeVec[i];
             let p = n.convertToWorldSpace(cc.v2(0, 0));
@@ -311,7 +311,7 @@ export default class CardConsole extends cc.Component {
     }
 
     checkTouchMove (touchPos) {
-        let curCardNodeVec = this.m_handCardNodeMap.get(0);
+        let curCardNodeVec = this.m_handCardNodeMap[0];
         for (let i = curCardNodeVec.length - 1; i >= 0; i--) {
             let n = curCardNodeVec[i];
             let p = n.convertToWorldSpace(cc.v2(0, 0));
@@ -325,7 +325,7 @@ export default class CardConsole extends cc.Component {
     }
 
     checkGrayCard () {
-        let curCardNodeVec = this.m_handCardNodeMap.get(0);
+        let curCardNodeVec = this.m_handCardNodeMap[0];
         let maxID = this.m_startGrayIDX > this.m_endGrayIDX ? this.m_startGrayIDX : this.m_endGrayIDX;
         let minID = this.m_startGrayIDX < this.m_endGrayIDX ? this.m_startGrayIDX : this.m_endGrayIDX;
         let cardNode = null;
@@ -508,7 +508,7 @@ export default class CardConsole extends cc.Component {
             }
         }
         //stand some unselectedCards
-        let curHandCardNodeVec = this.m_handCardNodeMap.get(0);
+        let curHandCardNodeVec = this.m_handCardNodeMap[0];
         for (let i = 0; i < curHandCardNodeVec.length; i++) {
             let tempNode = curHandCardNodeVec[i];
             let comp = tempNode.getComponent('PokerCardNode');
@@ -560,7 +560,7 @@ export default class CardConsole extends cc.Component {
     }
 
     showHandCardNeedRomove (localChairID, handCardData) {
-        let curCardNodeVec = this.m_handCardNodeMap.get(localChairID);
+        let curCardNodeVec = this.m_handCardNodeMap[localChairID];
         let curCardNum = handCardData.length;
         if (curCardNum == curCardNodeVec.length) {
             return;
@@ -574,7 +574,7 @@ export default class CardConsole extends cc.Component {
                 i--;
             }
         }
-        this.m_handCardNodeMap.set(localChairID, curCardNodeVec);
+        this.m_handCardNodeMap[localChairID] = curCardNodeVec;
         if (curCardNodeVec.length == 0) {
             return;
         }
@@ -582,7 +582,7 @@ export default class CardConsole extends cc.Component {
     }
 
     showHandCardNeedAdd (localChairID, handCardData) {
-        let curCardNodeVec = this.m_handCardNodeMap.get(localChairID);
+        let curCardNodeVec = this.m_handCardNodeMap[localChairID];
         let curCardNum = handCardData.length;
         if (curCardNum == curCardNodeVec.length) {
             return;
@@ -627,7 +627,7 @@ export default class CardConsole extends cc.Component {
         for (let i = 0; i < handCardData.length; i++) {
             curCardNodeVec.push(nodeCardMap[handCardData[i]]);
         }
-        this.m_handCardNodeMap.set(localChairID, curCardNodeVec);
+        this.m_handCardNodeMap[localChairID] = curCardNodeVec;
         this.sortZOrder(localChairID);
         this.addMoveCards(localChairID, handCardData, addCardDataVec, addCardNodeVec);
     }
@@ -848,7 +848,7 @@ export default class CardConsole extends cc.Component {
 
     setSelectedCard (selectedCards) {
         this.sitAllCards();
-        let curCardNodeVec = this.m_handCardNodeMap.get(0);
+        let curCardNodeVec = this.m_handCardNodeMap[0];
         for (let i = curCardNodeVec.length - 1; i >= 0; i--) {
             let n = curCardNodeVec[i];
             let comp = n.getComponent('PokerCardNode');
@@ -890,17 +890,20 @@ export default class CardConsole extends cc.Component {
         for (let i = 0; i < PlayerCount; i++) {
             this.clearOutCard(i);
         }
-        this.m_handCardNodeMap.forEach(function(item, key){
+
+        for (let key in this.m_handCardNodeMap) {
+            let item = this.m_handCardNodeMap[key];
             if (item && item.length) {
                 for (let i = 0; i < item.length; i++) {
                     item[i].destroy();
                 }
             }
-        });
+        }
+        
         this._selectedCardVec = [];
         this._grayCardVec = [];
         for (let i = 0; i < PlayerCount; i++) {
-            this.m_handCardNodeMap.set(i, []);
+            this.m_handCardNodeMap[i] = [];
         }
     }
 };

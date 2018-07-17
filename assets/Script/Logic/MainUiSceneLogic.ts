@@ -60,15 +60,15 @@ class MainUiSceneLogic extends Singleton {
             {
                 msgID: eMsgType.MSG_ENTER_ROOM,
                 roomID: roomID,
-                uid: userData.uid,
-            }, 
-            eMsgType.MSG_PLAYER_LOGIN, 
+                uid: userData.uid
+            },
+            eMsgType.MSG_ENTER_ROOM,
             MyUtils.getInstance().parePortTypte(roomID),
-            roomID)
+            roomID);
     }
 
     onNetClose() {
-        
+
     }
 
     onNetReconnected() {
@@ -101,45 +101,31 @@ class MainUiSceneLogic extends Singleton {
             this.requestEnterRoom(roomID);
         }
     }
-    
-    private _onMsgRoomInfoRsp(jsMsg) {
-        if (jsMsg.ret == 0) {var gameType = MyUtils.parePortTypte(jsMsg.roomID);
-            if (gameType == eMsgPort.ID_MSG_PORT_DOU_DI_ZHU) {
-            //if (false) {
-                let ddzPlayerDataLogic = DDZPlayerData.getInstance();
-                ddzPlayerDataLogic.init();
 
-                let ddzDataLogic = DDZGameDataLogic.getInstance();
-                ddzDataLogic.onMessage(JSON.stringify(jsMsg));
-                cc.loader.loadRes("com/prefab/CommonLoading", cc.Prefab, function (err, prefab) {
-                    if (err) {
-                        console.log("load[com/prefab/CommonLoading] failed");
-                    }
-                    let loadNode = cc.instantiate(prefab);
-                    loadNode.parent = cc.director.getScene();
-                    loadNode.parent = this.node;
-                    let loadComp = loadNode.getComponent('CommonLoading');
-                    loadComp.initWithResPathList(gameType, ()=>{
-                        if(this._playerInfo){
-                            ddzPlayerDataLogic.onMessage(JSON.stringify(this._playerInfo));
-                        }
-                        cc.view.adjustViewPort(true);
-                        cc.view.resizeWithBrowserSize(true);
-                        cc.view.setOrientation(cc.macro.ORIENTATION_LANDSCAPE);
-                        cc.director.loadScene("NewDDZGameScene");
-                    });
-                }.bind(this));
-            } else {
-                cc.loader.loadRes("com/prefab/LoadGameScene", cc.Prefab, function (err, prefab) {
-                    if (err) {
-                        console.log("加载[com/prefab/LoadGameScene]资源失败");
-                    }
-                    var layer = cc.instantiate(prefab);
-                    layer.parent = cc.director.getScene();
-                    layer.setPosition(cc.p(0, 0));
-                    layer.getComponent('LoadGameScene').openGameScene(jsMsg, this._playerInfo);
-                }.bind(this));
-            }
+    private _onMsgRoomInfoRsp(jsMsg) {
+        var gameType = MyUtils.parePortTypte(jsMsg.roomID);
+        if (gameType == eMsgPort.ID_MSG_PORT_DOU_DI_ZHU) {
+            //if (false) {
+            let ddzPlayerDataLogic = DDZPlayerData.getInstance();
+            ddzPlayerDataLogic.init();
+
+            let ddzDataLogic = DDZGameDataLogic.getInstance();
+            ddzDataLogic.onMessage(jsMsg);
+            cc.loader.loadRes("com/prefab/CommonLoading", cc.Prefab, function (err, prefab) {
+                if (err) {
+                    console.log("load[com/prefab/CommonLoading] failed");
+                }
+                let loadNode = cc.instantiate(prefab);
+                loadNode.parent = cc.director.getScene();
+                loadNode.parent = this.node;
+                let loadComp = loadNode.getComponent('CommonLoading');
+                loadComp.initWithResPathList(gameType, () => {
+                    cc.view.adjustViewPort(true);
+                    cc.view.resizeWithBrowserSize(true);
+                    cc.view.setOrientation(cc.macro.ORIENTATION_LANDSCAPE);
+                    cc.director.loadScene("NewDDZGameScene");
+                });
+            }.bind(this));
         }
     }
 

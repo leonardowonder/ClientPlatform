@@ -5,6 +5,8 @@ import Singleton from '../../Utils/Singleton';
 export enum EmPrefabEnum {
     Prefab_Loading = 0,
     Prefab_TendencyChart,
+    Prefab_MessageBox,
+    Prefab_PromptDialogLayer,
     Prefab_Max
 }
 
@@ -22,6 +24,8 @@ class PrefabManager extends Singleton {
     private static s_prefabConfig = [
         { path: 'prefab/common/Loading', componentName: 'Loading' },
         { path: 'prefab/gamePlay/tendencyChart/TendencyChart', componentName: 'TendencyChart' },
+        { path: 'prefab/common/MessageBoxLayer', componentName: 'MessageBoxLayer' },
+        { path: 'prefab/common/PromptDialogLayer', componentName: 'PromptDialogLayer' },
     ];
 
     private _loadingList: EmPrefabEnum[] = [];
