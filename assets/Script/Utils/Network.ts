@@ -112,15 +112,14 @@ class Network extends Singleton {
             return;
         }
 
-        console.log(' on msg ' + ev.data);
         let msg = JSON.parse(ev.data);
         if (msg == null) {
             cc.error('can not pase set msg : ' + ev.data);
             return;
         }
-        
+
         let nMsgID: number = msg[ClientDefine.msgKey];
-        console.log('on msg success msg str =', getMsgStr(nMsgID));
+        console.log('on msg str =', getMsgStr(nMsgID), '\nmsg =', ev.data);
         // check call back 
         for (let idx = 0; idx < this.vMsgCallBack.length; ++idx) {
             if (this.vMsgCallBack[idx][0] != nMsgID) {
@@ -154,7 +153,7 @@ class Network extends Singleton {
 
     sendMsg(jsMsg: any, msgID: number, targetPort: number, targetID: number, callBack: Function = null): boolean {
         if (this.mWebSocket.readyState != WebSocket.OPEN) {
-            cc.error('socket is not open , can not send msgid = ' + msgID, 'msg str =', getMsgStr(msgID));
+            cc.error('socket is not open , can not send msg str =', getMsgStr(msgID), ' msgid =', msgID);
             return false;
         }
         let jsPacket = {};
@@ -165,7 +164,7 @@ class Network extends Singleton {
         jsPacket['JS'] = JSON.stringify(jsMsg);
         this.mWebSocket.send(JSON.stringify(jsPacket));
 
-        console.log('send msg : ' + JSON.stringify(jsPacket), 'msg str =', getMsgStr(msgID));
+        console.log('send msg str =', getMsgStr(msgID), 'msg = ', JSON.stringify(jsPacket));
         if (callBack != null) // reg call back ;
         {
             let p: [number, Function];
