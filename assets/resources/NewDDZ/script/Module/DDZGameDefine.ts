@@ -62,6 +62,21 @@ export let TagAnalyseResult = function() {
     }
 };
 
+//0:隐藏,1:准备,2:1分,3:2分,4:3分,5:不叫,6:不抢,7:明牌,8:不出,9:加倍
+export enum EmDDZPlayerState {
+    State_None = 0,
+    State_Ready,
+    State_Score1,
+    State_Score2,
+    State_Score3,
+    State_NoCall,
+    State_NoRob,
+    State_ShowCards,
+    State_NoDiscard,
+    State_Add,
+    State_Max
+}
+
 
 //出牌结果
 // struct tagOutCardResult

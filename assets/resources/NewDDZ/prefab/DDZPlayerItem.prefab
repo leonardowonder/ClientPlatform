@@ -32,9 +32,13 @@
     ],
     "_tag": -1,
     "_active": true,
-    "_components": [],
+    "_components": [
+      {
+        "__id__": 39
+      }
+    ],
     "_prefab": {
-      "__id__": 39
+      "__id__": 40
     },
     "_id": "",
     "_opacity": 255,
@@ -273,7 +277,7 @@
       "__id__": 1
     },
     "asset": {
-      "__id__": 0
+      "__uuid__": "a9e5c107-8e00-4518-8c36-27cd5b58619d"
     },
     "fileId": "eeGAbnGHhBWb9pts9iRveS",
     "sync": false
@@ -300,7 +304,7 @@
       "__id__": 1
     },
     "asset": {
-      "__id__": 0
+      "__uuid__": "a9e5c107-8e00-4518-8c36-27cd5b58619d"
     },
     "fileId": "96fF+/Ka5Dr5SeTvH/MdMV",
     "sync": false
@@ -445,7 +449,7 @@
       "__id__": 1
     },
     "asset": {
-      "__id__": 0
+      "__uuid__": "a9e5c107-8e00-4518-8c36-27cd5b58619d"
     },
     "fileId": "75EDbgmulAtY2+1BM/JFhj",
     "sync": false
@@ -482,7 +486,7 @@
       "__id__": 1
     },
     "asset": {
-      "__id__": 0
+      "__uuid__": "a9e5c107-8e00-4518-8c36-27cd5b58619d"
     },
     "fileId": "3dO4P17f5NlLL3pD4NoPHV",
     "sync": false
@@ -493,7 +497,7 @@
       "__id__": 1
     },
     "asset": {
-      "__id__": 0
+      "__uuid__": "a9e5c107-8e00-4518-8c36-27cd5b58619d"
     },
     "fileId": "c4VkqmkORNXJGqUrnVKxfd",
     "sync": false
@@ -699,7 +703,7 @@
       "__id__": 1
     },
     "asset": {
-      "__id__": 0
+      "__uuid__": "a9e5c107-8e00-4518-8c36-27cd5b58619d"
     },
     "fileId": "9cMJaaVrRMUIudY3o0o6nb",
     "sync": false
@@ -786,7 +790,7 @@
       "__id__": 1
     },
     "asset": {
-      "__id__": 0
+      "__uuid__": "a9e5c107-8e00-4518-8c36-27cd5b58619d"
     },
     "fileId": "e0Sui8audDma4eqEFbwFJe",
     "sync": false
@@ -823,7 +827,7 @@
       "__id__": 1
     },
     "asset": {
-      "__id__": 0
+      "__uuid__": "a9e5c107-8e00-4518-8c36-27cd5b58619d"
     },
     "fileId": "ca3d6UJYdLI40BgHl/W9BO",
     "sync": false
@@ -834,7 +838,7 @@
       "__id__": 1
     },
     "asset": {
-      "__id__": 0
+      "__uuid__": "a9e5c107-8e00-4518-8c36-27cd5b58619d"
     },
     "fileId": "23r7tm60lOzLO87Btr8rLz",
     "sync": false
@@ -925,7 +929,7 @@
       "__id__": 1
     },
     "asset": {
-      "__id__": 0
+      "__uuid__": "a9e5c107-8e00-4518-8c36-27cd5b58619d"
     },
     "fileId": "07gjc667RJ6JE4GMcegKiL",
     "sync": false
@@ -1070,7 +1074,7 @@
       "__id__": 1
     },
     "asset": {
-      "__id__": 0
+      "__uuid__": "a9e5c107-8e00-4518-8c36-27cd5b58619d"
     },
     "fileId": "7fbFMv9F9ML6Ti+opzCfxp",
     "sync": false
@@ -1107,7 +1111,7 @@
       "__id__": 1
     },
     "asset": {
-      "__id__": 0
+      "__uuid__": "a9e5c107-8e00-4518-8c36-27cd5b58619d"
     },
     "fileId": "05+ALcKo9NY6o58YAmk2Vi",
     "sync": false
@@ -1198,10 +1202,54 @@
       "__id__": 1
     },
     "asset": {
-      "__id__": 0
+      "__uuid__": "a9e5c107-8e00-4518-8c36-27cd5b58619d"
     },
     "fileId": "48D+rlSCpK4qvF0gsjNuzS",
     "sync": false
+  },
+  {
+    "__type__": "1f988EeUk9NaZok2jgutOFn",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 1
+    },
+    "_enabled": true,
+    "m_headSprite": {
+      "__id__": 5
+    },
+    "m_landlordTag": {
+      "__id__": 27
+    },
+    "m_restCardNumLabel": {
+      "__id__": 32
+    },
+    "m_stateSprite": {
+      "__id__": 37
+    },
+    "m_nickName": {
+      "__id__": 11
+    },
+    "m_stateFrames": [
+      {
+        "__uuid__": "c50ea046-c79a-47da-b5b6-45a3a3b013aa"
+      },
+      {
+        "__uuid__": "acb7d435-20f1-4e62-922b-681347a1bab5"
+      },
+      {
+        "__uuid__": "29e3f354-bc50-4b71-92c7-e20d000d1094"
+      },
+      {
+        "__uuid__": "fedd0d65-08c3-4a79-a0a2-489f117d45f4"
+      },
+      {
+        "__uuid__": "c316b559-2ff4-4ed0-968e-aadbc593752f"
+      },
+      null
+    ],
+    "m_localChairID": -1,
+    "m_serverChairID": -1
   },
   {
     "__type__": "cc.PrefabInfo",
@@ -1209,7 +1257,7 @@
       "__id__": 1
     },
     "asset": {
-      "__id__": 0
+      "__uuid__": "a9e5c107-8e00-4518-8c36-27cd5b58619d"
     },
     "fileId": "df9QVzsnFOIaNA2YgFzUta",
     "sync": false

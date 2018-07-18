@@ -4,14 +4,12 @@ import UserData from '../../../../Script/Data/UserData';
 import GameLogic from '../Data/../Module/Game/GameLogic';
 import ResManager from '../Module/Custom/ResManager';
 import DDZGameDataLogic from '../Data/DDZGameDataLogic';
-import { eRoomPeerState, eRoomState } from '../Define/DDZDefine';
 import { DDZCardType, SortType } from '../Module/DDZGameDefine';
 import NetSink from '../Module/Game/TableSink';
 import DDZPlayerData from '../Data/DDZPlayerData';
 import CardConsole from '../Module/Game/CardConsole';
 import CardHelper from '../Control/CardHelper';
-import PlayerUINode from './PlayerUINode';
-import HandCardLogic from '../Control/HandCardLogic';
+import PlayerRootLayer from './PlayerRootLayer';
 import DDZLanguage from '../Data/DDZLanguage';
 import PrefabManager, { EmPrefabEnum } from '../../../../Script/Manager/CommonManager/PrefabManager';
 import SceneManager, { EmSceneID } from '../../../../Script/Manager/CommonManager/SceneManager';
@@ -41,10 +39,8 @@ export default class TableMainUI extends cc.Component {
     @property(NetSink)
     m_netSink: NetSink = null;
 
-    @property(HandCardLogic)
-    m_handLogicComp: HandCardLogic[] = [];
-    @property(PlayerUINode)
-    m_headUINodeComp: PlayerUINode[] = [];
+    @property(PlayerRootLayer)
+    m_playerRootLayer: PlayerRootLayer = null;
 
     @property
     m_curActIdx: number = -1;
@@ -62,19 +58,8 @@ export default class TableMainUI extends cc.Component {
         this.m_consoleNode.init(this);
         this.m_cardHelper.init(this);
         this.m_netSink.init(this);
-        this.m_handLogicComp = [];
-        for (let i = 0; i < this.m_chairNodes.length; i++) {
-            let comp1: HandCardLogic = this.m_chairNodes[i].getComponent(HandCardLogic);
-            comp1.init();
-            this.m_handLogicComp.push(comp1);
-            comp1.setLocalChairID(i);
 
-            let comp2: PlayerUINode = this.m_chairNodes[i].getComponent(PlayerUINode);
-            comp2.init();
-            this.m_headUINodeComp.push(comp2);
-            comp2.setLocalChairID(i);
-            comp2.standUp();
-        }
+        this.m_playerRootLayer.init();
 
         this.m_btnGroupController.hideAll();
     }
@@ -99,27 +84,27 @@ export default class TableMainUI extends cc.Component {
     }
 
     showLayer() {
-        for (let idx = 0; idx < DDZDataMgrIns._seatCnt; idx++) {
-            let playerData = DDZPlayerDataLogic._players[idx];
-            if (playerData && playerData.uid > 0) {
-                if (this.getLocalIDByChairID(idx) > -1) {
-                    this.m_headUINodeComp[this.getLocalIDByChairID(idx)].sitDown(playerData);
-                }
-                if (DDZPlayerDataLogic._players[idx].uid == userData.uid) {
-                    if (DDZDataMgrIns._roomState != eRoomState.eRoomSate_WaitReady &&
-                        DDZPlayerDataLogic._players[idx].cards) {
-                        // for (let i = 0; i < DDZGameData.players[idx].cards.length; i++) {
-                        //     this.m_pMyCardManager.node.getComponent('DDZMyHoldCardManager').showCardByArray(DDZGameData.players[idx].cards);
-                        // }
-                    }
-                    if (DDZDataMgrIns._roomState == eRoomState.eRoomSate_WaitReady &&
-                        DDZPlayerDataLogic._players[idx].state != eRoomPeerState.eRoomPeer_Ready) {
-                        //auto ready
-                    } else {
-                    }
-                }
-            }
-        }
+        // for (let idx = 0; idx < DDZDataMgrIns._seatCnt; idx++) {
+        //     let playerData = DDZPlayerDataLogic._players[idx];
+        //     if (playerData && playerData.uid > 0) {
+        //         if (this.getLocalIDByChairID(idx) > -1) {
+        //             this.m_headUINodeComp[this.getLocalIDByChairID(idx)].sitDown(playerData);
+        //         }
+        //         if (DDZPlayerDataLogic._players[idx].uid == userData.uid) {
+        //             if (DDZDataMgrIns._roomState != eRoomState.eRoomSate_WaitReady &&
+        //                 DDZPlayerDataLogic._players[idx].cards) {
+        //                 // for (let i = 0; i < DDZGameData.players[idx].cards.length; i++) {
+        //                 //     this.m_pMyCardManager.node.getComponent('DDZMyHoldCardManager').showCardByArray(DDZGameData.players[idx].cards);
+        //                 // }
+        //             }
+        //             if (DDZDataMgrIns._roomState == eRoomState.eRoomSate_WaitReady &&
+        //                 DDZPlayerDataLogic._players[idx].state != eRoomPeerState.eRoomPeer_Ready) {
+        //                 //auto ready
+        //             } else {
+        //             }
+        //         }
+        //     }
+        // }
         this.updateShowNotStartButton();
         if (!DDZPlayerDataLogic.getPlayerDataByUID(userData.uid)) {
             this.m_netSink.sendEnterRoom();
@@ -212,35 +197,34 @@ export default class TableMainUI extends cc.Component {
         }
     }
 
-    setHandCard(localChairID, cardDataVec) {
-        let comp = this.m_handLogicComp[localChairID];
-        comp.setHandCard(cardDataVec);
+    setHandCard(localChairID: number, cardDataVec) {
+        this.m_playerRootLayer.setHandCard(localChairID, cardDataVec);
     }
 
-    showHandCard(localChairID) {
-        let cardData = this.m_handLogicComp[localChairID].m_handCardData;
+    showHandCard(localChairID: number) {
+        let cardData = this.m_playerRootLayer.getHandCard(localChairID);
         this.m_consoleNode.showHandCard(localChairID, cardData);
     }
 
-    showDispatchCards(localChairID) {
-        let cardData = this.m_handLogicComp[localChairID].m_handCardData;
+    showDispatchCards(localChairID: number) {
+        let cardData = this.m_playerRootLayer.getHandCard(localChairID);
         this.m_consoleNode.showDisPatchCards(localChairID, cardData);
     }
 
-    removeHandCard(localChairID, removeVec) {
-        this.m_handLogicComp[localChairID].removeHandCard(removeVec);
+    removeHandCard(localChairID: number, removeVec) {
+        this.m_playerRootLayer.removeHandCard(localChairID, removeVec);
     }
 
-    addHandCard(localChairID, addVec) {
-        this.m_handLogicComp[localChairID].addHandCard(addVec);
-        let cardData = this.m_handLogicComp[localChairID].m_handCardData;
+    addHandCard(localChairID: number, addVec) {
+        this.m_playerRootLayer.addHandCard(localChairID, addVec);
+        let cardData = this.m_playerRootLayer.getHandCard(localChairID);
         this.m_consoleNode.showHandCard(localChairID, cardData);
     }
 
     sendOutCard(localChairID, sendCardVec, serverCardType) {
         if (localChairID == 0) {
             this.removeHandCard(localChairID, sendCardVec);
-            let cardData = this.m_handLogicComp[localChairID].m_handCardData;
+            let cardData = this.m_playerRootLayer.getHandCard(localChairID);
             this.m_consoleNode.showHandCard(localChairID, cardData);
         } else {
 
@@ -265,7 +249,7 @@ export default class TableMainUI extends cc.Component {
     }
 
     analyeMyCard() {//can offer card
-        let result = this.m_cardHelper.searchOutCard(this.m_handLogicComp[0].m_handCardData);
+        let result = this.m_cardHelper.searchOutCard(this.m_playerRootLayer.getHandCard(0));
 
         this.m_btnGroupController.hideAll();
 
@@ -379,27 +363,26 @@ export default class TableMainUI extends cc.Component {
         PrefabManager.getInstance().showPrefab(EmPrefabEnum.Prefab_MessageBox, [messageText, confimCallback]);
     }
 
-    sitDown(playerData, serverChairID) {
-        if (this.getLocalIDByChairID(serverChairID) == -1) {
+    updatePlayerData(playerData, serverChairID) {
+        let clientIdx = this.getLocalIDByChairID(serverChairID);
+        if (clientIdx == -1) {
             return;
         }
-        this.m_headUINodeComp[this.getLocalIDByChairID(serverChairID)].sitDown(playerData);
+        
+        this.m_playerRootLayer.setPlayerData(clientIdx, playerData);
     }
 
     standUp(serverChairID) {
-        this.m_headUINodeComp[this.getLocalIDByChairID(serverChairID)].standUp();
-    }
+        let clientIdx = this.getLocalIDByChairID(serverChairID);
 
-    setName(serverID, name) {
-        this.m_headUINodeComp[this.getLocalIDByChairID(serverID)].setName(name);
-    }
-
-    setHead(serverID, headIcon) {
-        this.m_headUINodeComp[this.getLocalIDByChairID(serverID)].setHead(headIcon);
+        this.m_playerRootLayer.clearPlayerData(clientIdx);
+        this.m_playerRootLayer.hide(clientIdx);
     }
 
     setStateTag(serverID, stateTag) {
-        this.m_headUINodeComp[this.getLocalIDByChairID(serverID)].setState(stateTag);
+        let clientIdx = this.getLocalIDByChairID(serverID);
+
+        this.m_playerRootLayer.updateState(clientIdx, stateTag);
     }
 
     openRoom() {
