@@ -150,37 +150,37 @@ export default class PlayerUINode extends cc.Component {
     setState(stateTag) {
         //0:隐藏,1:准备,2:1分,3:2分,4:3分,5:不叫,6:不抢,7:明牌,8:不出,9:加倍
         console.log("setState : " + stateTag);
-        let spriteAtlas = ResMgrIns.getRes('CaoZuo');
-        this.m_stateSprite.node.active = stateTag > 0;
-        switch (stateTag) {
-            case 1:
-                this.m_stateSprite.spriteFrame = spriteAtlas.getSpriteFrame("zhunbei2");
-                break;
-            case 2:
-                this.m_stateSprite.node.active = false;
-                break;
-            case 3:
-                this.m_stateSprite.spriteFrame = spriteAtlas.getSpriteFrame("playing-jichu-erfen_zhuomian_jinbiaosai");
-                break;
-            case 4:
-                this.m_stateSprite.spriteFrame = spriteAtlas.getSpriteFrame("playing-jichu-sanfen_zhuomian_jinbiaosai");
-                break;
-            case 5:
-                this.m_stateSprite.spriteFrame = spriteAtlas.getSpriteFrame("playing-jichu-bujiao_playing");
-                break;
-            case 6:
-                this.m_stateSprite.spriteFrame = spriteAtlas.getSpriteFrame("playing-jichu-buqiang_playing");
-                break;
-            case 7:
-                this.m_stateSprite.spriteFrame = spriteAtlas.getSpriteFrame("playing-jichu-mingpai_playing");
-                break;
-            case 8:
-                this.m_stateSprite.spriteFrame = spriteAtlas.getSpriteFrame("playing-jichu-buchu_playing");
-                break;
-            case 9:
-                this.m_stateSprite.spriteFrame = spriteAtlas.getSpriteFrame("playing-jichu-jiabei_playing");
-                break;
-        }
+        // let spriteAtlas = ResMgrIns.getRes('CaoZuo');
+        // this.m_stateSprite.node.active = stateTag > 0;
+        // switch (stateTag) {
+        //     case 1:
+        //         this.m_stateSprite.spriteFrame = spriteAtlas.getSpriteFrame("zhunbei2");
+        //         break;
+        //     case 2:
+        //         this.m_stateSprite.node.active = false;
+        //         break;
+        //     case 3:
+        //         this.m_stateSprite.spriteFrame = spriteAtlas.getSpriteFrame("playing-jichu-erfen_zhuomian_jinbiaosai");
+        //         break;
+        //     case 4:
+        //         this.m_stateSprite.spriteFrame = spriteAtlas.getSpriteFrame("playing-jichu-sanfen_zhuomian_jinbiaosai");
+        //         break;
+        //     case 5:
+        //         this.m_stateSprite.spriteFrame = spriteAtlas.getSpriteFrame("playing-jichu-bujiao_playing");
+        //         break;
+        //     case 6:
+        //         this.m_stateSprite.spriteFrame = spriteAtlas.getSpriteFrame("playing-jichu-buqiang_playing");
+        //         break;
+        //     case 7:
+        //         this.m_stateSprite.spriteFrame = spriteAtlas.getSpriteFrame("playing-jichu-mingpai_playing");
+        //         break;
+        //     case 8:
+        //         this.m_stateSprite.spriteFrame = spriteAtlas.getSpriteFrame("playing-jichu-buchu_playing");
+        //         break;
+        //     case 9:
+        //         this.m_stateSprite.spriteFrame = spriteAtlas.getSpriteFrame("playing-jichu-jiabei_playing");
+        //         break;
+        // }
 
     }
 

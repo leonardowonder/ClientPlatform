@@ -15,6 +15,7 @@ import HandCardLogic from '../Control/HandCardLogic';
 import DDZLanguage from '../Data/DDZLanguage';
 import PrefabManager, { EmPrefabEnum } from '../../../../Script/Manager/CommonManager/PrefabManager';
 import SceneManager, { EmSceneID } from '../../../../Script/Manager/CommonManager/SceneManager';
+import DDZButtonGroupController from '../Controller/DDZButtonGroupController';
 
 let userData = UserData.getInstance();
 let ResMgrIns = ResManager.getInstance();
@@ -27,24 +28,9 @@ let MAXPLAYER = 3;
 
 @ccclass
 export default class TableMainUI extends cc.Component {
-    @property(cc.Button)
-    m_btnQuit: cc.Button = null;
-    @property(cc.Button)
-    m_btnTip: cc.Button = null;
-    @property(cc.Button)
-    m_btnSend: cc.Button = null;
-    @property(cc.Button)
-    m_btnCantOffer: cc.Button = null;
-    @property(cc.Button)
-    m_btnClear: cc.Button = null;
-    @property(cc.Button)
-    m_readyBtn: cc.Button = null;
-    @property(cc.Button)
-    m_btnDismiss: cc.Button = null;
-    @property(cc.Button)
-    m_btnStart: cc.Button = null;
-    @property(cc.Node)
-    m_actBtnPanel: cc.Node = null;
+    @property(DDZButtonGroupController)
+    m_btnGroupController: DDZButtonGroupController = null;
+
     @property(cc.Node)
     m_chairNodes: cc.Node[] = [];
 
@@ -71,9 +57,7 @@ export default class TableMainUI extends cc.Component {
     @property(cc.Label)
     m_testLabel: cc.Label = null;
 
-
     init() {
-        this.m_actBtnPanel.active = false;
         DDZDataMgrIns.init();
         this.m_consoleNode.init(this);
         this.m_cardHelper.init(this);
@@ -92,8 +76,7 @@ export default class TableMainUI extends cc.Component {
             comp2.standUp();
         }
 
-        this.activeBtn(this.m_btnCantOffer, false);
-        this.activeBtn(this.m_btnSend, false);
+        this.m_btnGroupController.hideAll();
     }
 
     onLoad() {
@@ -132,9 +115,7 @@ export default class TableMainUI extends cc.Component {
                     if (DDZDataMgrIns._roomState == eRoomState.eRoomSate_WaitReady &&
                         DDZPlayerDataLogic._players[idx].state != eRoomPeerState.eRoomPeer_Ready) {
                         //auto ready
-                        this.m_readyBtn.node.active = true;
                     } else {
-                        this.m_readyBtn.node.active = false;
                     }
                 }
             }
@@ -143,148 +124,49 @@ export default class TableMainUI extends cc.Component {
         if (!DDZPlayerDataLogic.getPlayerDataByUID(userData.uid)) {
             this.m_netSink.sendEnterRoom();
         }
-
-        // this.showTiLaChuai(false)
-        // this.m_pChaoZhuangButton.node.active = false;
-        // this.m_pNoChaoZhuangButton.node.active = false;
-        // for (let idx = 0; idx < DDZGameData.seatCnt; idx++) {
-        //     this._users[idx].getComponent("DDZGameUser").waitCountDown(false, 15);
-        // }
-
-        // if (DDZGameData.roomState >= eRoomState.eRoomState_StartGame) {
-        //     this.checkQiangDiZhuButton(DDZGameData.roomState == eRoomState.eRoomState_RobotBanker && DDZGameData.players[DDZGameData.curActIdex].uid == userData.uid);
-        //     this.checkChuPaiButton(DDZGameData.roomState == eRoomState.eRoomState_DDZ_Chu && DDZGameData.players[DDZGameData.curActIdex].uid == userData.uid);
-        //     if (DDZGameData.roomState == eRoomState.eRoomState_DDZ_Chu) {
-        //         for (let idx = 0; idx < DDZGameData.seatCnt; idx++) {
-        //             if (DDZGameData.curActIdex != idx) {
-        //                 this._users[this.getLocalIdxByServerIdx(idx)].getComponent('DDZGameUser').showOutCard(DDZGameData.lastChu[idx], 0, false, false);
-        //             } else {
-        //                 this._users[this.getLocalIdxByServerIdx(idx)].getComponent('DDZGameUser').showOutCard([], 0, false, false);
-        //             }
-        //         }
-        //     }
-        //     this.waitUserAct();
-        // }
-        // if (DDZGameData.roomState == eRoomState.eRoomState_JJ_DDZ_Ti_La_Chuai) {
-        //     if (DDZGameData.waitTiLaChuaiPlayers && DDZGameData.waitTiLaChuaiPlayers.length) {
-        //         for (let i = 0; i < DDZGameData.waitTiLaChuaiPlayers.length; i++) {
-        //             if (DDZGameData.players[DDZGameData.waitTiLaChuaiPlayers[i]].uid == userData.uid) {
-        //                 this.showTiLaChuai(true);
-        //             } else {
-        //                 this._users[this.getLocalIdxByServerIdx(DDZGameData.players[DDZGameData.waitTiLaChuaiPlayers[i]].idx)].getComponent("DDZGameUser").waitCountDown(true, 15);
-        //             }
-        //         }
-        //     }
-        // } else if (DDZGameData.roomState == eRoomState.eRoomState_JJ_DDZ_Chao_Zhuang) {
-        //     var isShow = true;
-        //     if (DDZGameData.chosed && DDZGameData.chosed.length) {
-        //         for (let idx = 0; idx < DDZGameData.chosed.length; idx++) {
-        //             if (DDZGameData.players[DDZGameData.chosed[idx]].uid == userData.uid) {
-        //                 isShow = false;
-        //                 break;
-        //             }
-        //         }
-        //     }
-        //     this.m_pChaoZhuangButton.node.active = isShow;
-        //     this.m_pNoChaoZhuangButton.node.active = isShow;
-        // }
-        // for (let idx = 0; idx < 3; idx++) {
-        //     var card = this.m_pTitleBG.node.getChildByName("DZCard_" + (idx + 1)).getComponent('DDZCard');
-        //     if (DDZGameData.diPai && DDZGameData.diPai.length && DDZGameData.roomState < eRoomState.eRoomState_JJ_DDZ_Chao_Zhuang
-        //         && DDZGameData.roomState >= eRoomState.eRoomState_DDZ_Chu) {
-        //         card.setCardNum(DDZGameData.diPai[idx]);
-        //         card.fanPai(0, 0);
-        //         //card.showDiZhuIcon(true);
-        //     } else {
-        //         card.restore();
-        //     }
-        // }
-        // if (DDZGameData.isWaitingDismiss == 1) {
-        //     if (!this._DissolveLayer) {
-        //         this._DissolveLayer = cc.instantiate(this.m_pDDZDissolveLayer);
-        //         this._DissolveLayer.parent = this.node;
-        //         this._DissolveLayer.setPosition(cc.p(0, 0));
-        //         this._DissolveLayer.setLocalZOrder(59);
-        //     }
-        //     for (let idx = 0; idx < DDZGameData.seatCnt; idx++) {
-        //         if (DDZGameData.players[idx].uid == DDZGameData.applyDismissUID) {
-        //             this._DissolveLayer.getComponent('DDZDissolveLayer').show(DDZGameData.players[idx].idx, DDZGameData.DismissLeftWaitTime);
-        //             break;
-        //         }
-        //     }
-        //     if (DDZGameData.agreeIdxs && DDZGameData.agreeIdxs.length) {
-        //         for (let idx = 0; idx < DDZGameData.agreeIdxs.length; idx++) {
-        //             if (DDZGameData.players[idx].uid != DDZGameData.applyDismissUID) {
-        //                 this._DissolveLayer.getComponent('DDZDissolveLayer').playerIsAgree(DDZGameData.agreeIdxs[idx], true);
-        //             }
-        //         }
-        //     }
-        // } else if (this._DissolveLayer) {
-        //     this._DissolveLayer.removeFromParent(true);
-        //     this._DissolveLayer = null;
-        // }
-        //this.updateRoomInfo();
-
     }
 
     activeBtn(btn, active) {
         btn.node.active = active;
     }
 
-    btnCall(event, customData) {
-        var btn = event.target.getComponent(cc.Button);
-        if (btn == this.m_btnQuit) {
-            //cc.director.loadScene("MainUIScene");
-            //test
-            //this.addHandCard(0, [40, 41, 66, 129, 148, 156]);
-            // let outCardVec = [72,81,74,80,82,73,98,88,89,97,90,96];
-            // //this.sendOutCard(0, outCardVec, 6);
-            // this.sendOutCard(1, outCardVec, 7);
-            // //this.sendOutCard(2, outCardVec, 7);
-            // this.setCurOutCard(outCardVec, 7);
-            // this.setCurLocalChairID(0);
-            var isOK = false;
-            if (DDZDataMgrIns._clubID || DDZDataMgrIns._createUID != userData.uid) {
-                for (let idx = 0; idx < MAXPLAYER; idx++) {
-                    let playerData = DDZPlayerDataLogic._players[idx];
-                    if (!playerData.uid) {
-                        isOK = true;
-                        break;
-                    }
+    onQuitClick() {
+        var isOK = false;
+        if (DDZDataMgrIns._clubID || DDZDataMgrIns._createUID != userData.uid) {
+            for (let idx = 0; idx < MAXPLAYER; idx++) {
+                let playerData = DDZPlayerDataLogic._players[idx];
+                if (!playerData.uid) {
+                    isOK = true;
+                    break;
                 }
             }
-            if (isOK) {
-                this.m_netSink.sendLeaveRoom();
-            } else {
-                var info = DDZLanguage.InfoType.MainGame.DELETE_ROOM;
-                let confimCallback = () => {
-                    this.m_netSink.sendApplyDismissRoom();
-                };
-
-                PrefabManager.getInstance().showPrefab(EmPrefabEnum.Prefab_MessageBox, [info, confimCallback, () => {}]);
-            }
-        } else if (btn == this.m_btnSend) {
-            this.sendMyCards();
-        } else if (btn == this.m_btnTip) {
-            this.showTip();
-        } else if (btn == this.m_btnCantOffer) {
-
-        } else if (btn == this.m_btnClear) {
-            //cc.view.setOrientation(cc.macro.ORIENTATION_LANDSCAPE);
-            this.clearAllProcess();
-        } else if (btn == this.m_readyBtn) {
-            //cc.view.setOrientation(cc.macro.ORIENTATION_PORTRAIT);
-            this.m_netSink.sendReady();
-        } else if (btn == this.m_btnDismiss) {
+        }
+        if (isOK) {
+            this.m_netSink.sendLeaveRoom();
+        } else {
             var info = DDZLanguage.InfoType.MainGame.DELETE_ROOM;
             let confimCallback = () => {
                 this.m_netSink.sendApplyDismissRoom();
             };
 
             PrefabManager.getInstance().showPrefab(EmPrefabEnum.Prefab_MessageBox, [info, confimCallback, () => {}]);
-        } else if (btn == this.m_btnStart) {
-            this.m_netSink.sendOpenRoom();
         }
+    }
+
+    onDiscardClick() {
+        this.sendMyCards();
+    }
+
+    onTipClick() {
+        this.showTip();
+    }
+
+    onClearClick() {
+        this.clearAllProcess();
+    }
+
+    onReadyClick() {
+        this.m_netSink.sendReady();
     }
 
     updateShowNotStartButton() {
@@ -295,10 +177,7 @@ export default class TableMainUI extends cc.Component {
                 playerCnt++;
             }
         }
-        //this.m_pShareButton.node.active = playerCnt < DDZGameData.seatCnt && !CClientApp.isCheck();
-        this.m_btnStart.node.active = (!DDZDataMgrIns._isOpen) && (DDZDataMgrIns._createUID == userData.uid);
-        this.m_btnDismiss.node.active = (playerCnt < DDZDataMgrIns._seatCnt || !DDZDataMgrIns._isOpen) &&
-            DDZDataMgrIns._createUID == userData.uid;
+        
     }
 
     onDestroy() {
@@ -326,10 +205,10 @@ export default class TableMainUI extends cc.Component {
         this.m_consoleNode.setConsoleEnable(localChairID == 0);
         this.m_curActIdx = localChairID;
         if (localChairID == 0) {
-            this.m_actBtnPanel.active = true;
+            // this.m_actBtnPanel.active = true;
             this.analyeMyCard();
         } else {
-            this.m_actBtnPanel.active = false;
+            // this.m_actBtnPanel.active = false;
         }
     }
 
@@ -387,17 +266,14 @@ export default class TableMainUI extends cc.Component {
 
     analyeMyCard() {//can offer card
         let result = this.m_cardHelper.searchOutCard(this.m_handLogicComp[0].m_handCardData);
-        if (result == null) {//can send any card
-            this.activeBtn(this.m_btnCantOffer, false);
-            this.activeBtn(this.m_btnTip, false);
-        } else if (result.cbSearchCount == 0) {// can not send any card
-            this.activeBtn(this.m_btnCantOffer, true);
-            this.activeBtn(this.m_btnTip, false);
-            this.activeBtn(this.m_btnSend, false);
-        } else {
-            this.activeBtn(this.m_btnCantOffer, false);
+
+        this.m_btnGroupController.hideAll();
+
+        let canDiscard: boolean = result == null || result.cbSearchCount != 0;
+        this.m_btnGroupController.updateMyTurnNode(canDiscard);
+
+        if (result.cbSearchCount != 0) {
             this.m_cardHelper.setCurTipResult(result);
-            this.activeBtn(this.m_btnTip, true);
             this.checkSelectedCardCanOffer(this.m_consoleNode.getSelectedCardsVec(), true);
         }
     }
@@ -405,7 +281,7 @@ export default class TableMainUI extends cc.Component {
     showTip() {
         let curTipStruct: any = this.m_cardHelper.getTip();
         if (curTipStruct == -1) {
-            this.activeBtn(this.m_btnTip, false);
+            // this.activeBtn(this.m_btnTip, false);
             return;
         }
         let curTipID = curTipStruct.curID;
@@ -434,7 +310,7 @@ export default class TableMainUI extends cc.Component {
             return false;
         }
         if (!needCompare) {
-            this.activeBtn(this.m_btnSend, true);
+            this.m_btnGroupController.updateDiscardButton(true);
             return true;
         } else {
             return this.m_cardHelper.compareCard(selectedCardVec);
@@ -443,7 +319,7 @@ export default class TableMainUI extends cc.Component {
 
     checkSelectedCardCanOffer(selectedCardVec, needCompare) {
         let canOffer = this.compareMyCards(selectedCardVec, needCompare);
-        this.activeBtn(this.m_btnSend, canOffer);
+        this.m_btnGroupController.updateDiscardButton(canOffer);
     }
 
     clearAllProcess() {
@@ -524,9 +400,6 @@ export default class TableMainUI extends cc.Component {
 
     setStateTag(serverID, stateTag) {
         this.m_headUINodeComp[this.getLocalIDByChairID(serverID)].setState(stateTag);
-        if (this.getLocalIDByChairID(serverID) == 0 && stateTag == 1) {
-            this.m_readyBtn.node.active = false;
-        }
     }
 
     openRoom() {
