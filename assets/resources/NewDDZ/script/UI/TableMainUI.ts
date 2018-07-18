@@ -369,7 +369,7 @@ export default class TableMainUI extends cc.Component {
         }
     }
 
-    exitGame(messageText) {
+    exitGame(messageText: string = '') {
         let confimCallback = () => {
             setTimeout(() => {
                 SceneManager.getInstance().changeScene(EmSceneID.SceneID_MainScene);

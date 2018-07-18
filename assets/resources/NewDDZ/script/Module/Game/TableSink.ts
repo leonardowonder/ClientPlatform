@@ -10,6 +10,7 @@ import GameLogic from './GameLogic';
 import DDZPlayerData from '../../Data/DDZPlayerData';
 import DDZLanguage from '../../Data/DDZLanguage';
 import PrefabManager, { EmPrefabEnum } from '../../../../../Script/Manager/CommonManager/PrefabManager';
+import TableMainUI from '../../UI/TableMainUI';
 
 let userData = UserData.getInstance();
 let DDZDataMgrIns = DDZGameDataLogic.getInstance();
@@ -20,10 +21,11 @@ let DDZPlayerDataLogic = DDZPlayerData.getInstance();
 @ccclass
 export default class TableSink extends cc.Component {
 
-    _delegate = null;
+    private m_curView: TableMainUI = null;
 
-    init(delegate) {
-        this._delegate = delegate;
+    init(view: TableMainUI) {
+        this.m_curView = view;
+        
         cc.systemEvent.on(ClientDefine.netEventMsg, this.onMsg, this);
         cc.systemEvent.on("reconnect", this.reconnect, this);
         cc.systemEvent.on("reconnectFailed", this.reconnectedFailed, this);
@@ -110,7 +112,7 @@ export default class TableSink extends cc.Component {
             // if (this._DDZGameOver == null) {
             //     this.exitGame("房间已解散");
             // }
-            this._delegate.exitGame(DDZLanguage.alreadyDismissRoom);
+            this.m_curView.exitGame(DDZLanguage.alreadyDismissRoom);
             return true;
         }
         if (jsonMessage.msgID == eMsgType.MSG_PLAYER_BASE_DATA) {
@@ -135,12 +137,12 @@ export default class TableSink extends cc.Component {
             return true;
         } else if (jsonMessage.msgID == eMsgType.MSG_ENTER_ROOM) {
             if (jsonMessage.ret != 0) {
-                this._delegate.exitGame(DDZLanguage.donotFindRoom);
+                this.m_curView.exitGame(DDZLanguage.donotFindRoom);
             }
             return true;
         } else if (jsonMessage.msgID == eMsgType.MSG_REQUEST_ROOM_INFO) {
             if (jsonMessage.ret != 0) {
-                this._delegate.exitGame();
+                this.m_curView.exitGame();
             }
             return true;
         } else if (jsonMessage.msgID == eMsgType.MSG_ROOM_INFO) {
@@ -177,7 +179,7 @@ export default class TableSink extends cc.Component {
             //         this._users[this.getLocalIdxByServerIdx(DDZGameData.players[i].idx)].getComponent('DDZGameUser').showOutCard([], 0, false, false);
             //     }
             // }
-            this._delegate.setStateTag(jsonMessage.idx, 1);
+            this.m_curView.setStateTag(jsonMessage.idx, 1);
             return true;
         } else if (jsonMessage.msgID == eMsgType.MSG_PLAYER_SIT_DOWN) {
             var text = null;
@@ -210,16 +212,16 @@ export default class TableSink extends cc.Component {
                 for (let idx = 0; idx < DDZDataMgrIns._seatCnt; idx++) {
                     let player = DDZPlayerDataLogic._players[idx];
                     if (player && player.uid > 0) {
-                        this._delegate.sitDown(player, idx);
+                        this.m_curView.sitDown(player, idx);
                     } else {
-                        this._delegate.standUp(idx);
+                        this.m_curView.standUp(idx);
                     }
                 }
 
             } else {
                 //AudioManager.playerEffect("resources/ddz/sound/Player_Come_In.mp3");
                 let player = DDZPlayerDataLogic._players[jsonMessage.idx];
-                this._delegate.sitDown(player, jsonMessage.idx);
+                this.m_curView.sitDown(player, jsonMessage.idx);
             }
             //this.updateShowNotStartButton();
             return true;
@@ -227,15 +229,15 @@ export default class TableSink extends cc.Component {
             for (let idx = 0; idx < DDZDataMgrIns._seatCnt; idx++) {
                 let player = DDZPlayerDataLogic._players[idx];
                 if (player.uid == jsonMessage.uid) {
-                    this._delegate.setName(idx, jsonMessage.name);
-                    this._delegate.setHead(idx, jsonMessage.headIcon);
+                    this.m_curView.setName(idx, jsonMessage.name);
+                    this.m_curView.setHead(idx, jsonMessage.headIcon);
                     break;
                 }
             }
         } else if (jsonMessage.msgID == eMsgType.MSG_PLAYER_LEAVE_ROOM) {
             var errorText = null;
             if (jsonMessage.ret == 0) {
-                this._delegate.exitGame("退出成功");
+                this.m_curView.exitGame("退出成功");
             } else if (jsonMessage.ret == 1) {
                 errorText = "您没有在该房间";
             } else if (jsonMessage.ret == 200) {
@@ -250,7 +252,7 @@ export default class TableSink extends cc.Component {
             }
             return true;
         } else if (jsonMessage.msgID == eMsgType.MSG_ROOM_STAND_UP) {
-            this._delegate.standUp(jsonMessage.idx);
+            this.m_curView.standUp(jsonMessage.idx);
             return true;
         } else if (jsonMessage.msgID == eMsgType.MSG_PLAYER_OPEN_ROOM) {
             var errorText = null;
@@ -270,7 +272,7 @@ export default class TableSink extends cc.Component {
             }
             return true;
         } else if (jsonMessage.msgID == eMsgType.MSG_ROOM_DO_OPEN) {
-            this._delegate.openRoom();
+            this.m_curView.openRoom();
             return true;
         }
     }
