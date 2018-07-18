@@ -43,7 +43,6 @@ export default class PokerCardNode extends cc.Component {
             this.m_cardColorSprite.node.active = true;
             this.m_cardNumSprite.spriteFrame = spriteAtlas.getSpriteFrame(spriteFrameStruct.cardNumSp);
             this.m_cardColorSprite.spriteFrame = spriteAtlas.getSpriteFrame(spriteFrameStruct.cardColorSp);
-
         }
     }
 
