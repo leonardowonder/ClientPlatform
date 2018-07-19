@@ -1,7 +1,7 @@
 const { ccclass, property } = cc._decorator;
 
 import ResManager from '../Module/Custom/ResManager';
-import GameLogic from '../Data/../Module/Game/GameLogic';
+import GameLogic from '../Module/Game/GameLogic';
 import { EPokerType } from '../Module/DDZGameDefine';
 
 let ResMgrIns = ResManager.getInstance();

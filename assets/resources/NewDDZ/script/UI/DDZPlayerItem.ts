@@ -4,8 +4,6 @@ import DDZGameDataLogic from '../Data/DDZGameDataLogic';
 import { eRoomPeerState, eRoomState } from '../Define/DDZDefine';
 import { EmDDZPlayerState } from '../Module/DDZGameDefine';
 
-let DDZDataMgrIns = DDZGameDataLogic.getInstance();
-
 @ccclass
 export default class DDZPlayerItem extends cc.Component {
     @property(cc.Sprite)
@@ -41,6 +39,11 @@ export default class DDZPlayerItem extends cc.Component {
         this.node.active = false;
     }
 
+    clear() {
+        this.reset();
+        this.hide();
+    }
+
     reset() {
         this.m_landlordTag.active = false;
         this.m_stateSprite.spriteFrame = null;
@@ -59,7 +62,7 @@ export default class DDZPlayerItem extends cc.Component {
         this.setHead(data.head);
         this.setCoin(data.chips);
         this.setState(EmDDZPlayerState.State_None);
-        if (data.state == eRoomPeerState.eRoomPeer_Ready && DDZDataMgrIns._roomState == eRoomState.eRoomSate_WaitReady) {
+        if (data.state == eRoomPeerState.eRoomPeer_Ready && DDZGameDataLogic.getInstance()._roomState == eRoomState.eRoomSate_WaitReady) {
             this.setState(EmDDZPlayerState.State_None);
         }
     }
@@ -74,6 +77,10 @@ export default class DDZPlayerItem extends cc.Component {
 
     setCoin(num: number) {
         this.m_coinLabel.string = num.toString();
+    }
+
+    setIsBanker(isBanker: boolean) {
+        this.m_landlordTag.active = isBanker;
     }
 
     setLocalChairID(localID) {
@@ -108,10 +115,10 @@ export default class DDZPlayerItem extends cc.Component {
                 });
             }
         } else {
-            var realUrl = cc.url.raw("resources/NewDDZ/image/room_default_none.png");
-            var texture = cc.textureCache.addImage(realUrl, null, null);
-            this.m_headSprite.spriteFrame = new cc.SpriteFrame(texture);
-            this.m_headSprite.node.setContentSize(cc.size(96, 96));
+            // var realUrl = cc.url.raw("resources/NewDDZ/image/room_default_none.png");
+            // var texture = cc.textureCache.addImage(realUrl, null, null);
+            // this.m_headSprite.spriteFrame = new cc.SpriteFrame(texture);
+            // this.m_headSprite.node.setContentSize(cc.size(96, 96));
         }
     }
 

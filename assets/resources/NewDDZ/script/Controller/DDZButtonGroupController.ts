@@ -1,7 +1,14 @@
 const { ccclass, property } = cc._decorator;
 
+import NetSink from '../Module/Game/TableSink';
+
+import TableMainUI from '../UI/TableMainUI';
+
 @ccclass
 export default class DDZButtonGroupController extends cc.Component {
+    @property(TableMainUI)
+    m_tableMainUI: TableMainUI = null;
+
     @property(cc.Button)
     m_discardButton: cc.Button = null;
 
@@ -13,6 +20,26 @@ export default class DDZButtonGroupController extends cc.Component {
     m_canDiscardNode: cc.Node = null;
     @property(cc.Node)
     m_cannotDiscardNode: cc.Node = null;
+    
+    onDiscardClick() {
+        this.m_tableMainUI.sendMyCards();
+    }
+
+    onDonotDiscardClick() {
+        NetSink.getInstance().requestNotDiscard();
+    }
+
+    onTipClick() {
+        this.m_tableMainUI.showTip();
+    }
+
+    onClearClick() {
+        this.m_tableMainUI.clearAllProcess();
+    }
+
+    onCallBankerClick(event: cc.Event, coustEvent: string) {
+        NetSink.getInstance().requestCallBanker(parseInt(coustEvent));
+    }
 
     hideAll() {
         this.m_myTurnNode.active = false;
@@ -24,7 +51,7 @@ export default class DDZButtonGroupController extends cc.Component {
         this.m_callBankerNode.active = true;
     }
 
-    updateMyTurnNode(canDiscard: boolean) {        
+    updateMyTurnNode(canDiscard: boolean) {
         this.m_myTurnNode.active = true;
         this.m_callBankerNode.active = false;
 
@@ -33,6 +60,6 @@ export default class DDZButtonGroupController extends cc.Component {
     }
 
     updateDiscardButton(canDiscard: boolean) {
-        this.m_discardButton.interactable = canDiscard; 
+        this.m_discardButton.interactable = canDiscard;
     }
 }

@@ -1,10 +1,9 @@
 //DDZ GameDataMgr
 import Singleton from '../../../../Script/Utils/Singleton';
-import { eMsgType } from '../../../../Script/Define/MessageIdentifer';
 
 import { eRoomState } from '../Define/DDZDefine';
 
-class DDZGameLogic extends Singleton {
+class DDZGameDataLogic extends Singleton {
     _roomID: number = 0
     _roomState: number = 0
     _leftCircle: number = 0;
@@ -44,26 +43,10 @@ class DDZGameLogic extends Singleton {
 
     }
 
-    onMessage(msg) {
-        var jsonMessage = msg;
-        if (jsonMessage.msgID == eMsgType.MSG_ROOM_INFO) {
-            this.setRoomInfo(jsonMessage);
-        } else if (jsonMessage.msgID == eMsgType.MSG_ROOM_CHANGE_STATE) {
-            this._roomState = jsonMessage.newState;
-        } else if (jsonMessage.msgID == eMsgType.MSG_ROOM_DO_OPEN) {
-            this._isOpen = true;
-        } else if (jsonMessage.msgID == eMsgType.MSG_ROOM_DDZ_START_GAME) {
-            // svr : { vSelfCard : [23,23,23,2,23] }
-            // if (!DDZGameData.isChaoZhuang) {
-            //     DDZGameData.onceGameOver();
-            // }
-        }
-    }
-
     setRoomInfo(info) {
         this.clearRoomInfo();
-        this._roomID = info.roomID
-        this._roomState = info.state
+        this._roomID = info.roomID;
+        this._roomState = info.state;
         this._leftCircle = info.leftCircle - 1;
         this._isOpen = info.isOpen == 1;
         this._waitTimer = 15
@@ -108,9 +91,17 @@ class DDZGameLogic extends Singleton {
         }
     }
 
+    setRoomOpen(open) {
+        this._isOpen = open;
+    }
+
+    changeRoomState(state) {
+        this._roomState = state;
+    }
+
     clearRoomInfo() {
-        this._roomID = 0
-        this._roomState = 0
+        this._roomID = 0;
+        this._roomState = 0;
         this._leftCircle = 0;
         this._isOpen = false;
         this._waitTimer = 0
@@ -160,4 +151,4 @@ class DDZGameLogic extends Singleton {
     }
 };
 
-export default new DDZGameLogic();
+export default new DDZGameDataLogic();

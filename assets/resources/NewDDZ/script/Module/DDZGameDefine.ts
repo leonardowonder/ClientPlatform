@@ -1,37 +1,37 @@
 
-export let DDZ_Type = {
-    DDZ_Single: 0,
-    DDZ_Pair: 1,
-    DDZ_3Pices: 2,
-    DDZ_3Follow1: 3,//
-    DDZ_SingleSequence: 4,
-    DDZ_PairSequence: 5,
-    DDZ_3PicesSeqence: 6,
-    DDZ_AircraftWithWings: 7,//
-    DDZ_4Follow2: 8,//
-    DDZ_Common: 9,
-    DDZ_Bomb: 10,
-    DDZ_Rokect: 11,
-    DDZ_Max: 12,
+export enum DDZ_Type {
+    DDZ_Single = 0,
+    DDZ_Pair,
+    DDZ_3Pices,
+    DDZ_3Follow1,//
+    DDZ_SingleSequence,
+    DDZ_PairSequence,
+    DDZ_3PicesSeqence,
+    DDZ_AircraftWithWings,//
+    DDZ_4Follow2,//
+    DDZ_Common,
+    DDZ_Bomb,
+    DDZ_Rokect,
+    DDZ_Max,
 }
 
-export let DDZCardType = {
-    Type_None: 0,
-    Type_Single: 1,//单张
-    Type_DuiZi: 2,//对子
-    Type_SanZhang_0: 3,//三不带
-    Type_SanZhang_1: 4,//三带一
-    Type_SanZhang_2: 5,//三带一对
-    Type_ShunZi: 6,//顺子
-    Type_LianDui: 7,//连对
-    Type_FeiJi_0: 8,//飞机不带
-    Type_FeiJi_1: 9,//飞机带2单张
-    Type_FeiJi_2: 10,//飞机带2对
-    Type_ZhaDan_2: 11,//四带两对
-    Type_ZhaDan_1: 12,//四带两张单
-    Type_ZhaDan_0: 13,//炸弹
-    Type_JokerZhaDan: 14,//炸弹
-    Type_Max: 100,
+export enum DDZCardType {
+    Type_None = 0,
+    Type_Single,//单张
+    Type_DuiZi,//对子
+    Type_SanZhang_0,//三不带
+    Type_SanZhang_1,//三带一
+    Type_SanZhang_2,//三带一对
+    Type_ShunZi,//顺子
+    Type_LianDui,//连对
+    Type_FeiJi_0,//飞机不带
+    Type_FeiJi_1,//飞机带2单张
+    Type_FeiJi_2,//飞机带2对
+    Type_ZhaDan_2,//四带两对
+    Type_ZhaDan_1,//四带两张单
+    Type_ZhaDan_0,//炸弹
+    Type_JokerZhaDan,//炸弹
+    Type_Max = 100,
 }
 
 export let EPokerType = {

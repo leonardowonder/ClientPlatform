@@ -15,7 +15,7 @@ export default class CardHelper extends cc.Component {
     _serverCardType = -1;//server type
     _sendCardVec = [];
 
-    init (delegate) {
+    init(delegate) {
         this._delegate = delegate;
         this._sendCardVec = [];
         this._sendCardType = DDZCardType.Type_None;
@@ -24,7 +24,7 @@ export default class CardHelper extends cc.Component {
         this._searchResult = null;
     }
 
-    clearSendCardType () {
+    clearSendCardType() {
         this._sendCardVec = [];
         this._sendCardType = DDZCardType.Type_None;
         this._serverCardType = -1;
@@ -32,7 +32,7 @@ export default class CardHelper extends cc.Component {
         this._searchResult = null;
     }
 
-    setCurSendCard (cardDataVec, serverCardType) {
+    setCurSendCard(cardDataVec, serverCardType) {
         this._sendCardVec = [];
         for (let i in cardDataVec) {
             this._sendCardVec.push(cardDataVec[i]);
@@ -43,7 +43,7 @@ export default class CardHelper extends cc.Component {
         console.log('CurServerType:' + this._serverCardType + 'CurLocalType:' + this._sendCardType);
     }
 
-    analyseSelectedCard (selectedCardVec) {
+    analyseSelectedCard(selectedCardVec) {
         let cardTypeVec = GameLogicIns.getCardType(selectedCardVec);
         if (cardTypeVec.length == 1 && cardTypeVec[0] == DDZCardType.Type_None) {
             return [];
@@ -51,7 +51,7 @@ export default class CardHelper extends cc.Component {
         return cardTypeVec;
     }
 
-    searchOutCard (handCardVec) {
+    searchOutCard(handCardVec) {
         if (this._sendCardVec.length == 0) {
             return null;
         }
@@ -59,11 +59,11 @@ export default class CardHelper extends cc.Component {
         return searchResult;
     }
 
-    setCurTipResult (searchResult) {
+    setCurTipResult(searchResult) {
         this._searchResult = searchResult;
     }
 
-    getTip () {
+    getTip() {
         if (this._searchResult == null) {
             return -1;
         }
@@ -82,7 +82,7 @@ export default class CardHelper extends cc.Component {
         }
     }
 
-    compareCard (selectedCardVec) {
+    compareCard(selectedCardVec) {
         if (this._sendCardType == DDZCardType.Type_None) {
             return true;
         }

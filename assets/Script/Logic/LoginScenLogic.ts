@@ -94,7 +94,7 @@ class LoginScenLogic extends Singleton {
         UserData.getInstance().setPlayerBaseData(jsMsg);
         
         if (jsMsg.stayRoomID && jsMsg.stayRoomID > 0) {
-            MainUiSceneLogic.getInstance().requestEnterRoom(jsMsg.stayRoomID);
+            MainUiSceneLogic.getInstance().requestRoomInfo(jsMsg.stayRoomID);
         }
         else {
             SceneManager.getInstance().changeScene(EmSceneID.SceneID_MainScene);

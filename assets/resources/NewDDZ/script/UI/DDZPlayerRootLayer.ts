@@ -6,7 +6,7 @@ import DDZPlayerItem from './DDZPlayerItem';
 import HandCardLogic from '../Control/HandCardLogic';
 
 @ccclass
-export default class PlayerRootLayer extends cc.Component {
+export default class DDZPlayerRootLayer extends cc.Component {
     @property(DDZPlayerItem)
     m_players: DDZPlayerItem[] = [];
 
@@ -32,13 +32,26 @@ export default class PlayerRootLayer extends cc.Component {
         this.m_players[idx].setPlayerData(data);
     }
 
+    clearAllCards() {
+        _.forEach(this.m_cards, (card: HandCardLogic, idx: number) => {
+            card.clear();
+        });
+    }
+
+    clearAllPlayers() {
+        _.forEach(this.m_players, (player: DDZPlayerItem) => {
+            player.clearPlayerData();
+            player.hide();
+        });
+    }
+
     clearPlayerData(idx: number) {
         if (!this._checkIdxValid(idx)) {
             cc.warn(`PlayerRootLayer clearPlayerData invalid idx = ${idx}`);
             return;
         }
 
-        this.m_players[idx].clearPlayerData();
+        this.m_players[idx].clear();
     }
 
     hide(idx: number) {

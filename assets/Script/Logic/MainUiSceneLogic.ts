@@ -12,8 +12,7 @@ import MyUtils from '../Utils/MyUtils';
 
 import MainUiScene from '../View/Scene/MainUiScene';
 
-import DDZPlayerData from '../../resources/NewDDZ/script/Data/DDZPlayerData';
-import DDZGameDataLogic from '../../resources/NewDDZ/script/Data/DDZGameDataLogic';
+import NetSink from '../../resources/NewDDZ/script/Module/Game/TableSink';
 
 let userData = UserData.getInstance();
 
@@ -30,29 +29,21 @@ class MainUiSceneLogic extends Singleton {
     }
 
     init() {
-        super.init();
         this._registEvent();
+
+        NetSink.getInstance();
+        super.init();
     }
 
     //net work
-    requestCreateDDZRoom() {
+    requestRoomInfo(roomID: number) {
         Network.getInstance().sendMsg(
             {
-                msgID: eMsgType.MSG_CREATE_ROOM,
-                gameType: 4,
-                uid: userData.uid,
-                isFree: 0,
-                seatCnt: 3,
-                payType: 0,
-                level: 0,
-                forbidJoin: 0,
-                isChaoZhuang: 0,
-                maxBet: 16,
-                starGame: 3,
+                msgID: eMsgType.MSG_REQUEST_ROOM_INFO,
             },
-            eMsgType.MSG_CREATE_ROOM,
+            eMsgType.MSG_REQUEST_ROOM_INFO,
             eMsgPort.ID_MSG_PORT_DOU_DI_ZHU,
-            userData.uid);
+            roomID);
     }
 
     requestEnterRoom(roomID: number) {
@@ -63,8 +54,21 @@ class MainUiSceneLogic extends Singleton {
                 uid: userData.uid
             },
             eMsgType.MSG_ENTER_ROOM,
-            MyUtils.getInstance().parePortTypte(roomID),
+            eMsgPort.ID_MSG_PORT_DOU_DI_ZHU,
+            // MyUtils.getInstance().parePortTypte(roomID),
             roomID);
+    }
+
+    requestEnterNewRoom() {
+        Network.getInstance().sendMsg(
+            {
+                msgID: eMsgType.MSG_ENTER_COIN_GAME,
+                level: 0,
+                uid: userData.uid
+            },
+            eMsgType.MSG_ENTER_COIN_GAME,
+            eMsgPort.ID_MSG_PORT_DOU_DI_ZHU,
+            userData.uid);
     }
 
     onNetClose() {
@@ -87,6 +91,10 @@ class MainUiSceneLogic extends Singleton {
                 this._onMsgRoomInfoRsp(msg.jsMsg);
                 break;
             }
+            case eMsgType.MSG_ENTER_COIN_GAME: {
+                this._onMsgEnterCoinGameRsp(msg.jsMsg);
+                break;
+            }
             default: {
                 break;
             }
@@ -103,14 +111,30 @@ class MainUiSceneLogic extends Singleton {
     }
 
     private _onMsgRoomInfoRsp(jsMsg) {
-        var gameType = MyUtils.parePortTypte(jsMsg.roomID);
-        if (gameType == eMsgPort.ID_MSG_PORT_DOU_DI_ZHU) {
-            //if (false) {
-            let ddzPlayerDataLogic = DDZPlayerData.getInstance();
-            ddzPlayerDataLogic.init();
+        //     var gameType = MyUtils.parePortTypte(jsMsg.roomID);
+        //     if (gameType == eMsgPort.ID_MSG_PORT_DOU_DI_ZHU) {
+        //if (false) {
 
-            let ddzDataLogic = DDZGameDataLogic.getInstance();
-            ddzDataLogic.onMessage(jsMsg);
+        cc.loader.loadRes("com/prefab/CommonLoading", cc.Prefab, function (err, prefab) {
+            if (err) {
+                console.log("load[com/prefab/CommonLoading] failed");
+            }
+            let loadNode = cc.instantiate(prefab);
+            loadNode.parent = cc.director.getScene();
+            loadNode.parent = this.node;
+            let loadComp = loadNode.getComponent('CommonLoading');
+            loadComp.initWithResPathList(eMsgPort.ID_MSG_PORT_DOU_DI_ZHU, () => {
+                cc.view.adjustViewPort(true);
+                cc.view.resizeWithBrowserSize(true);
+                cc.view.setOrientation(cc.macro.ORIENTATION_LANDSCAPE);
+                cc.director.loadScene("DDZGameRoomScene");
+            });
+        }.bind(this));
+        // }
+    }
+
+    private _onMsgEnterCoinGameRsp(jsMsg) {
+        if (jsMsg.ret == 0) {
             cc.loader.loadRes("com/prefab/CommonLoading", cc.Prefab, function (err, prefab) {
                 if (err) {
                     console.log("load[com/prefab/CommonLoading] failed");
@@ -119,11 +143,11 @@ class MainUiSceneLogic extends Singleton {
                 loadNode.parent = cc.director.getScene();
                 loadNode.parent = this.node;
                 let loadComp = loadNode.getComponent('CommonLoading');
-                loadComp.initWithResPathList(gameType, () => {
+                loadComp.initWithResPathList(eMsgPort.ID_MSG_PORT_DOU_DI_ZHU, () => {
                     cc.view.adjustViewPort(true);
                     cc.view.resizeWithBrowserSize(true);
                     cc.view.setOrientation(cc.macro.ORIENTATION_LANDSCAPE);
-                    cc.director.loadScene("NewDDZGameScene");
+                    cc.director.loadScene("DDZGameRoomScene");
                 });
             }.bind(this));
         }

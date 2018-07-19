@@ -7,6 +7,7 @@ export enum eMsgPort
 	ID_MSG_PORT_VERIFY,
 	ID_MSG_PORT_RECORDER_DB,
 	ID_MSG_PORT_DATA,
+	ID_MSG_PORT_CLUB = ID_MSG_PORT_DATA,
 	ID_MSG_PORT_DB,
 	ID_MSG_PORT_MJ,
 	ID_MSG_PORT_BI_JI,
@@ -14,7 +15,6 @@ export enum eMsgPort
 	ID_MSG_PORT_DOU_DI_ZHU,
 	ID_MSG_PORT_GOLDEN,
 	ID_MSG_PORT_SCMJ,
-	ID_MSG_PORT_THIRTEEN,
 	ID_MSG_PORT_ALL_SERVER,
 	ID_MSG_PORT_MAX,
 };
@@ -41,7 +41,9 @@ export enum eMsgType
 
 	MSG_REQUEST_PLAYER_DATA, // request player brif data 
 	// client : { nReqID : 23  isDetail : 0 }
-	// svr : { uid : 23 , name : "hello" , headIcon : "http://weshg.wx.com",sex : 1 , ip : "1.0.0.1" , J : 23.0002, W : 232.234}  // J , W : GPS positon , maybe null ;
+	// svr : { uid : 23 , name : "hello" , headIcon : "http://weshg.wx.com",sex : 1 , ip : "1.0.0.1" , J : 23.0002, W : 232.234, isInRoom : 0 ,isOnline : 0 ,lastLoginTime : 2345234 }  // J , W : GPS positon , maybe null ;
+	// isInRoom : only when player is online , have this key .
+	// loginTime : only when player is offline , have this key .
 	MSG_PLAYER_OTHER_LOGIN,  // more than one place login , prelogin need disconnect ; client recived must disconnect from server
 	// svr : null 
 	MSG_PLAYER_BASE_DATA,
@@ -92,6 +94,23 @@ export enum eMsgType
 	MSG_ROOM_INTERACT_EMOJI,
 	// svr : { invokerIdx : 1 ,targetIdx : 0 , emoji : 23 } 
 
+	MSG_REQUEST_JOINED_CLUBS,
+	// client : {}
+	// svr : { clubs : [ 23,1,23 ] } 
+
+	MSG_PLAYER_RECIEVED_NEW_MAIL,
+	// svr : { maxMailID : 23 }
+
+	MSG_PLAYER_REQ_MAILS,
+	// client : { clientMaxMailID : 23   }
+	// svr : { pageIdx : 1 , mails : [ { mailID : 234 , type : 0 ,state : 0 ,time : 234523, detail : { } }, ....  ] } 
+	// 10 cnt per page ,if mails size < 10 , means end ;
+	
+	MSG_PLAYER_PROCESS_MAIL,
+	// client : { mailID : 23 , state : eMailState, arg : {}  } . arg : can be null , depend on mail type and process type ;
+	// svr : { ret : 0 ,mailID : 23 ,state : eMailState }
+	// ret : 0 success , 1 mail state error , 2 arg invliad ;
+
 	MSG_CREATE_ROOM = 300,
 	// client: { uid : 234 ,gameType : 0 , seatCnt : 4 , payType : 1 , level : 2 , opts : {  .... }  }
 	// payType : 0 the room owner pay cards , 1 AA pay card type , 2 big winer pay cards 
@@ -103,7 +122,7 @@ export enum eMsgType
 
 	MSG_ENTER_ROOM,
 	// client : { roomID : 23, uid : 23 }
-	// svr: { roomID : 23 , ret : 0 } // ret : 0 success , 1 can not find room , 2 you already in other room ;3, room is full , 4, uid error ,5 , can not enter room , 6 unknown error, 7 arg not allow enter , 8 dianmond not enough;
+	// svr: { roomID : 23 , ret : 0 } // ret : 0 success , 1 can not find room , 2 you already in other room ;3, room is full , 4, uid error ,5 , can not enter room , 6 unknown error, 7 arg not allow enter , 8 dianmond not enough, 9 can not enter club room;
 	MSG_ROOM_CHANGE_STATE,
 	// svr : { lastState : 23 , newState : 23 }
 	MSG_ROOM_INFO, 
@@ -166,6 +185,9 @@ export enum eMsgType
 	// client : null
 	// svr : { list : [ 23, 232,52 ... ] } 
 
+	MSG_ROOM_TEMP_OWNER_UPDATED,
+	// svr : { uid : 23 }
+
 	MSG_PLAYER_SET_READY = 600,   	// player do ready
 	// client : { dstRoomID : 2345 } ;
 	// svr : { ret : 1 , curState : 23 } // 1 you are not in room , 2 you are not state waitNextGame, tell curState ;
@@ -208,7 +230,7 @@ export enum eMsgType
 
 	MSG_REQ_ROOM_ITEM_INFO,
 	// client : { roomID : 23 }
-	// svr : { state : 2 ,isOpen : 0 , roomID: 23, opts: {} , players: [23,234,23 ..] }
+	// svr : { state : 2 ,isOpen : 0 ,leftRound : 2 , roomID: 23, opts: {} , players: [23,234,23 ..] }
 
 	MSG_NN_PLAYER_UPDATE_TUO_GUAN,
 	// client : { isTuoGuan : 0  }
@@ -308,9 +330,183 @@ export enum eMsgType
 	// svr: { idx : 0 , isTiLaChuai : 0 }
 
 	MSG_DDZ_MAX = 1500,
-	
-		
-		
+
+	MSG_ROOM_GOLDEN_BEGIN = 1700, //三张命令号开始标识
+
+	MSG_ROOM_GOLDEN_GAME_END, //三张游戏结束消息
+	// svr: { bankerIdx : 2 , result : [ { uid : 23 , offset : 23, final : -23 }, .... ] }
+
+	MSG_ROOM_GOLDEN_GAME_WAIT_ACT, //三张发送玩家操作列表消息
+	// sur: { acts : { act ： 1 , info : 1 } , { act : 2 , info : 1 } ... }
+
+	MSG_ROOM_GOLDEN_GAME_PASS, //三张玩家弃牌
+	// sur : { ret : 0 }  0, 成功; 1, 玩家为空.
+
+	MSG_ROOM_GOLDEN_GAME_CALL, //三张玩家跟注
+	// sur : { ret : 0 , idx : 1 , coin : 10 , (mutiple : 1)//只有在加注时会发 }
+
+	MSG_ROOM_GOLDEN_GAME_CALL2END, //三张玩家更改一跟到底
+	// sur : { ret : 0, call2end : 1 }
+
+	MSG_ROOM_GOLDEN_GAME_LOOK_CARDS, //三张看牌
+	// sur : { ret : 0, (idx : 1)//群发用于其他玩家知晓, (cards : { 23 , 24, 25 })//用于发送给看牌的玩家知晓 } 当失败时只给要求看牌玩家发失败信息(只有ret)
+
+	MSG_ROOM_GOLDEN_GAME_PK, //三张比牌
+	// sur : { ret : 0, idx : 1, withIdx : 2, result : 1 }
+	// result : 1, 胜利; 0, 失败
+
+	MSG_ROOM_GOLDEN_GAME_END_PK, //三张最终PK
+	// sur : { participate : { 1 , 2, 3 } , lose : { 2 , 3 } }
+	// participate : 参与者
+	// lose : 输的人
+
+	MSG_ROOM_GOLDEN_GAME_CANCLE_TRUSTEE, //三张取消托管
+	// sur : { ret : 0}
+
+	MSG_ROOM_GOLDEN_GAME_UPDATE_TRUSTEE, //三张托管状态变化
+	// sur : { idx : 1 , state : 1 }
+	// state : 0, 取消托管  1, 托管
+
+	MSG_ROOM_GOLDEN_END = 1900, //三张命令号结束标识
+
+
+
+	MSG_ROOM_SICHUAN_MAJIANG_BEGIN = 2000, //四川麻将命令号开始标记
+
+	MSG_ROOM_SCMJ_GAME_END, //四川麻将游戏结束
+
+	MSG_ROOM_SCMJ_PLAYER_HU, //四川麻将胡
+
+	MSG_ROOM_SCMJ_PLAYER_EXCHANGE_CARDS, //四川麻将换三张
+
+	MSG_ROOM_SCMJ_PLAYER_DECIDE_MISS, //四川麻将定缺
+
+	MSG_ROOM_SCMJ_GAME_START, //四川麻将开始游戏消息
+
+	MSG_ROOM_SICHUAN_MAJIANG_END = 2100, //四川麻将命令号结束标识
+
+	// club msg 
+	MSG_CLUB_MSG = 2800,
+	MSG_CLUB_CREATE_CLUB,
+	// client : { name : "23",opts : {} }
+	// svr : { ret : 0 , clubID : 2 } 
+	// ret : 0 success , 1 condition is not meet , 2 name duplicate;
+
+	MSG_CLUB_DISMISS_CLUB,
+	// client : { clubID : 23 }
+	// svr : { ret : 0 }
+	// ret : 0 , 1 invalid privilige ,3 still have playing room , can not dissmiss , 4 player is null;
+
+	MSG_CLUB_SET_STATE,
+	// client: { clubID : 23 , isPause : 0 }
+	// svr : { ret : 0 }
+	// ret : 0 success , 1 invalid privilige 
+
+	MSG_CLUB_APPLY_JOIN, 
+    // client : { clubID : 23 }
+	// svr : { ret : 0 }
+	// ret : 0 success , 1 already in club , 2 already applyed , do not apply again , 3 memeber cnt  reach limit , 4 player is null ;
+	MSG_CLUB_KICK_PLAYER,
+	// client : { clubID : 23 , kickUID : 23 }
+	// svr : { ret : 0 }
+	// ret : 0 success ,1  kickUID not in club , 2 you are not mangager , 4 you do not login , invalid player 
+	MSG_CLUB_PLAYER_LEAVE,
+	// client : { clubID : 0 }
+	// svr : { ret : 0 }
+	// ret : 0 success , 1 you are not in club ,4 you do not login , invalid player  ;
+	MSG_CLUB_SET_ROOM_OPTS,
+	// client : { clubID : 0 , opts : { }  }
+	// svr : { ret :0 }
+	// ret : 0 success , 1 privilige too low ,4 you do not login , invalid player  ; .
+	// opts : create room opts ;
+	MSG_CLUB_UPDATE_PRIVILIGE,
+	// client : { clubID : 0 , playerUID : 234 , privilige : eClubPrivilige }
+	// svr : { ret : 0 }
+	// ret : 0 success , 1 privilige invalid, 2 mgr cnt reach limit ,  3 player not in club , 4 you do not login , invalid player , 5 the same privilige ;
+	MSG_CLUB_REQ_EVENTS,
+	// client : { clubID : 23, clientMaxEventID : 23, state : eEventState   }
+	// svr : { ret : 0 ,pageIdx : 0 , vEvents : [ { eventID : 8 , type : eClubEvent , state : eEventState , time : 23452 ,detail : {} } ] }
+	// ret : 0 success , 4 ,you do not login , invalid player , 1 privilige invalid 
+	// ps : if vEvents's size less then 10 , means last page ;
+	MSG_CLUB_PROCESS_EVENT,
+	// client : { clubID : 23 , eventID : 23 ,  detial : {} }
+	// svr : { ret : 0 }
+	// ret : 0 success , 1 event not exsit , 2 already processed ,3 invalid privilige , 4 you are not login, 5 invalid detail ;
+	MSG_CLUB_REQ_INFO,
+	// client : { clubID : 23 }
+	// svr : {  inviteCnt : 23 , notice : "this is notice" name : 2 , creator : 23, mgrs : [23,23,52], clubID : 23,diamond : 23 , state : 0, curCnt : 23, capacity : 23 , maxEventID : 23 ,opts : {} }
+	// state : 0 normal , 1 pause ;
+	MSG_CLUB_REQ_ROOMS,
+	// client : { clubID : 0 }
+	// svr : { clubID : 234, name : 23, fullRooms : [ 23,23,4 ], emptyRooms :  [  23,2, .... ]  }
+
+	MSG_CLUB_REQ_PLAYERS,
+	// client : { clubID : 10  }
+	// svr : { pageIdx : 0 ,players : [ { uid : 235, privilige : eClubPrivilige  } .... ] } 
+	// ret : 0 , players's size < 10 means last page;
+	MSG_CLUB_INVITE_JOIN,
+	// client : { clubID : 3, invites : [ 23,45,2] }
+	// svr : { ret : 0 }
+	// ret : 0 , 1 invalid privilige 
+	MSG_CLUB_RESPONE_INVITE,
+	// client : { clubID : 3 , nIsAgree : 0  }
+	// svr : { ret : 0 }
+	// ret : 0 success , 1 member cnt reach limit , 2 invitation time out ;
+	MSG_CLUB_REQ_INVITATIONS ,
+	// client : { clubID : 3 }
+	// svr : { ret : 0 , invitations : [ 23,23,42] } ;
+	MSG_CLUB_UPDATE_NOTICE,
+	// client : { clubID : 23 , notice : "hello hapyy join" }
+	// svr : { ret : 0 , notice : "hello" }
+	// ret : 0 , 1 invalid privilige
+	MSG_CLUB_UPDATE_NAME,
+	// client : { clubID : 23 , name : "hello hapyy join" }
+	// svr : { ret : 0 , name : "hello" }
+	// ret : 0 , 1 invalid privilige , 2 new name is the same as old name , 3 duplicate name 
+
+	MSG_CLUB_CHECK_NAME, // check if the name is duplicate 
+	// client : { name : 234 }
+	// svr : { ret : 0 } // ret : 0 ok , 1 duplicate 
+
+	MSG_CLUB_UPDATE_DIAMOND, 
+	// client : { clubID : 23 }
+	// svr : { ret : 0 ,clubID : 23, diamond : 23 }
+
+	MSG_CLUB_SET_PLAYER_INIT_POINTS,
+	// client : { clubID : 23 , uid : 23 , points : 23 }
+	// svr : { ret : 0 ,clubID : 23 , uid : 23 , points : 23 }
+	// ret : 0 success , 1 privilige is invalid , 2 player is not in club , 3 invalid points ;
+
+	MSG_CLUB_RESET_PLAYER_POINTS,
+	// client : { clubID : 23 , uid : 23 }
+	// svr : { ret : 0 ,clubID : 23 , uid : 23 }
+	// ret : 0 success , 1 privilige is invalid , 2 player is not in club ;
+
+	MSG_CLUB_MSG_END = 2900,
+
+	MSG_ENTER_COIN_GAME,
+	// client : { level : 1 , uid : 235  }
+	// ret : { ret : 2 , level : 1 }
+	// ret : 0 success , 1 `coin limit , 2 already in other room , 3 already queuing other level, 4 invalid level argument;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	// mj specail msg ;
 	MSG_PLAYER_WAIT_ACT_ABOUT_OTHER_CARD,  // 有人出了一张牌，等待需要这张牌的玩家 操作，可以 碰，杠，胡
 	// svr : { invokerIdx : 2,cardNum : 32 , acts : [type0, type 1 , ..] }  ;
@@ -436,19 +632,19 @@ export enum eMsgType
 	// uid : 玩家的uid，curCoin 结束时剩余钱；
 
 	// su zhou ma jiang
-MSG_ROOM_SZ_PLAYER_HU, // 苏州麻将玩家胡牌 
-// svr : { isZiMo : 0 ,isFanBei : 0 , detail : {} }
-//  当是自摸的时候，isZiMo : 1 , detail = { huIdx : 234 , winCoin : 234,huHuaCnt : 23,holdHuaCnt : 0, isGangKai :0 , invokerGangIdx : 0, vhuTypes : [ eFanxing , ] }
-// 当不是自摸的时候，isZiMo : 0 , detail = { dianPaoIdx : 23 , isRobotGang : 0 , nLose : 23, huPlayers : [{ idx : 234 , win : 234 , huHuaCnt : 23,holdHuaCnt : 0, vhuTypes : [ eFanxing , ] } , .... ] } 
-// huPlayers : json 数组包含子类型，表示胡牌玩家的数组，一炮多响，有多个胡牌玩家 
-// 胡牌子类型: idx :胡牌玩家的idx ， huaCnt : 花数量，offset ：胡牌玩家赢的钱，isGangKai ，胡牌玩家是否是杠开， vhuTypes 是一个数组，表示胡牌时候的 各种翻型叠加,
-// invokerGangIdx : 引杠者的索引，当明杠，直杠才有这个key值,暗杠的时候这个就是胡牌者自己
+	MSG_ROOM_SZ_PLAYER_HU, // 苏州麻将玩家胡牌 
+   // svr : { isZiMo : 0 ,isFanBei : 0 , detail : {} }
+   //  当是自摸的时候，isZiMo : 1 , detail = { huIdx : 234 , winCoin : 234,huHuaCnt : 23,holdHuaCnt : 0, isGangKai :0 , invokerGangIdx : 0, vhuTypes : [ eFanxing , ] }
+   // 当不是自摸的时候，isZiMo : 0 , detail = { dianPaoIdx : 23 , isRobotGang : 0 , nLose : 23, huPlayers : [{ idx : 234 , win : 234 , huHuaCnt : 23,holdHuaCnt : 0, vhuTypes : [ eFanxing , ] } , .... ] } 
+   // huPlayers : json 数组包含子类型，表示胡牌玩家的数组，一炮多响，有多个胡牌玩家 
+   // 胡牌子类型: idx :胡牌玩家的idx ， huaCnt : 花数量，offset ：胡牌玩家赢的钱，isGangKai ，胡牌玩家是否是杠开， vhuTypes 是一个数组，表示胡牌时候的 各种翻型叠加,
+   // invokerGangIdx : 引杠者的索引，当明杠，直杠才有这个key值,暗杠的时候这个就是胡牌者自己
 
-MSG_ROOM_SZ_GAME_OVER, // 苏州麻将结束
-// svr: { isLiuJu : 0 , isNextFanBei : 0 , detail : [ {idx : 0 , offset : 23 }, ...  ] } 
-// svr : isLiuJu : 是否是流局
- // detail : 数组就是每个玩家的本局的最终输赢 ；
- // isNextFanBei : 下一局是否要翻倍
+	MSG_ROOM_SZ_GAME_OVER, // 苏州麻将结束
+	// svr: { isLiuJu : 0 , isNextFanBei : 0 , detail : [ {idx : 0 , offset : 23 }, ...  ] } 
+   // svr : isLiuJu : 是否是流局
+	// detail : 数组就是每个玩家的本局的最终输赢 ；
+	// isNextFanBei : 下一局是否要翻倍
 
 	MSG_ROOM_UPDATE_PLAYER_NET_STATE, // 更新房间内玩家的在线状态
 	// svr : { idx : 0 , isOnLine : 0 } // isOnline 0 不在线，1 在线 。  
@@ -469,438 +665,8 @@ MSG_ROOM_SZ_GAME_OVER, // 苏州麻将结束
 	// svr: {idx : 0,card : 0}
 	//card : 0是取消，其它的是包牌的card
 
-	MSG_ROOM_GOLDEN_BEGIN = 1700, //三张命令号开始标识
 
-	MSG_ROOM_GOLDEN_GAME_END, //三张游戏结束消息
-	// svr: { bankerIdx : 2 , result : [ { uid : 23 , offset : 23, final : -23 }, .... ] }
 
-	MSG_ROOM_GOLDEN_GAME_WAIT_ACT, //三张发送玩家操作列表消息
-	// sur: { acts : { act ： 1 , info : 1 } , { act : 2 , info : 1 } ... }
-
-	MSG_ROOM_GOLDEN_GAME_PASS, //三张玩家弃牌
-	// sur : { ret : 0 }  0, 成功; 1, 玩家为空.
-
-	MSG_ROOM_GOLDEN_GAME_CALL, //三张玩家跟注
-	// sur : { ret : 0 , idx : 1 , coin : 10 , (mutiple : 1)//只有在加注时会发 }
-
-	MSG_ROOM_GOLDEN_GAME_CALL2END, //三张玩家更改一跟到底
-	// sur : { ret : 0, call2end : 1 }
-
-	MSG_ROOM_GOLDEN_GAME_LOOK_CARDS, //三张看牌
-	// sur : { ret : 0, (idx : 1)//群发用于其他玩家知晓, (cards : { 23 , 24, 25 })//用于发送给看牌的玩家知晓 } 当失败时只给要求看牌玩家发失败信息(只有ret)
-
-	MSG_ROOM_GOLDEN_GAME_PK, //三张比牌
-	// sur : { ret : 0, idx : 1, withIdx : 2, result : 1 }
-	// result : 1, 胜利; 0, 失败
-
-	MSG_ROOM_GOLDEN_GAME_END_PK, //三张最终PK
-	// sur : { participate : { 1 , 2, 3 } , lose : { 2 , 3 } }
-	// participate : 参与者
-	// lose : 输的人
-
-	MSG_ROOM_GOLDEN_END = 1900, //三张命令号结束标识
-
-
-
-	MSG_ROOM_SICHUAN_MAJIANG_BEGIN = 2000, //四川麻将命令号开始标记
-
-	MSG_ROOM_SCMJ_GAME_END, //四川麻将游戏结束
-
-	MSG_ROOM_SCMJ_PLAYER_HU, //四川麻将胡
-
-	MSG_ROOM_SCMJ_PLAYER_EXCHANGE_CARDS, //四川麻将换三张
-
-	MSG_ROOM_SCMJ_PLAYER_DECIDE_MISS, //四川麻将定缺
-
-	MSG_ROOM_SCMJ_GAME_START, //四川麻将开始游戏消息
-
-	MSG_ROOM_SICHUAN_MAJIANG_END = 2100, //四川麻将命令号结束标识
-
-
-	/*13水消息列表
-		(2200 - 2300)
-		ret: 0成功, >1 失败
-	*/
-	MSG_ROOM_THIRTEEN_BEGIN = 2200, //13水命令号开始标记
-
-	MSG_ROOM_THIRTEEN_GAME_END, //13水游戏结束
-	// svr: { result : [ { idx : 23 , offset : 23, cards : [[1,2,3], [4,5,6,7,8], [9,10,11,12,13]], cardsType : [1,1,1], cardsWeight : [12,12,12], swat : 0 , shoot : [0 , 1 , 2] }, .... ] }
-	// swat 红波浪：值为玩家IDX
-	// shoot 打枪 : 数组被打枪玩家的IDX
-
-	MSG_ROOM_THIRTEEN_GAME_WAIT_ACT, //动作列表（开始信号）
-	// null
-
-	MSG_ROOM_THIRTEEN_GAME_PUT_CARDS, //十三张玩家摆牌
-	// client: { cards : [1, 2, 3, ... , 13] }
-	// svr : { ret : 1 } 正确时无返回，错误时返回为大于0的值
-	// ret : 1, 找不到该玩家  2, 牌型信息错误  3, 摆牌错误，无法摆牌  4, 已摆牌
-
-	MSG_ROOM_THIRTEEN_GAME_PUT_CARDS_UPDATE, //十三张玩家摆牌更新
-	// svr : { idx : 1 , state : 0/1 , sys : 1}
-	// sys : system auto put cards, if not do not send this key
-
-	MSG_ROOM_THIRTEEN_GAME_SHOW_CARDS, //十三张玩家明牌
-	// client: null
-	// svr : { ret : 1 }
-	// 1, 玩家不存在  2, 状态错误操作失败  3, 当前房间不能明牌  4, 金币不足  7, 请求超时
-
-	MSG_ROOM_THIRTEEN_GAME_DELAY_PUT, //十三张增加摆牌时间
-	// client: 暂时定义null, 每次增加固定的时间
-	// svr : { ret : 1 }
-	// 1, 玩家不存在 
-
-	MSG_ROOM_THIRTEEN_UPDATE_CARDS_PUT_TIME, //十三张摆牌时间更新
-	// svr : {idx : 1, time : int}
-
-	MSG_ROOM_THIRTEEN_START_ROT_BANKER, //十三水开始抢庄信号
-	// svr : {}
-
-	MSG_ROOM_THIRTEEN_ROT_BANKER, //十三张抢庄
-	// client: {state : 1}
-	// state : 1, rot banker; 0, do not rot banker
-	// svr : { ret : 0 }
-	// 1, 玩家不存在  2, 状态错误操作失败  3, 当前房间不能抢庄  4, 金币不足  5, 积分不足  7, 请求超时 
-
-	MSG_ROOM_THIRTEEN_PRODUCED_BANKER, //十三水庄信息
-	// svr : {bankerIdx : 1, rotBanker : 1}
-	// rotBanker : 1, banker is rotted; 0, normal banker
-
-	//MSG_ROOM_THIRTEEN_SHOW_CARDS, //十三水明牌命令
-	// client : {}
-	// svr : {ret : 0}
-
-	MSG_ROOM_THIRTEEN_SHOW_CARDS_UPDATE, //十三水玩家明牌更新
-	// svr : {idx : 1, cards : [1,2, ... 13], waitTime: int}
-
-	MSG_ROOM_THIRTEEN_GOLDEN_UPDATE, //十三张游戏内剩余金币更新
-	// svr : { idx : 1 , chips : 123 }
-
-	MSG_ROOM_THIRTEEN_APPLAY_DRAG_IN, //申请带入金币
-	// client : {amount : 100, clubID : 123}
-	// svr : {ret : 0}
-	// 1, 玩家不存在  2 3, 带入金额错误  4, 金币不足  5 6, 俱乐部选择错误  7, 请求超时
-
-	MSG_ROOM_THIRTEEN_DRAG_IN,//带入金币反馈信息
-	// svr : {idx : 1 , chips : 123}
-
-	MSG_ROOM_THIRTEEN_NEED_DRAGIN, //需要带入金币才能继续
-	// svr : {idx : 1, clubIDs : [123,123,123], min : 100, max : 200}
-
-	MSG_ROOM_THIRTEEN_REAL_TIME_RECORD, //十三水实时战绩
-	// svr : {idx : 0, detail : [{uid : 123, chip : 123, drag : 123, round : 123}, ...]}
-	// 10 tips per page
-
-	MSG_ROOM_THIRTEEN_STAND_PLAYERS, //十三水围观玩家信息
-	// client : {}
-	// svr : {idx : 0, players : [123, 123, 123...]}
-	// 20/per page
-
-	MSG_ROOM_THIRTEEN_BOARD_GAME_RECORD, //十三水上局回顾
-	// client : {idx : -1}
-	// -1 : last game (stat form 0)
-	// svr : {ret : 0, idx : 123, detail : [{uid : 123, offset : 123, cards : [12, 12, ...], types : [1, 2, 3]}, ...]}
-
-	MSG_ROOM_REQUEST_THIRTEEN_ROOM_INFO, //十三水请求房间基本信息
-	// client : as request room info
-	// svr : {ret : 0, roomID : 123, leftTime : 123, opts : {json::opts}}
-
-	MSG_ROOM_THIRTEEN_PLAYER_AUTO_STANDUP, //十三水玩家自动站起切换
-	// clinet : {state : 1}
-	// state : 1 auto stand up,  0 cancle auto stand up
-	// svr : {ret : 0, state : 1}
-	// 1, 玩家不存在  2, 操作错误
-
-	MSG_ROOM_THIRTEEN_PLAYER_AUTO_LEAVE, //十三水玩家自动离开切换
-	// clinet : {state : 1}
-	// state : 1 auto leave,  0 cancle auto leave
-	// svr : {ret : 0, state : 1}
-	// 1, 玩家不存在  2, 操作错误
-
-	MSG_ROOM_THIRTEEN_CLIENT_OVER, //十三水游戏客户端结束
-	// client : {}
-
-	MSG_ROOM_THIRTEEN_DECLINE_DRAG_IN, //带入金币拒绝反馈信息
-	// svr : {}
-
-	MSG_ROOM_THIRTEEN_REPUT_CARDS, //十三水游戏重新摆牌
-	// client : {}
-	// svr : {ret : 0}
-	// 1, 玩家不存在  2, 操作错误  3, 未摆牌
-
-	MSG_ROOM_THIRTEEN_RBPOOL_UPDATE, //十三张抢庄池发生变化
-	// svr : {pool : 123}
-
-	MSG_ROOM_THIRTEEN_CANCEL_DRAGIN, //十三水取消带入
-	// client : {}
-
-	MSG_ROOM_THIRTEEN_DISMISS_ROOM, //十三水解散房间
-	// client : {uid : 123}
-	// svr : {ret : 0}
-	// 1, uid is null or is not correct  2, uid is not the owner
-
-	MSG_ROOM_THIRTEEN_DELAY_TIME, //十三水房间延时
-	// client : {uid : 123, time : 30}
-	// svr : {ret : 0}
-	// 1, game is over  2, uid is miss  4, time out
-	// time : is not 30 will be 60
-
-	MSG_ROOM_THIRTEEN_FORCE_DISMISS_ROOM, //十三水极速场强制解散房间
-	// client : {uid : 123}
-	// svr : {ret : 0}
-	// 1, uid is null or is not correct  2, uid is not the owner
-
-	MSG_ROOM_THIRTEEN_MTT_GAME_START, //十三水比赛场游戏开始
-	// svr : {roomID : 123, port : 8}
-	// no reply
-
-	MSG_ROOM_THIRTEEN_MTT_ELIMINATION, //十三水比赛玩家淘汰信息
-	// svr : {aliveCnt : 0}
-	// no reply
-
-	MSG_ROOM_THIRTEEN_MTT_REQUEST_ROOM_LIST, //十三水比赛场请求观战房间列表
-	// svr : {ret : 0, roomInfo : { { idx : 0, playerCnt : 4, playerInfo : { {uid : 123, chip : 100},... } },... }}
-
-	MSG_ROOM_THIRTEEN_END = 2300, //13水命令号结束标记
-
-
-
-	/*Club消息列表
-		(2400 - 2500)
-		ret: 0成功, >1 失败
-	*/
-	MSG_CLUB_MESSAGE_BEGIN = 2400,
-
-	MSG_CLUB_PLAYER_CLUB_INFO, //玩家俱乐部信息
-	//client : {nTargetID : playerUID}
-	//svr : {joined : [111, 222, 333] , created : [111, 222, 333]}
-
-	MSG_CLUB_CREATE_CLUB, //创建俱乐部
-	//client : targetID: playerUID, {name : "str", region : "str", description : "null", icon : "str"}
-	//svr : {ret : 0, clubID : 123}
-	// 1, 俱乐部名为空  2, 地区为空  3, 俱乐部已存在
-
-	MSG_CLUB_DISMISS_CLUB, //解散俱乐部
-	//client : targetID: clubID, {uid : 123}
-	//svr : {ret : 0, clubID : 123}
-	// 1, 俱乐部错误  2, 权限不足  3, 操作失败
-
-	MSG_CLUB_APPLY_JOIN, //玩家申请加入俱乐部
-	//client : targetID: clubID, {uid : 123}
-	//svr : {ret : 0}
-	// 1, 俱乐部错误  2, 已加入  3, 已申请
-
-	MSG_CLUB_FIRE_PLAYER, //踢出玩家
-	//client : targetID: clubID, {uid : 123, fireUID : 123}
-	//svr : {ret : 0}
-	// 1 2, 玩家信息错误  3, 权限不足  4, 操作无效
-
-	MSG_CLUB_QUIT_CLUB, //玩家请求退出俱乐部
-	//client : targetID: clubID, {uid : 123}
-	//svr : {ret : 0}
-	// 1, 玩家信息错误  2, 俱乐部群主无法退出  3, 操作无效
-	
-	MSG_CLUB_APPLY_CLUB_INFO, //玩家申请俱乐部信息
-	//client : targetID: clubID, {}
-	//svr : {ret : 0, clubID : 123, name : "str", creator : 123, nom : 12, lom : 12, region : "str", description : "str", icon : "url", nor : 123}
-	//nom : number of member	lom : limit of member amount	nor : number of room
-
-	MSG_CLUB_APPLY_CLUB_DETAIL, //玩家申请俱乐部详情
-	//client : targetID: clubID, {}
-	//svr : {ret : 0, creator : 123, members : [{id : 123, level : 1}, {id : 321, level : 1}, ...], createType : 1, searchLimit : 1, foundation : 123}
-	//createType : who can create room (0: everyone, 1: administrator or creator, 2: creator)
-	//searchLimit : who can search dao this club(0: everyone, 1: nobody)
-
-	MSG_CLUB_APPLY_ROOM_INFO, //玩家请求俱乐部牌局信息
-	//client : targetID: clubID, {}
-	//svr : {ret : 0, clubID : 123, rooms : [{id : 123, port : 13}, {id : 321, port : 12}, ...]}
-	// 1, 连接超时，牌局信息可能不全
-
-	MSG_CLUB_INFO_UPDATE_ICON, //修改头像
-	//client : targetID: clubID, {uid : 123, icon : "url"}
-	//svr : {ret : 0, clubID : 123}
-	// 1, 玩家信息错误  2, 权限不足
-
-	MSG_CLUB_INFO_UPDATE_NAME, //修改名称
-	//client : targetID: clubID, {uid : 123, name : "str"}
-	//svr : {ret : 0, clubID : 123}
-	// 1, 玩家信息错误  2, 权限不足  3, 名字为空
-
-	MSG_CLUB_INFO_UPDATE_CREATE_TYPE, //修改建房权限
-	//client : targetID: clubID, {uid : 123, state : 1}
-	//svr : {ret : 0, clubID : 123, state : 1}
-	// 1, 玩家信息错误  2, 权限不足  3 4, 信息有误
-
-	MSG_CLUB_INFO_UPDATE_SEARCH_LIMIT, //修改搜索限制
-	//client : targetID: clubID, {uid : 123, state : 1}
-	//svr : {ret : 0, clubID : 123, state : 1}
-	// 1, 玩家信息错误  2, 权限不足  3 4, 信息有误
-
-	MSG_CLUB_INFO_UPDATE_DESCRIPTION, //修改描述
-	//client : targetID: clubID, {uid : 123, description : "str"}
-	//svr : {ret : 0, clubID : 123}
-	// 1, 玩家信息错误  2, 权限不足  3 4, 信息有误
-
-	MSG_CLUB_INFO_UPDATE_LEVEL, //修改玩家等级权限
-	//client : targetID: clubID, {uid : 123, memberUID : 321, level : 1}
-	//svr : {ret : 0}
-	// 1 3, 玩家信息错误  2, 权限不足  4, 玩家未加入  5, 信息错误  6, 操作无效
-
-	MSG_CLUB_INFO_UPDATE_MEMBER_LIMIT, //修改俱乐部人数上限
-	//client : targetID: clubID, {uid : 123, amount : 1}
-	//svr : {ret : 0}
-	//amount : update times, +10/per time
-
-	MSG_CLUB_MEMBER_INFO, //俱乐部成员信息
-	//client : targetID : clubID, {}
-	//svr : {ret : 0, clubID : 123, members : {123, 123, 123...}}
-
-	MSG_CLUB_MEMBER_DETAIL, //俱乐部成员详情
-	//client : targetID : clubID, {memberUID : 123}
-	//svr : {ret : 0, clubID : 123, uid : 123, level : 123, remark : '123'}
-	// 1, 玩家信息错误  4, 玩家未加入  
-
-	MSG_CLUB_MEMBER_UPDATE_REMARK, //俱乐部修改成员备注
-	//client : targetID : clubID, {uid : 123, memberUID : 123, remark : '123'}
-	//svr : {ret : 0, uid : 123}
-	// 1 3, 玩家信息错误  2, 权限不足  4, 玩家未加入  6, 操作无效
-
-	MSG_CLUB_EVENT_GRANT_FOUNDATION, //发放基金
-	//client : targetID: clubID, {uid : 123, memberUID : 321, amount : 1000}
-	//svr : {ret : 0}
-	// 1, 玩家信息错误  2, 权限不足  3, 信息有误  4, 玩家未加入  5, 金额错误  6, 基金不足
-
-	MSG_CLUB_EVENT_GRANT_RECORDER, //俱乐部发放基金记录
-	//client : targetID: clubID, {}
-	//svr : {ret : 0, clubID : 123, events : [{eventID : 123, time: 123456, disposer:123, detail : {json}}, ... ]}
-
-	MSG_CLUB_EVENT_JOIN, //申请加入消息列表
-	//client : targetID: clubID, {}
-	//svr : {ret : 0, events : [{eventID: 123, time: 123456, state: 0, disposer: 123, detail : {json}}, ...]}
-	//state : 0, wait access	1, apply accede		2, apply refused
-	//disposer : treat uid, if 0 no body or treat by system
-	//detail : json received from client
-
-	MSG_CLUB_EVENT_ACTIVE_UPDATE, //服务器主动推送事件列表更新
-	//svr : {clubID : 123, type : 0}
-	//type : eClubEventType
-
-	MSG_CLUB_EVENT_ENTRY, //申请带入消息列表
-	//client : targetID: clubID, {}
-	//svr : {ret : 0, events : [{eventID: 123, time: 123456, detail : {json}}, ...]}
-
-	MSG_CLUB_EVENT_ENTRY_UPDATE, //服务器接受客户端申请事件列表更新
-	//client : targetID: clubID, {uid : 123}
-	//svr : {ret : 0, clubID : 123, detail : [{type : 0, amount : 0}, ...]}
-
-	MSG_CLUB_EVENT_ENTRY_RECORDER, //申请带入消息记录列表
-	//client : targetID: clubID, {}
-	//svr : {ret : 0, events : [{eventID: 123, time: 123456, state: 0, disposer: 123, detail : {json}}, ...]}
-	//state : 0, wait access	1, apply accede		2, apply refused
-	//disposer : treat uid, if 0 no body or treat by system
-	//detail : json received from client
-
-	MSG_CLUB_EVENT_ENTRY_RECORDER_UPDATE, //申请带入记录列表更新
-	//wait
-
-	MSG_CLUB_EVENT_APPLY_TREAT, //申请处理俱乐部事件
-	//client : targetID: clubID, {uid : 123, eventID : 321, state : 0}
-	//svr : {ret : 0}
-	//state : 1, accede		2, refused
-	// 1, 玩家信息错误  2 3 5 10, 信息错误  6, 事件已处理  7, 权限不足  8, 操作错误  9, 事件类型错误  11, 联盟积分不足  12, 请求超时  13, 该玩家金币不足
-
-	MSG_LEAGUE_CLUB_LEAGUE_INFO, //俱乐部联盟信息
-	//client : targetID: clubID, {}
-	//svr : {joined : [111, 222, 333] , created : [111, 222, 333]}
-
-	MSG_LEAGUE_CREATE_LEAGUE, //创建联盟部
-	//client : targetID: clubID, {uid : 123, name : "str", icon : "url:null"}
-	//svr : {ret : 0}
-	// 1, 名字为空  3, 联盟已存在
-
-	MSG_LEAGUE_APPLY_LEAGUE_INFO, //玩家申请联盟信息
-	//client : targetID: leagueID, {}
-	//svr : {ret : 0, leagueID : 123, name : "str", creator : 123}
-
-	MSG_LEAGUE_APPLY_LEAGUE_DETAIL, //玩家申请联盟详情
-	//client : targetID: leagueID, {}
-	//svr : {ret : 0, leagueID : 123, name : "str", creator : 123, members : [{id : 123, level : 1}, {id : 321, level : 1}, ...], joinLimit : 1, joinEvents : [{eventID : 123, time : 123, detail : {json}}, ...]}
-	//joinLimit : 0, all club can join		1, no one can search dao
-
-	MSG_LEAGUE_JOIN_LEAGUE, //加入联盟
-	//client : targetID: leagueID, {uid : 123, clubID : 123}
-	//svr : {ret : 0}
-	// 1, 俱乐部信息错误  2, 玩家信息错误  3, 已申请  4, 权限不足  6, 联盟拒绝请求  7, 请求超时
-
-	MSG_LEAGUE_UPDATE_JOIN_LIMIT, //修改联盟搜索限制
-	//client : targetID: leagueID, {uid : 123, clubID : 123, state : 1}
-	//svr : {ret : 0, clubID : 123, state : 1}
-	// 1, 俱乐部信息错误  2, 玩家信息错误  3 4, 信息错误  5, 权限不足
-
-	MSG_LEAGUE_FIRE_CLUB, //踢出俱乐部
-	//client : targetID: leagueID, {uid : 123, clubID : 123, fireCID : 123}
-	//svr : {ret : 0}
-	// 1, 俱乐部信息错误  2, 玩家信息错误  3 4, 信息错误  5 6, 权限不足  7, 请求超时
-
-	MSG_LEAGUE_DISMISS_LEAGUE, //解散联盟
-	//client : targetID: leagueID, {uid : 123, clubID : 123}
-	//svr : {ret : 0}
-	// 1, 俱乐部信息错误  2, 玩家信息错误  3, 信息错误  5, 权限不足  7, 请求超时
-
-	MSG_LEAGUE_QUIT_LEAGUE, //退出联盟
-	//client : targetID: leagueID, {uid : 123, clubID : 123}
-	//svr : {ret : 0}
-	// 1, 俱乐部信息错误  2, 玩家信息错误  3, 信息错误  5, 操作失败  7, 请求超时
-
-	MSG_LEAGUE_EVENT_JOIN, //申请加入联盟列表
-	//client : targetID: leagueID, {}
-	//svr : {ret : 0, events : [{eventID: 123, time: 123456, state: 0, disposer: 123, detail : {json}}, ...]}
-	//state : 0, wait access	1, apply accede		2, apply refused
-	//disposer : treat uid, if 0 no body or treat by system
-	//detail : json received from client
-
-	MSG_LEAGUE_EVENT_APPLY_TREAT, //申请处理联盟事件
-	//client : targetID: leagueID, {uid : 123, eventID : 321, clubID : 123, state : 0}
-	//svr : {ret : 0}
-	//state : 1, accede		2, refused
-	// 1, 玩家信息错误  2 4 5 8, 信息错误  3, 俱乐部信息错误  6 10, 权限不足  7, 请求超时  9, 事件已处理  11, 操作失败  12, 事件无法处理
-
-	MSG_LEAGUE_EVENT_ACTIVE_UPDATE, //服务器主动推送联盟事件列表更新
-	//svr : {leagueID : 123, clubID : 123, type : 0}
-
-	MSG_LEAGUE_EVENT_ACTIVE_LIST_UPDATE, //服务器接受客户端申请联盟事件列表更新
-	//client : targetID: leagueID, {uid : 123, clubID : 123}
-	//svr : {ret : 0, clubID : 123, leagueID : 123, detail : [{type : 0, amount : 0}, ...]}
-
-	MSG_CLUB_SYSTEM_AUTO_ADD_PLAYER, //服务器自动接收玩家加入俱乐部——慎用
-	//client : targetID: clubID, {uid : 123}
-	//svr : {}
-
-	MSG_CLUB_ROOM_T_PLAYER_CHECK, //用于客户端显示按钮T人
-	//client : targetID: roomID {idx : 0}
-	//svr : {idx : 0, ret : 0}
-	//ret : 1, player is null	2, club is error	3, level is not enough	7, time out
-
-	MSG_CLUB_ROOM_T_PLAYER, //实际操作T人
-	//client : targetID: roomID {idx : 0}
-	//svr : {idx : 0, ret : 0}
-	//ret : 1, player is null	2, club is error	3, level is not enough	7, time out
-
-	MSG_CLUB_ROOM_T_STAND_PLAYER, //实际操作强制站起
-	//client : targetID: roomID {idx : 0}
-	//svr : {idx : 0, ret : 0}
-	//ret : 1, player is null	2, club is error	3, level is not enough	7, time out
-
-	MSG_CLUB_MESSAGE_END = 2500,
-
-	MSG_PLAYER_RESET_PASSWORD, //玩家重置密码
-	//client : {number : 11111111, password : "123456"}
-	//DATASERVER消息 targetID 发玩家ID
-	//svr : {ret : 0} 0成功，大于0失败
-
-	MSG_PLAYER_RESET_NAME, //玩家修改昵称
-	//client : {name : "lucy", sex : 1}
-	//svr : {ret : 0}
 
 
 

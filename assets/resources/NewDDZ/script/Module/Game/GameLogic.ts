@@ -1,6 +1,6 @@
 import Singleton from '../../../../../Script/Utils/Singleton';
 
-import { TagAnalyseResult, TagSearchCardResult, TagDistributing, SortType, EPokerType, DDZCardType, DDZ_Type } from '../../Module/DDZGameDefine';
+import { TagAnalyseResult, TagSearchCardResult, TagDistributing, SortType, EPokerType, DDZCardType, DDZ_Type } from '../DDZGameDefine';
 import FVMASK from './FvMask';
 
 var MAX_COUNT = 20;
@@ -1348,7 +1348,7 @@ class GameLogic extends Singleton {
     }
 
     //type translation
-    switchCardTypeToServerType(cardType) {
+    switchCardTypeToServerType(cardType: DDZCardType): DDZ_Type {
         switch (cardType) {
             case DDZCardType.Type_None:
                 return -1;
@@ -1380,7 +1380,7 @@ class GameLogic extends Singleton {
         }
     }
 
-    switchServerTypeToCardType(serverType, cardDataVec) {
+    switchServerTypeToCardType(serverType: DDZ_Type, cardDataVec): DDZCardType {
         switch (serverType) {
             case DDZ_Type.DDZ_Single:
                 return DDZCardType.Type_Single;

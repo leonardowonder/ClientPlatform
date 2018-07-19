@@ -3,6 +3,7 @@ const { ccclass, property } = cc._decorator;
 import ResManager from '../Custom/ResManager';
 import GameLogic from './GameLogic';
 import { DDZCardType, SortType } from '../DDZGameDefine';
+import TableMainUI from '../../UI/TableMainUI';
 
 let ResMgrIns = ResManager.getInstance();
 let GameLogicIns = GameLogic.getInstance();
@@ -39,18 +40,17 @@ export default class CardConsole extends cc.Component {
     @property
     m_moveCards: boolean = false;
 
-    _delegate = null;
-
     _grayCardVec = [];
     _selectedCardVec = [];
     m_handCardNodeMap = null;
+    m_tableMainView: TableMainUI = null;
 
-    setConsoleEnable (enable) {
+    setConsoleEnable(enable) {
         this.m_consoleActive = enable;
     }
 
-    init (delegate) {
-        this._delegate = delegate;
+    init(view: TableMainUI) {
+        this.m_tableMainView = view;
         this.node.on('touchstart', this.onTouchBegan.bind(this));
         this.node.on('touchmove', this.onTouchMoved.bind(this));
         this.node.on('touchend', this.onTouchEnded.bind(this));
@@ -64,7 +64,7 @@ export default class CardConsole extends cc.Component {
         }
     }
 
-    showDisPatchCards (localChairID, handCardData) {
+    showDisPatchCards(localChairID, handCardData) {
         var cardNodePrefab = ResMgrIns.getRes('PokerCardNode');
         let demoNode = cc.instantiate(cardNodePrefab);
         let cardNum = handCardData.length;
@@ -84,12 +84,12 @@ export default class CardConsole extends cc.Component {
         this.moveDispatchCards(localChairID, handCardData);
     }
 
-    moveDispatchCards (localChairID, handCardData) {
+    moveDispatchCards(localChairID, handCardData) {
         if (handCardData.length == 0) {
             return;
         }
         this.m_moveCards = true;
-        
+
         let startPosNode = this.m_startCardPosNode[localChairID];
         let startPos = startPosNode.getPosition();
         let cardNum = handCardData.length;
@@ -109,7 +109,7 @@ export default class CardConsole extends cc.Component {
                 let tempPos = tempNode.getPosition();
                 let dstPosX = startPosTemp + demoW / 3.5 * i;
                 finalPosX = dstPosX;
-                let curAct = cc.callFunc(()=>{
+                let curAct = cc.callFunc(() => {
                     tempNode.runAction(cc.moveTo(DispatchCardActTime, cc.p(dstPosX, tempPos.y)));
                 });
                 spawnAct.push(curAct);
@@ -118,7 +118,7 @@ export default class CardConsole extends cc.Component {
                 for (; i < cardNum; i++) {
                     let tempNode = curHandCardNodeVec[i];
                     let tempPos = tempNode.getPosition();
-                    let curAct = cc.callFunc(()=>{
+                    let curAct = cc.callFunc(() => {
                         tempNode.runAction(cc.moveTo(DispatchCardActTime, cc.p(finalPosX, tempPos.y)));
                     });
                     spawnAct.push(curAct);
@@ -132,13 +132,13 @@ export default class CardConsole extends cc.Component {
             act.push(cc.delayTime(DispatchCardActTime));
             step--;
         }
-        act.push(cc.callFunc(()=>{
+        act.push(cc.callFunc(() => {
             this.dispathCardsCompelete(handCardData);
         }));
         this.node.runAction(cc.sequence(act));
     }
 
-    moveCards (localChairID, handCardData) {
+    moveCards(localChairID, handCardData) {
         if (handCardData.length == 0) {
             return;
         }
@@ -155,7 +155,7 @@ export default class CardConsole extends cc.Component {
             let tempNode = curHandCardNodeVec[i];
             let tempPos = tempNode.getPosition();
             let dstPosX = startPos.x + demoNode.width / 3.5 * i;
-            let curAct = cc.callFunc(()=>{
+            let curAct = cc.callFunc(() => {
                 tempNode.stopAllActions();
                 tempNode.runAction(cc.moveTo(DispatchCardActTime, cc.p(dstPosX, tempPos.y)));
             });
@@ -167,13 +167,13 @@ export default class CardConsole extends cc.Component {
             act.push(cc.spawn(spawnAct));
         }
         act.push(cc.delayTime(DispatchCardActTime));
-        act.push(cc.callFunc(()=>{
+        act.push(cc.callFunc(() => {
             this.dispathCardsCompelete(handCardData);
         }));
         this.node.runAction(cc.sequence(act));
     }
 
-    addMoveCards (localChairID, handCardData, addCardDataVec, addCardNodeVec) {
+    addMoveCards(localChairID, handCardData, addCardDataVec, addCardNodeVec) {
         if (handCardData.length == 0) {
             return;
         }
@@ -195,13 +195,13 @@ export default class CardConsole extends cc.Component {
             let dstPosX = startPos.x + demoNode.width / 3.5 * i;
             let curAct = null;
             if (needDrop) {
-                curAct = cc.callFunc(()=>{
+                curAct = cc.callFunc(() => {
                     tempNode.stopAllActions();
                     tempNode.runAction(cc.moveTo(DropCardActTime, cc.p(dstPosX, startPosNode.y)));
                 });
                 dropSpawnAct.push(curAct);
             } else {
-                curAct = cc.callFunc(()=>{
+                curAct = cc.callFunc(() => {
                     tempNode.stopAllActions();
                     tempNode.runAction(cc.moveTo(DispatchCardActTime, cc.p(dstPosX, startPosNode.y)));
                 });
@@ -216,14 +216,14 @@ export default class CardConsole extends cc.Component {
         act.push(cc.delayTime(DispatchCardActTime));
         act.push(cc.spawn(dropSpawnAct));
         act.push(cc.delayTime(DropCardActTime));
-        act.push(cc.callFunc(()=>{
+        act.push(cc.callFunc(() => {
             this.dispathCardsCompelete(handCardData);
         }));
         this.node.runAction(cc.sequence(act));
 
     }
 
-    showHandCard (localChairID, handCardData) {
+    showHandCard(localChairID, handCardData) {
         var cardNodePrefab = ResMgrIns.getRes('PokerCardNode');
         let demoNode = cc.instantiate(cardNodePrefab);
         let cardNodesLength = demoNode.width / 3.5 * (handCardData.length - 1) + demoNode.width;
@@ -259,16 +259,16 @@ export default class CardConsole extends cc.Component {
         this.sortZOrder(localChairID);
     }
 
-    sortZOrder (localChairID) {
+    sortZOrder(localChairID) {
         let curHandCardNodeVec = this.m_handCardNodeMap[localChairID];
         for (let i = 0; i < curHandCardNodeVec.length; i++) {
             curHandCardNodeVec[i].setLocalZOrder(i);
         }
     }
 
-    onTouchBegan (event) {
+    onTouchBegan(event) {
         if (this.m_moveCards) {
-             return;
+            return;
         }
         this.checkTouchPosContainCardNode(event.getLocation());
         this.m_touchBegan = this.m_startGrayIDX > -1;
@@ -277,24 +277,24 @@ export default class CardConsole extends cc.Component {
         }
     }
 
-    onTouchMoved (event) {
+    onTouchMoved(event) {
         if (!this.m_touchBegan) {
-             return;
+            return;
         }
         this.checkTouchMove(event.getLocation());
         this.checkGrayCard();
     }
 
-    onTouchEnded (event) {
+    onTouchEnded(event) {
         if (!this.m_touchBegan) {
-             return;
+            return;
         }
         //this.normalStandCard();
         this.checkStandCardContainAutoStand();
         this.m_touchBegan = false;
     }
 
-    checkTouchPosContainCardNode (touchPos) {
+    checkTouchPosContainCardNode(touchPos) {
         this.m_startGrayIDX = -1;
         this.m_endGrayIDX = -1;
         let curCardNodeVec = this.m_handCardNodeMap[0];
@@ -306,11 +306,11 @@ export default class CardConsole extends cc.Component {
                 this.m_startGrayIDX = i;
                 this.m_endGrayIDX = i;
                 break;
-            } 
+            }
         }
     }
 
-    checkTouchMove (touchPos) {
+    checkTouchMove(touchPos) {
         let curCardNodeVec = this.m_handCardNodeMap[0];
         for (let i = curCardNodeVec.length - 1; i >= 0; i--) {
             let n = curCardNodeVec[i];
@@ -320,11 +320,11 @@ export default class CardConsole extends cc.Component {
             if (rect.contains(touchPos)) {
                 this.m_endGrayIDX = i;
                 break;
-            } 
+            }
         }
     }
 
-    checkGrayCard () {
+    checkGrayCard() {
         let curCardNodeVec = this.m_handCardNodeMap[0];
         let maxID = this.m_startGrayIDX > this.m_endGrayIDX ? this.m_startGrayIDX : this.m_endGrayIDX;
         let minID = this.m_startGrayIDX < this.m_endGrayIDX ? this.m_startGrayIDX : this.m_endGrayIDX;
@@ -351,7 +351,7 @@ export default class CardConsole extends cc.Component {
         console.log('GrayCards:' + this._grayCardVec.length);
     }
 
-    checkStandCardContainAutoStand  () {//include auto stand process
+    checkStandCardContainAutoStand() {//include auto stand process
         if (this._grayCardVec.length == 0) {
             return;
         }
@@ -407,7 +407,7 @@ export default class CardConsole extends cc.Component {
                     this.normalStandCard();
                     return;
                 } else {
-                    if (allPreSeleGray){//preSelectedCard all gray
+                    if (allPreSeleGray) {//preSelectedCard all gray
                         this.normalStandCard();
                         return;
                     } else {
@@ -435,13 +435,13 @@ export default class CardConsole extends cc.Component {
         this._grayCardVec = [];
         this.standCardByLineCardData(dstStandCards);
 
-        if (this._delegate && this.m_consoleActive) {
+        if (this.m_tableMainView && this.m_consoleActive) {
             let selectedCardDataVec = this.getSelectedCardsVec();
-            this._delegate.checkSelectedCardCanOffer(selectedCardDataVec, true);
+            this.m_tableMainView.checkSelectedCardCanOffer(selectedCardDataVec, true);
         }
     }
 
-    normalStandCard () {
+    normalStandCard() {
         if (this._grayCardVec.length == 0) {
             return;
         }
@@ -459,14 +459,14 @@ export default class CardConsole extends cc.Component {
         }
         this._grayCardVec = [];
         console.log("selectedCard0: " + this._selectedCardVec.length);
-        if (this._delegate && this.m_consoleActive) {
+        if (this.m_tableMainView && this.m_consoleActive) {
             let selectedCardDataVec = this.getSelectedCardsVec();
-            this._delegate.checkSelectedCardCanOffer(selectedCardDataVec, true);
+            this.m_tableMainView.checkSelectedCardCanOffer(selectedCardDataVec, true);
         }
 
     }
 
-    checkCanBeLine (cardDataVec) {
+    checkCanBeLine(cardDataVec) {
         let curSelectedCardVec = cardDataVec;
         if (curSelectedCardVec.length > 5) {
             let lineResult = GameLogicIns.searchLineFromCardVec(curSelectedCardVec);
@@ -492,7 +492,7 @@ export default class CardConsole extends cc.Component {
         return [];
     }
 
-    standCardByLineCardData  (lineDataVec) {
+    standCardByLineCardData(lineDataVec) {
         let curSelectedCardVec = this.getSelectedCardsVec();
         for (let i = 0; i < curSelectedCardVec.length; i++) {
             let curCardData = curSelectedCardVec[i];
@@ -522,7 +522,7 @@ export default class CardConsole extends cc.Component {
         }
     }
 
-    popSelectedCardNode (node) {
+    popSelectedCardNode(node) {
         for (let i = 0; i < this._selectedCardVec.length; i++) {
             if (this._selectedCardVec[i] == node) {
                 this._selectedCardVec.splice(i, 1);
@@ -530,18 +530,18 @@ export default class CardConsole extends cc.Component {
         }
     }
 
-    onDestroy () {
+    onDestroy() {
         this.node.off('touchstart', this.onTouchBegan.bind(this));
         this.node.off('touchmove', this.onTouchMoved.bind(this));
         this.node.off('touchend', this.onTouchEnded.bind(this));
     }
 
-    dispathCardsCompelete (handCardData) {
+    dispathCardsCompelete(handCardData) {
         this.m_moveCards = false;
         this.showHandCard(0, handCardData);
     }
 
-    findSelectedNodeByCardData (cardData) {
+    findSelectedNodeByCardData(cardData) {
         for (let i = 0; i < this._selectedCardVec.length; i++) {
             if (this._selectedCardVec[i].getComponent('PokerCardNode')._cardData == cardData) {
                 return this._selectedCardVec[i];
@@ -550,7 +550,7 @@ export default class CardConsole extends cc.Component {
         return null;
     }
 
-    checkContain (cardDataVec, cardData) {
+    checkContain(cardDataVec, cardData) {
         for (let i = 0; i < cardDataVec.length; i++) {
             if (cardDataVec[i] == cardData) {
                 return true;
@@ -559,7 +559,7 @@ export default class CardConsole extends cc.Component {
         return false;
     }
 
-    showHandCardNeedRomove (localChairID, handCardData) {
+    showHandCardNeedRomove(localChairID, handCardData) {
         let curCardNodeVec = this.m_handCardNodeMap[localChairID];
         let curCardNum = handCardData.length;
         if (curCardNum == curCardNodeVec.length) {
@@ -581,7 +581,7 @@ export default class CardConsole extends cc.Component {
         this.moveCards(localChairID, handCardData);
     }
 
-    showHandCardNeedAdd (localChairID, handCardData) {
+    showHandCardNeedAdd(localChairID, handCardData) {
         let curCardNodeVec = this.m_handCardNodeMap[localChairID];
         let curCardNum = handCardData.length;
         if (curCardNum == curCardNodeVec.length) {
@@ -605,7 +605,7 @@ export default class CardConsole extends cc.Component {
                 cardDataPosMap[handCardData[i]] = i;
             }
         }
-              
+
         var cardNodePrefab = ResMgrIns.getRes('PokerCardNode');
         let demoNode = cc.instantiate(cardNodePrefab);
         let cardNodesLength = demoNode.width / 3.5 * (curCardNodeVec.length - 1 + addCardDataVec.length) + demoNode.width;
@@ -632,7 +632,7 @@ export default class CardConsole extends cc.Component {
         this.addMoveCards(localChairID, handCardData, addCardDataVec, addCardNodeVec);
     }
 
-    clearOutCard (localChairID) {
+    clearOutCard(localChairID) {
         let outCardPosNode = this.m_outCardPosNode[localChairID];
         let children = outCardPosNode.children;
         for (let i = 0; i < children.length; i++) {
@@ -640,7 +640,7 @@ export default class CardConsole extends cc.Component {
         }
     }
 
-    showOutCard (localChairID, outCardVec, serverCardType) {
+    showOutCard(localChairID, outCardVec, serverCardType) {
         this.clearOutCard(localChairID);
         outCardVec = GameLogicIns.sortCardList(outCardVec, SortType.ST_NORMAL);
         let localCardType = GameLogicIns.switchServerTypeToCardType(serverCardType, outCardVec);
@@ -666,7 +666,7 @@ export default class CardConsole extends cc.Component {
         }
     }
 
-    showMoveOutCardEffect (isFromLeft, needSecondLine, outCardVec, cardType) {
+    showMoveOutCardEffect(isFromLeft, needSecondLine, outCardVec, cardType) {
         var node = new cc.Node('OutCardNode');
         if (cardType > DDZCardType.Type_DuiZi && cardType < DDZCardType.Type_ZhaDan_1) {//ShunZI
             var cardNodePrefab = ResMgrIns.getRes('PokerCardNode');
@@ -678,21 +678,21 @@ export default class CardConsole extends cc.Component {
             let cardNodesHeight = 0;
             if (needSecondLine) {
                 if (lineCount == 0) {
-                    cardNodesLength = demoNode.width / 2.0 * OutCardScale * (outCardVec.length - 1) + 
-                    demoNode.width * OutCardScale;
+                    cardNodesLength = demoNode.width / 2.0 * OutCardScale * (outCardVec.length - 1) +
+                        demoNode.width * OutCardScale;
                     cardNodesHeight = demoNode.height * OutCardScale;
                 } else {
-                    cardNodesLength = demoNode.width / 2.0 * OutCardScale * (MaxOutCardLineNode - 1) + 
-                         demoNode.width * OutCardScale;
+                    cardNodesLength = demoNode.width / 2.0 * OutCardScale * (MaxOutCardLineNode - 1) +
+                        demoNode.width * OutCardScale;
                     cardNodesHeight = demoNode.height * 0.6 * OutCardScale * lineCount +
-                         demoNode.height * OutCardScale;
+                        demoNode.height * OutCardScale;
                 }
             } else {
-                cardNodesLength = demoNode.width / 2.0 * OutCardScale * (outCardVec.length - 1) + 
+                cardNodesLength = demoNode.width / 2.0 * OutCardScale * (outCardVec.length - 1) +
                     demoNode.width * OutCardScale;
                 cardNodesHeight = demoNode.height * OutCardScale;
             }
-            
+
             node.width = cardNodesLength;
             node.height = cardNodesHeight;
             if (isFromLeft) {
@@ -710,31 +710,31 @@ export default class CardConsole extends cc.Component {
                 n.setScale(OutCardScale);
                 node.addChild(n);
                 if (needSecondLine) {
-                    n.setLocalZOrder(isFromLeft ? i : Math.floor(i / MaxOutCardLineNode) * 
+                    n.setLocalZOrder(isFromLeft ? i : Math.floor(i / MaxOutCardLineNode) *
                         MaxOutCardLineNode + MaxOutCardLineNode - (i % MaxOutCardLineNode));
                 } else {
                     n.setLocalZOrder(i);
                 }
-                
+
                 if (needSecondLine) {
                     if (i >= MaxOutCardLineNode) {
                         if (isFromLeft) {
-                            n.setPosition(cc.p(actStartPos.x, startPos.y - n.height * 0.6 * OutCardScale - n.height / 2.0 * 
+                            n.setPosition(cc.p(actStartPos.x, startPos.y - n.height * 0.6 * OutCardScale - n.height / 2.0 *
                                 OutCardScale));
-                            let curAct = cc.callFunc(()=>{
+                            let curAct = cc.callFunc(() => {
                                 n.stopAllActions();
-                                n.runAction(cc.moveTo(SequenceActTime, cc.p(startPos.x + n.width / 2.0 * 
-                                    OutCardScale * (i - MaxOutCardLineNode), startPos.y - n.height * 0.6 * OutCardScale - 
+                                n.runAction(cc.moveTo(SequenceActTime, cc.p(startPos.x + n.width / 2.0 *
+                                    OutCardScale * (i - MaxOutCardLineNode), startPos.y - n.height * 0.6 * OutCardScale -
                                     n.height / 2.0 * OutCardScale)).easing(cc.easeOut(0.8)));
                             });
                             spawnAct.push(curAct);
                         } else {
-                            n.setPosition(cc.p(actStartPos.x, startPos.y - n.height * 0.6 * OutCardScale - n.height / 2.0 * 
+                            n.setPosition(cc.p(actStartPos.x, startPos.y - n.height * 0.6 * OutCardScale - n.height / 2.0 *
                                 OutCardScale));
-                            let curAct = cc.callFunc(()=>{
+                            let curAct = cc.callFunc(() => {
                                 n.stopAllActions();
-                                n.runAction(cc.moveTo(SequenceActTime, cc.p(startPos.x - n.width / 2.0 * 
-                                    OutCardScale * (i - MaxOutCardLineNode), startPos.y - n.height * 0.6 * OutCardScale - 
+                                n.runAction(cc.moveTo(SequenceActTime, cc.p(startPos.x - n.width / 2.0 *
+                                    OutCardScale * (i - MaxOutCardLineNode), startPos.y - n.height * 0.6 * OutCardScale -
                                     n.height / 2.0 * OutCardScale)).easing(cc.easeOut(0.8)));
                             });
                             spawnAct.push(curAct);
@@ -742,26 +742,26 @@ export default class CardConsole extends cc.Component {
                     } else {
                         n.setPosition(cc.p(actStartPos.x, startPos.y - n.height * 0.6 * OutCardScale));
                         if (isFromLeft) {
-                            let curAct = cc.callFunc(()=>{
+                            let curAct = cc.callFunc(() => {
                                 n.stopAllActions();
-                                n.runAction(cc.moveTo(SequenceActTime, cc.p(startPos.x + n.width / 2.0 * 
-                                OutCardScale * i, startPos.y - n.height * 0.6 * OutCardScale)).easing(cc.easeOut(0.8)));
+                                n.runAction(cc.moveTo(SequenceActTime, cc.p(startPos.x + n.width / 2.0 *
+                                    OutCardScale * i, startPos.y - n.height * 0.6 * OutCardScale)).easing(cc.easeOut(0.8)));
                             });
                             spawnAct.push(curAct);
                         } else {
-                            let curAct = cc.callFunc(()=>{
+                            let curAct = cc.callFunc(() => {
                                 n.stopAllActions();
-                                n.runAction(cc.moveTo(SequenceActTime, cc.p(startPos.x - n.width / 2.0 * 
-                                OutCardScale * i, startPos.y - n.height * 0.6 * OutCardScale)).easing(cc.easeOut(0.8)));
+                                n.runAction(cc.moveTo(SequenceActTime, cc.p(startPos.x - n.width / 2.0 *
+                                    OutCardScale * i, startPos.y - n.height * 0.6 * OutCardScale)).easing(cc.easeOut(0.8)));
                             });
                             spawnAct.push(curAct);
                         }
                     }
                 } else {
                     n.setPosition(cc.p(actStartPos.x, startPos.y));
-                    let curAct = cc.callFunc(()=>{
+                    let curAct = cc.callFunc(() => {
                         n.stopAllActions();
-                        n.runAction(cc.moveTo(SequenceActTime, cc.p(startPos.x + n.width / 2.0 * 
+                        n.runAction(cc.moveTo(SequenceActTime, cc.p(startPos.x + n.width / 2.0 *
                             OutCardScale * i, startPos.y)).easing(cc.easeOut(1.0)));
                     });
                     spawnAct.push(curAct);
@@ -776,11 +776,11 @@ export default class CardConsole extends cc.Component {
             let cardNodesLength = 0;
             let cardNodesHeight = 0;
             if (lineCount == 0) {
-                cardNodesLength = demoNode.width / 2.0 * OutCardScale * (outCardVec.length - 1) + 
-                demoNode.width * OutCardScale;
+                cardNodesLength = demoNode.width / 2.0 * OutCardScale * (outCardVec.length - 1) +
+                    demoNode.width * OutCardScale;
                 cardNodesHeight = demoNode.height * OutCardScale;
             } else {
-                cardNodesLength = demoNode.width / 2.0 * OutCardScale * (MaxOutCardLineNode - 1) + 
+                cardNodesLength = demoNode.width / 2.0 * OutCardScale * (MaxOutCardLineNode - 1) +
                     demoNode.width * OutCardScale;
                 cardNodesHeight = demoNode.height * 0.6 * OutCardScale * (lineCount - 1) +
                     demoNode.height * OutCardScale;
@@ -798,17 +798,17 @@ export default class CardConsole extends cc.Component {
                 n.getComponent('PokerCardNode').initWithCardData(outCardVec[i]);
                 n.setScale(OutCardScale);
                 node.addChild(n);
-                n.setLocalZOrder(isFromLeft ? i : Math.floor(i / MaxOutCardLineNode) * 
+                n.setLocalZOrder(isFromLeft ? i : Math.floor(i / MaxOutCardLineNode) *
                     MaxOutCardLineNode + MaxOutCardLineNode - (i % MaxOutCardLineNode));
                 let zorder = n.getLocalZOrder();
                 if (needSecondLine) {
                     if (i >= MaxOutCardLineNode) {
                         if (isFromLeft) {
-                            n.setPosition(cc.p(startPos.x + n.width / 2.0 * OutCardScale * (i - MaxOutCardLineNode), 
-                            startPos.y - n.height * 0.6 * OutCardScale));
+                            n.setPosition(cc.p(startPos.x + n.width / 2.0 * OutCardScale * (i - MaxOutCardLineNode),
+                                startPos.y - n.height * 0.6 * OutCardScale));
                         } else {
-                            n.setPosition(cc.p(startPos.x - n.width / 2.0 * OutCardScale * (i - MaxOutCardLineNode), 
-                            startPos.y - n.height * 0.6 * OutCardScale));
+                            n.setPosition(cc.p(startPos.x - n.width / 2.0 * OutCardScale * (i - MaxOutCardLineNode),
+                                startPos.y - n.height * 0.6 * OutCardScale));
                         }
                     } else {
                         if (isFromLeft) {
@@ -834,7 +834,7 @@ export default class CardConsole extends cc.Component {
         return node;
     }
 
-    sitAllCards  () {
+    sitAllCards() {
         for (let i = 0; i < this._selectedCardVec.length; i++) {
             let tempNode = this._selectedCardVec[i];
             let comp = tempNode.getComponent('PokerCardNode');
@@ -846,7 +846,7 @@ export default class CardConsole extends cc.Component {
         this._selectedCardVec = [];
     }
 
-    setSelectedCard (selectedCards) {
+    setSelectedCard(selectedCards) {
         this.sitAllCards();
         let curCardNodeVec = this.m_handCardNodeMap[0];
         for (let i = curCardNodeVec.length - 1; i >= 0; i--) {
@@ -864,7 +864,7 @@ export default class CardConsole extends cc.Component {
         }
     }
 
-    getSelectedCardsVec () {
+    getSelectedCardsVec() {
         let selectedCardVec = [];
         for (let i = 0; i < this._selectedCardVec.length; i++) {
             let tempNode = this._selectedCardVec[i];
@@ -875,7 +875,7 @@ export default class CardConsole extends cc.Component {
         return selectedCardVec;
     }
 
-    getGrayCardsVec () {
+    getGrayCardsVec() {
         let grayCardVec = [];
         for (let i = 0; i < this._grayCardVec.length; i++) {
             let tempNode = this._grayCardVec[i];
@@ -886,7 +886,7 @@ export default class CardConsole extends cc.Component {
         return grayCardVec;
     }
 
-    clear () {
+    clear() {
         for (let i = 0; i < PlayerCount; i++) {
             this.clearOutCard(i);
         }
@@ -899,7 +899,7 @@ export default class CardConsole extends cc.Component {
                 }
             }
         }
-        
+
         this._selectedCardVec = [];
         this._grayCardVec = [];
         for (let i = 0; i < PlayerCount; i++) {
