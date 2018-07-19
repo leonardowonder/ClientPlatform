@@ -315,11 +315,19 @@ class TableSink extends Singleton {
             let player = DDZPlayerDataManager.getInstance()._players[jsonMessage.idx];
             this.m_curView && this.m_curView.updatePlayerData(player, jsonMessage.idx);
         }
+
+        Network.getInstance().sendMsg(
+            {
+                msgID: eMsgType.MSG_REQUEST_PLAYER_DATA,
+                nReqID: player.uid,
+                isDetail: false,
+            },
+            eMsgType.MSG_REQUEST_PLAYER_DATA,
+            eMsgPort.ID_MSG_PORT_DATA,
+            UserData.getInstance().uid);
     }
 
     onMsgRequestPlayerDataRsp(jsonMessage) {
-        DDZPlayerDataManager.getInstance().updatePlayerData(jsonMessage);
-
         for (let idx = 0; idx < DDZGameDataLogic.getInstance()._seatCnt; idx++) {
             let player = DDZPlayerDataManager.getInstance()._players[idx];
             if (player.uid == jsonMessage.uid) {

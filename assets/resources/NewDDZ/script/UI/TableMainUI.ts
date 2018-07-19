@@ -17,7 +17,6 @@ import SceneManager, { EmSceneID } from '../../../../Script/Manager/CommonManage
 import DDZButtonGroupController from '../Controller/DDZButtonGroupController';
 import DDZPlayerItem from './DDZPlayerItem';
 import HandCardLogic from '../Control/HandCardLogic';
-import PlayerData from '../../../../Script/Data/GamePlay/PlayerData';
 
 let userData = UserData.getInstance();
 let ResMgrIns = ResManager.getInstance();

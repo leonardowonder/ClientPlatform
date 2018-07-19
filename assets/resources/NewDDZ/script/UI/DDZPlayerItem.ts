@@ -1,8 +1,12 @@
 const { ccclass, property } = cc._decorator;
 
+import * as _ from 'lodash';
+
 import DDZGameDataLogic from '../Data/DDZGameDataLogic';
 import { eRoomPeerState, eRoomState } from '../Define/DDZDefine';
 import { EmDDZPlayerState } from '../Module/DDZGameDefine';
+
+import { DDZPlayerData } from '../Data/DDZPlayerDataManager';
 
 @ccclass
 export default class DDZPlayerItem extends cc.Component {
@@ -13,7 +17,7 @@ export default class DDZPlayerItem extends cc.Component {
     m_landlordTag: cc.Node = null;
     @property(cc.Label)
     m_restCardNumLabel: cc.Label = null;
-    
+
     @property(cc.Sprite)
     m_stateSprite: cc.Sprite = null;
     @property(cc.Label)
@@ -29,7 +33,7 @@ export default class DDZPlayerItem extends cc.Component {
     @property
     m_serverChairID: number = -1;
 
-    _data = null;
+    _data: DDZPlayerData = null;
 
     init() {
         this.reset();
@@ -56,7 +60,8 @@ export default class DDZPlayerItem extends cc.Component {
 
     setPlayerData(data) {
         this.node.active = true;
-        this._data = data;
+        
+        this._data.setPlayerData(data);
 
         this.setName(data.name);
         this.setHead(data.head);
@@ -106,7 +111,7 @@ export default class DDZPlayerItem extends cc.Component {
                 // });
             } else {
                 cc.loader.load({ url: headUrl, type: 'png' }, (err, texture) => {
-                    if(!err) {
+                    if (!err) {
                         this.m_headSprite.spriteFrame = new cc.SpriteFrame(texture);
                         this.m_headSprite.node.setContentSize(cc.size(96, 96));
                     } else {
@@ -132,7 +137,7 @@ export default class DDZPlayerItem extends cc.Component {
 
     private _getIdxByState(state: EmDDZPlayerState): number {
         let idx = 0;
-        switch(state) {
+        switch (state) {
             case EmDDZPlayerState.State_Score1: {
                 idx = 0;
                 break;

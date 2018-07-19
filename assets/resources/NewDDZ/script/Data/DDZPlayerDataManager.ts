@@ -2,14 +2,8 @@ import Singleton from '../../../../Script/Utils/Singleton';
 
 import * as _ from 'lodash';
 
-import { eMsgType } from '../../../../Script/Define/MessageIdentifer';
-
-import ClientDefine from '../../../../Script/Define/ClientDefine';
-
-import DDZGameDataLogic from './DDZGameDataLogic';
 import { eRoomState, eRoomPeerState } from '../Define/DDZDefine';
 import UserData from '../../../../Script/Data/UserData';
-import PlayerData from '../../../../Script/Data/GamePlay/PlayerData';
 var PlayerCount = 3;
 
 let userData = UserData.getInstance();
@@ -61,61 +55,37 @@ class DDZPlayerDataManager extends Singleton {
         }
     }
 
-    clearData() {
-        _.forEach(this._players, (player: PlayerData) => {
+    clearAllPlayerData() {
+        _.forEach(this._players, (player: DDZPlayerData) => {
             player.reset();
         })
     }
 
     getPlayerDataByUID(uid) {
         var data = null;
-        if (this._players != null) {
-            for (let idx = 0; idx < DDZGameDataLogic.getInstance()._seatCnt; idx++) {
-                let playerData = this._players[idx];
-                if (playerData != undefined && playerData.uid == uid) {
-                    data = playerData;
-                    break;
-                }
-            }
-        }
+
+        data = _.find(this._players, (player: DDZPlayerData) => {
+            return uid == player.uid;
+        })
+
         return data;
     }
 
     updatePlayerInfo(jsonMessage) {
-        this.clearData();
+        this.clearAllPlayerData();
         if (jsonMessage.players && jsonMessage.players.length) {
             for (let idx = 0; idx < jsonMessage.players.length; idx++) {
                 if (jsonMessage.players[idx].idx < 3) {
                     let serverIDx = jsonMessage.players[idx].idx;
-                    let playerData = this._players[serverIDx];
+                    let playerData: DDZPlayerData = this._players[serverIDx];
                     if (playerData) {
-                        playerData.uid = jsonMessage.players[idx].uid;
+                        playerData.setPlayerData(jsonMessage.players[idx]);
                         if (playerData.uid == userData.uid) {
                             this._meServerID = serverIDx;
                             this.showMeServerID();
                         }
                     }
                 }
-            }
-        }
-    }
-
-    updatePlayerData(jsonMessage) {
-        for (let idx = 0; idx < this._players.length; idx++) {
-            let playerData = this._players[idx];
-            if (playerData && playerData.uid == jsonMessage.uid) {
-                if (playerData.uid == userData.uid) {
-                    this._meServerID = jsonMessage.idx;
-                    this.showMeServerID();
-                }
-                playerData.name = jsonMessage.name;
-                playerData.head = jsonMessage.headIcon;
-                playerData.sex = jsonMessage.sex;
-                playerData.ip = jsonMessage.ip;
-                playerData.J = jsonMessage.J;
-                playerData.W = jsonMessage.W;
-                this._players[idx] = playerData;
-                break;
             }
         }
     }
@@ -137,23 +107,8 @@ class DDZPlayerDataManager extends Singleton {
         if (jsonMessage.idx > 2) {
             return;
         }
-        let playerData = this._players[jsonMessage.idx];
-        if (playerData) {
-            playerData.uid = 0;
-            playerData.chips = 0;
-            playerData.state = 0;
-            playerData.nJiaBei = 0;
-            playerData.isTiLaChuai = 0;
-            playerData.sex = 0;
-            playerData.name = "";
-            playerData.head = "";
-            playerData.ip = "";
-            playerData.cards = new Array();
-            playerData.isOnline = 1;
-            playerData.J = 0;
-            playerData.W = 0;
-            this._players[jsonMessage.idx] = playerData;
-        }
+        let playerData: DDZPlayerData = this._players[jsonMessage.idx];
+        playerData && playerData.reset();
     }
 
     onRoomChangeState(jsonMessage) {
@@ -181,14 +136,7 @@ class DDZPlayerDataManager extends Singleton {
     }
 
     onceGameOver() {
-        for (let idx = 0; idx < PlayerCount; idx++) {
-            let playerData = this._players[idx];
-            playerData.cards = new Array();
-            playerData.state = eRoomPeerState.eRoomPeer_WaitNextGame;
-            playerData.nJiaBei = 0;
-            playerData.isTiLaChuai = 0;
-            this._players[idx] = playerData;
-        }
+        this.clearAllPlayerData();
     }
 };
 
