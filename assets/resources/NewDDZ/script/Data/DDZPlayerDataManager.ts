@@ -13,7 +13,7 @@ export class DDZPlayerData {
 
     idx: number = 0;
     chips: number = 0;
-    cards: number[] = [];
+    holdCards: number[] = [];
     name: string = '';
     head: string = '';
     state: number = 0;
@@ -29,7 +29,7 @@ export class DDZPlayerData {
     
         this.idx = 0;
         this.chips = 0;
-        this.cards = [];
+        this.holdCards = [];
         this.name = '';
         this.head = '';
         this.state = 0;
@@ -124,8 +124,8 @@ class DDZPlayerDataManager extends Singleton {
     onStartGame(jsonMessage) {
         if (jsonMessage.vSelfCard && jsonMessage.vSelfCard.length) {
             let playerData = this._players[this._meServerID];
-            playerData.cards = jsonMessage.vSelfCard;
-            playerData.cards.sort(function (a, b) {
+            playerData.holdCards = jsonMessage.vSelfCard;
+            playerData.holdCards.sort(function (a, b) {
                 return b - a;
             });
         }

@@ -12,6 +12,9 @@ export default class DDZButtonGroupController extends cc.Component {
     @property(cc.Button)
     m_discardButton: cc.Button = null;
 
+    @property(cc.Button)
+    m_donotOfferButton: cc.Button = null;
+
     @property(cc.Node)
     m_myTurnNode: cc.Node = null;
     @property(cc.Node)
@@ -34,7 +37,7 @@ export default class DDZButtonGroupController extends cc.Component {
     }
 
     onClearClick() {
-        this.m_tableMainUI.clearAllProcess();
+        this.m_tableMainUI.clearTable();
     }
 
     onCallBankerClick(event: cc.Event, coustEvent: string) {
@@ -51,12 +54,14 @@ export default class DDZButtonGroupController extends cc.Component {
         this.m_callBankerNode.active = true;
     }
 
-    updateMyTurnNode(canDiscard: boolean) {
+    updateMyTurnNode(canDiscard: boolean, mustOffer: boolean) {
         this.m_myTurnNode.active = true;
         this.m_callBankerNode.active = false;
 
         this.m_canDiscardNode.active = canDiscard;
         this.m_cannotDiscardNode.active = !canDiscard;
+
+        this.m_donotOfferButton.interactable = !mustOffer;
     }
 
     updateDiscardButton(canDiscard: boolean) {

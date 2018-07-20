@@ -2,7 +2,7 @@ const { ccclass, property } = cc._decorator;
 
 import ResManager from '../Custom/ResManager';
 import GameLogic from './GameLogic';
-import { DDZCardType, SortType } from '../DDZGameDefine';
+import { DDZCardType, SortType, DDZ_Type } from '../DDZGameDefine';
 import TableMainUI from '../../UI/TableMainUI';
 
 let ResMgrIns = ResManager.getInstance();
@@ -24,6 +24,9 @@ export default class CardConsole extends cc.Component {
     m_startCardPosNode: cc.Node[] = [];
     @property(cc.Node)
     m_outCardPosNode: cc.Node[] = [];
+
+    @property(cc.Prefab)
+    m_cardPrefab: cc.Prefab = null;
 
     @property
     m_consoleActive: boolean = false;
@@ -65,7 +68,7 @@ export default class CardConsole extends cc.Component {
     }
 
     showDisPatchCards(localChairID, handCardData) {
-        var cardNodePrefab = ResMgrIns.getRes('PokerCardNode');
+        var cardNodePrefab = this.m_cardPrefab;
         let demoNode = cc.instantiate(cardNodePrefab);
         let cardNum = handCardData.length;
         let cardNodesLength = demoNode.width / 3.5 * (cardNum - 1) + demoNode.width;
@@ -224,7 +227,7 @@ export default class CardConsole extends cc.Component {
     }
 
     showHandCard(localChairID, handCardData) {
-        var cardNodePrefab = ResMgrIns.getRes('PokerCardNode');
+        var cardNodePrefab = this.m_cardPrefab;
         let demoNode = cc.instantiate(cardNodePrefab);
         let cardNodesLength = demoNode.width / 3.5 * (handCardData.length - 1) + demoNode.width;
         let curHandCardNodeVec = this.m_handCardNodeMap[localChairID];
@@ -292,6 +295,8 @@ export default class CardConsole extends cc.Component {
         //this.normalStandCard();
         this.checkStandCardContainAutoStand();
         this.m_touchBegan = false;
+
+        this.m_tableMainView && this.m_tableMainView.analyeMyCard();
     }
 
     checkTouchPosContainCardNode(touchPos) {
@@ -348,7 +353,7 @@ export default class CardConsole extends cc.Component {
             let comp = cardNode.getComponent('PokerCardNode');
             comp.setCardGray(false);
         }
-        console.log('GrayCards:' + this._grayCardVec.length);
+        // console.log('GrayCards:' + this._grayCardVec.length);
     }
 
     checkStandCardContainAutoStand() {//include auto stand process
@@ -356,7 +361,7 @@ export default class CardConsole extends cc.Component {
             return;
         }
         let needCheckLine = this._grayCardVec.length > 1;
-        console.log("selectedCard0: " + this._selectedCardVec.length);
+        // console.log("selectedCard0: " + this._selectedCardVec.length);
         let preSelectedCardData = this.getSelectedCardsVec();
         let lineSelectedCardDataVecPre = this.checkCanBeLine(preSelectedCardData);//pre selectedCards
         let grayCardData = this.getGrayCardsVec();
@@ -458,7 +463,7 @@ export default class CardConsole extends cc.Component {
             }
         }
         this._grayCardVec = [];
-        console.log("selectedCard0: " + this._selectedCardVec.length);
+        // console.log("selectedCard0: " + this._selectedCardVec.length);
         if (this.m_tableMainView && this.m_consoleActive) {
             let selectedCardDataVec = this.getSelectedCardsVec();
             this.m_tableMainView.checkSelectedCardCanOffer(selectedCardDataVec, true);
@@ -606,7 +611,7 @@ export default class CardConsole extends cc.Component {
             }
         }
 
-        var cardNodePrefab = ResMgrIns.getRes('PokerCardNode');
+        var cardNodePrefab = this.m_cardPrefab;
         let demoNode = cc.instantiate(cardNodePrefab);
         let cardNodesLength = demoNode.width / 3.5 * (curCardNodeVec.length - 1 + addCardDataVec.length) + demoNode.width;
         let startPosNode = this.m_startCardPosNode[localChairID];
@@ -632,16 +637,9 @@ export default class CardConsole extends cc.Component {
         this.addMoveCards(localChairID, handCardData, addCardDataVec, addCardNodeVec);
     }
 
-    clearOutCard(localChairID) {
-        let outCardPosNode = this.m_outCardPosNode[localChairID];
-        let children = outCardPosNode.children;
-        for (let i = 0; i < children.length; i++) {
-            children[i].destroy();
-        }
-    }
-
-    showOutCard(localChairID, outCardVec, serverCardType) {
-        this.clearOutCard(localChairID);
+    showOutCard(localChairID: number, outCardVec: number[], serverCardType: DDZ_Type) {
+        this._clearOutCard(localChairID);
+        this._clearSelectedCards();
         outCardVec = GameLogicIns.sortCardList(outCardVec, SortType.ST_NORMAL);
         let localCardType = GameLogicIns.switchServerTypeToCardType(serverCardType, outCardVec);
         let outCardPosNode = this.m_outCardPosNode[localChairID];
@@ -669,7 +667,7 @@ export default class CardConsole extends cc.Component {
     showMoveOutCardEffect(isFromLeft, needSecondLine, outCardVec, cardType) {
         var node = new cc.Node('OutCardNode');
         if (cardType > DDZCardType.Type_DuiZi && cardType < DDZCardType.Type_ZhaDan_1) {//ShunZI
-            var cardNodePrefab = ResMgrIns.getRes('PokerCardNode');
+            var cardNodePrefab = this.m_cardPrefab;
             let demoNode = cc.instantiate(cardNodePrefab);
             let startPos = cc.p(0, 0);
             let actStartPos = cc.p(0, 0);
@@ -769,7 +767,7 @@ export default class CardConsole extends cc.Component {
             }
             node.runAction(cc.spawn(spawnAct));
         } else {//BOUNCE EFFECT
-            var cardNodePrefab = ResMgrIns.getRes('PokerCardNode');
+            var cardNodePrefab = this.m_cardPrefab;
             let demoNode = cc.instantiate(cardNodePrefab);
             let startPos = cc.p(0, 0);
             let lineCount = Math.floor(outCardVec.length / MaxOutCardLineNode);
@@ -888,7 +886,7 @@ export default class CardConsole extends cc.Component {
 
     clear() {
         for (let i = 0; i < PlayerCount; i++) {
-            this.clearOutCard(i);
+            this._clearOutCard(i);
         }
 
         for (let key in this.m_handCardNodeMap) {
@@ -905,5 +903,18 @@ export default class CardConsole extends cc.Component {
         for (let i = 0; i < PlayerCount; i++) {
             this.m_handCardNodeMap[i] = [];
         }
+    }
+    
+
+    private _clearOutCard(localChairID) {
+        let outCardPosNode = this.m_outCardPosNode[localChairID];
+        let children = outCardPosNode.children;
+        for (let i = 0; i < children.length; i++) {
+            children[i].destroy();
+        }
+    }
+
+    private _clearSelectedCards() {
+        this._selectedCardVec.length = 0;
     }
 };

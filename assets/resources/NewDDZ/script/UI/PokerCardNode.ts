@@ -1,10 +1,8 @@
 const { ccclass, property } = cc._decorator;
 
-import ResManager from '../Module/Custom/ResManager';
 import GameLogic from '../Module/Game/GameLogic';
 import { EPokerType } from '../Module/DDZGameDefine';
 
-let ResMgrIns = ResManager.getInstance();
 let GameLogicIns = GameLogic.getInstance();
 var StandOffset = 20.0;
 
@@ -21,6 +19,9 @@ export default class PokerCardNode extends cc.Component {
     @property(cc.Node)
     m_cardBgNode: cc.Node = null;
 
+    @property(cc.SpriteAtlas)
+    m_atlas: cc.SpriteAtlas = null;
+
     _cardData: number = -1;
     _selectedState: boolean = false;
     _isGray: boolean = false;
@@ -30,7 +31,7 @@ export default class PokerCardNode extends cc.Component {
         this.setCardGray(false);
         this._cardData = cardData;
 
-        let spriteAtlas = ResMgrIns.getRes('large_pai');
+        let spriteAtlas = this.m_atlas;
         let spriteFrameStruct = this.getCardSpriteFrameName(cardData);
         if (spriteFrameStruct.cardNumSp == null) {
             this.m_jokerSprite.node.active = true,

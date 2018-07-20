@@ -4,10 +4,10 @@ import * as _ from 'lodash';
 import UserData from '../../../../Script/Data/UserData';
 import GameLogic from '../Module/Game/GameLogic';
 import ResManager from '../Module/Custom/ResManager';
-import DDZGameDataLogic from '../Data/DDZGameDataLogic';
+import DDZGameDataLogic, { DDZRoomInfo, DDZRoomOptsInfo, DDZLastDiscardInfo, DDZRoomStateInfo } from '../Data/DDZGameDataLogic';
 import { DDZCardType, SortType, EmDDZPlayerState, DDZ_Type } from '../Module/DDZGameDefine';
 import NetSink from '../Module/Game/TableSink';
-import DDZPlayerDataManager from '../Data/DDZPlayerDataManager';
+import DDZPlayerDataManager, { DDZPlayerData } from '../Data/DDZPlayerDataManager';
 import CardConsole from '../Module/Game/CardConsole';
 import CardHelper from '../Control/CardHelper';
 import DDZPlayerRootLayer from './DDZPlayerRootLayer';
@@ -16,7 +16,7 @@ import PrefabManager, { EmPrefabEnum } from '../../../../Script/Manager/CommonMa
 import SceneManager, { EmSceneID } from '../../../../Script/Manager/CommonManager/SceneManager';
 import DDZButtonGroupController from '../Controller/DDZButtonGroupController';
 import DDZPlayerItem from './DDZPlayerItem';
-import HandCardLogic from '../Control/HandCardLogic';
+import { eRoomState } from '../Define/DDZDefine';
 
 let userData = UserData.getInstance();
 let ResMgrIns = ResManager.getInstance();
@@ -50,8 +50,6 @@ export default class TableMainUI extends cc.Component {
     m_testLabel: cc.Label = null;
 
     reset() {
-        NetSink.getInstance().setCurView(this);
-        DDZGameDataLogic.getInstance().init();
         this.m_consoleNode.init(this);
         this.m_cardHelper.init(this);
 
@@ -62,23 +60,21 @@ export default class TableMainUI extends cc.Component {
 
     onLoad() {
         this.reset();
+        NetSink.getInstance().setCurView(this);
         this.m_topNode.setLocalZOrder(TopNodeZOrder);
-        this.m_roomIDLabel.string = DDZGameDataLogic.getInstance()._roomID.toString();
     }
 
     start() {
-        //let mm = [128, 148,156, 64,65,66,67,72,73,74,75,80,81,82,83,88,89,90,96,97,98,105,104,112,113,114];//129, 148, 156
-        //let mm = [72, 73, 74, 75, 80, 81, 82, 83, 96]
-        // let mm = [25, 26, 32, 33, 34, 35, 41, 42, 43, 48, 50, 49, 51, 56, 57, 58, 64, 65, 66, 72, 73, 74, 80, 81, 88, 96, 82, 83];
-        //let mm = [25,26,24,32,33,34,35,40,41,42,43,48,49,50,51];
-        //let mm = [24, 25, 32, 41, 64, 65, 80, 96, 115, 131, 148, 156];
-        // this.setHandCard(0, []);
-        this.refreshDatas();
+        this.refreshView();
     }
 
     onDestroy() {
         NetSink.getInstance().unsetCurView();
         ResMgrIns.releaseRes();
+    }
+
+    onReadyClick() {
+        NetSink.getInstance().requestReady();
     }
 
     onQuitClick() {
@@ -88,6 +84,8 @@ export default class TableMainUI extends cc.Component {
     clearTable() {
         this._clearPlayers();
         this._clearCards();
+        this._clearAllProcess();
+        this.m_btnGroupController.hideAll();
     }
 
     showLayer() {
@@ -103,10 +101,7 @@ export default class TableMainUI extends cc.Component {
             return;
         }
 
-        this.m_btnGroupController.hideAll();
-        if (clientIdx == 0) {
-            this.m_btnGroupController.showRobNode();
-        }
+        this.updateOptions(false);
     }
 
     onPlayerRob() {
@@ -137,23 +132,44 @@ export default class TableMainUI extends cc.Component {
         player && player.setIsBanker(true);
     }
 
-    updateBaseScore(baseScore: number, cards: number[]) {
-        cc.log('wd debug to do updateBaseScore', arguments);
-    }
-
-    onWaitPlayerDiscard(serverIdx: number) {
+    updateBaseScore(serverIdx: number, baseScore: number, cards: number[]) {
         let clientIdx: number = this.getLocalIDByChairID(serverIdx);
         if (clientIdx == -1) {
-            cc.warn('TableMainUI onBankerProduced invalid serverIdx =', serverIdx);
+            cc.warn('TableMainUI updateBaseScore invalid serverIdx =', serverIdx);
             return;
         }
 
-        // if (clientIdx == 0) {
-        //     this.m_btnGroupController.updateMyTurnNode();
-        //     this.m_btnGroupController.updateDiscardButton();
+        if (clientIdx == 0) {
+            this.addHandCard(0, cards);
+        }
+    }
+
+    onWaitPlayerDiscard(serverIdx: number) {
+        // let clientIdx: number = this.getLocalIDByChairID(serverIdx);
+        // if (clientIdx == -1) {
+        //     cc.warn('TableMainUI onBankerProduced invalid serverIdx =', serverIdx);
+        //     return;
         // }
+        this.updateOptions(true);
         // let player: DDZPlayerItem = this.m_playerRootLayer.getPlayerByClientIdx(clientIdx);
         // player && player.setIsBanker(true);
+    }
+
+    updateOptions(isDiscard: boolean) {
+        let isMyTurn: boolean = this.m_curActIdx == 0;
+        this.m_consoleNode.setConsoleEnable(isMyTurn);
+
+        if (!isMyTurn) {
+            this.m_btnGroupController.hideAll();
+        }
+        else {
+            if (isDiscard) {
+                this.m_btnGroupController.updateMyTurnNode(true, false);
+            }
+            else {                
+                this.m_btnGroupController.showRobNode();
+            }
+        }
     }
 
     onPlayerDiscard() {
@@ -161,21 +177,33 @@ export default class TableMainUI extends cc.Component {
     }
 
     onRoomPlayerDiscard(cards: number[], type: DDZCardType, serverIdx: number) {
-        let playerCards: HandCardLogic = this.m_playerRootLayer.getHandCard(0);
+        if (cards == null) {
+            cc.log('wd debug cards null');
+        }
+        else {
+            let serverCardType: DDZ_Type = GameLogicIns.switchCardTypeToServerType(type);
 
-        playerCards && playerCards.removeHandCard(cards);
+            let clientIdx: number = this.getLocalIDByChairID(serverIdx);
 
-        let serverCardType: DDZ_Type = GameLogicIns.switchCardTypeToServerType(type);
-        this.m_cardHelper.setCurSendCard(cards, serverCardType);
-        this.m_consoleNode.showOutCard(0, cards, serverCardType);
+            this.setCurOutCard(cards, serverCardType, clientIdx);
+
+            this.sendOutCard(clientIdx, cards, serverCardType);
+        }
     }
 
     onDistrbuteCards(cards: number[]) {
-        this.m_consoleNode.showDisPatchCards(0, cards);
+        this.setHandCard(0, cards);
+
+        this.showDispatchCards(0);
     }
 
-    refreshDatas() {
+    refreshView() {
         this.updateAllPlayerDatas();
+        this.updateRoomView();
+    }
+
+    onGetRoomInfo() {
+        this.refreshView();
     }
 
 
@@ -195,12 +223,10 @@ export default class TableMainUI extends cc.Component {
 
     setCurLocalChairID(serverIdx: number) {
         let localChairID = this.getLocalIDByChairID(serverIdx);
-
-        this.m_consoleNode.setConsoleEnable(localChairID == 0);
         this.m_curActIdx = localChairID;
     }
 
-    setHandCard(localChairID: number, cardDataVec) {
+    setHandCard(localChairID: number, cardDataVec: number[]) {
         this.m_playerRootLayer.setHandCard(localChairID, cardDataVec);
     }
 
@@ -224,7 +250,7 @@ export default class TableMainUI extends cc.Component {
         this.m_consoleNode.showHandCard(localChairID, cardData);
     }
 
-    sendOutCard(localChairID, sendCardVec, serverCardType) {
+    sendOutCard(localChairID: number, sendCardVec: number[], serverCardType: DDZ_Type) {
         if (localChairID == 0) {
             this.removeHandCard(localChairID, sendCardVec);
             let cardData = this.m_playerRootLayer.getHandCard(localChairID);
@@ -235,9 +261,9 @@ export default class TableMainUI extends cc.Component {
         this.m_consoleNode.showOutCard(localChairID, sendCardVec, serverCardType);
     }
 
-    setCurOutCard(sendCardVec, serverCardType) {
+    setCurOutCard(sendCardVec: number[], serverCardType: DDZ_Type, clientIdx: number) {
         this.m_cardHelper.clearSendCardType();
-        this.m_cardHelper.setCurSendCard(sendCardVec, serverCardType);
+        this.m_cardHelper.setCurSendCard(sendCardVec, serverCardType, clientIdx);
     }
 
     checkSelectedCard(selectedCard) {
@@ -251,13 +277,14 @@ export default class TableMainUI extends cc.Component {
         return cardType;
     }
 
-    analyeMyCard() {//can offer card
+    analyeMyCard() {
         let result = this.m_cardHelper.searchOutCard(this.m_playerRootLayer.getHandCard(0));
 
         this.m_btnGroupController.hideAll();
 
         let canDiscard: boolean = result == null || result.cbSearchCount != 0;
-        this.m_btnGroupController.updateMyTurnNode(canDiscard);
+        let mustOffer: boolean = result == null;
+        this.m_btnGroupController.updateMyTurnNode(canDiscard, mustOffer);
 
         if (result && result.cbSearchCount != 0) {
             this.m_cardHelper.setCurTipResult(result);
@@ -309,12 +336,6 @@ export default class TableMainUI extends cc.Component {
         this.m_btnGroupController.updateDiscardButton(canOffer);
     }
 
-    clearAllProcess() {
-        this.m_cardHelper.clearSendCardType();
-        this.m_consoleNode.clear();
-        this.m_playerRootLayer.clearAllCards();
-    }
-
     sendMyCards() {
         let selectedCard = this.m_consoleNode.getSelectedCardsVec();
         selectedCard = GameLogicIns.sortCardList(selectedCard, SortType.ST_NORMAL);
@@ -362,19 +383,41 @@ export default class TableMainUI extends cc.Component {
         SceneManager.getInstance().changeScene(EmSceneID.SceneID_MainScene);
     }
 
+    updateRoomView() {
+        let roomInfo: DDZRoomInfo = DDZGameDataLogic.getInstance().getRoomInfo();
+        this.m_roomIDLabel.string = DDZGameDataLogic.getInstance().getRoomInfo().roomID.toString();
+
+        if (roomInfo) {
+            let state: eRoomState = roomInfo.state;
+            let stateInfo: DDZRoomStateInfo = roomInfo.stateInfo;
+            if (stateInfo) {
+                this.setCurLocalChairID(stateInfo.curActIdx);
+                if (state == eRoomState.eRoomState_DecideBanker) {
+                    this.updateOptions(false);
+                }
+                else {
+                    this.updateOptions(true);
+                }
+            }
+        }
+
+    }
+
     updateAllPlayerDatas() {
         let playerDatas = DDZPlayerDataManager.getInstance()._players;
 
-        _.forEach(playerDatas, (playerData) => {
+        _.forEach(playerDatas, (playerData: DDZPlayerData) => {
             let serverIdx = playerData.idx;
 
             this.updatePlayerData(playerData, serverIdx);
 
             let localChairID = this.getLocalIDByChairID(serverIdx);
-            this.m_playerRootLayer.setHandCard(localChairID, playerData.cards);
+            if (localChairID != -1) {
+                this.m_playerRootLayer.setHandCard(localChairID, playerData.holdCards);
 
-            if (localChairID == 0) {
-                this.m_consoleNode.showDisPatchCards(0, playerData.cards);
+                if (localChairID == 0) {
+                    this.m_consoleNode.showDisPatchCards(0, playerData.holdCards);
+                }
             }
         });
     }
@@ -428,6 +471,12 @@ export default class TableMainUI extends cc.Component {
     }
 
     private _clearCards() {
+        this.m_playerRootLayer.clearAllCards();
+    }
+
+    private _clearAllProcess() {
+        this.m_cardHelper.clearSendCardType();
+        this.m_consoleNode.clear();
         this.m_playerRootLayer.clearAllCards();
     }
 

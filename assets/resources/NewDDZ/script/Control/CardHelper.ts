@@ -1,21 +1,23 @@
 const { ccclass } = cc._decorator;
 
 import GameLogic from '../Module/Game/GameLogic';
-import { DDZCardType, SortType } from '../Module/DDZGameDefine';
+import { DDZCardType, SortType, DDZ_Type } from '../Module/DDZGameDefine';
+import TableMainUI from '../UI/TableMainUI';
 
 let GameLogicIns = GameLogic.getInstance();
 
 @ccclass
 export default class CardHelper extends cc.Component {
 
-    _delegate = null;
+    _delegate: TableMainUI = null;
     _curTipID = 0;
     _searchResult = null;
-    _sendCardType = 0;//myType
-    _serverCardType = -1;//server type
-    _sendCardVec = [];
+    _sendCardType: DDZCardType = 0;//myType
+    _serverCardType: DDZ_Type = -1;//server type
+    _sendCardVec: number[] = [];
+    _curIdx: number = -1;
 
-    init(delegate) {
+    init(delegate: TableMainUI) {
         this._delegate = delegate;
         this._sendCardVec = [];
         this._sendCardType = DDZCardType.Type_None;
@@ -25,18 +27,20 @@ export default class CardHelper extends cc.Component {
     }
 
     clearSendCardType() {
-        this._sendCardVec = [];
+        this._sendCardVec.length = 0;
         this._sendCardType = DDZCardType.Type_None;
         this._serverCardType = -1;
         this._curTipID = 0;
         this._searchResult = null;
+        this._curIdx = -1;
     }
 
-    setCurSendCard(cardDataVec, serverCardType) {
+    setCurSendCard(cardDataVec: number[], serverCardType: DDZ_Type, clientIdx: number) {
         this._sendCardVec = [];
-        for (let i in cardDataVec) {
-            this._sendCardVec.push(cardDataVec[i]);
-        }
+
+        this._sendCardVec = cardDataVec;
+        this._curIdx = clientIdx;
+
         this._sendCardVec = GameLogicIns.sortCardList(this._sendCardVec, SortType.ST_NORMAL);
         this._sendCardType = GameLogicIns.switchServerTypeToCardType(serverCardType, this._sendCardVec);
         this._serverCardType = serverCardType;
@@ -52,7 +56,7 @@ export default class CardHelper extends cc.Component {
     }
 
     searchOutCard(handCardVec) {
-        if (this._sendCardVec.length == 0) {
+        if (this._sendCardVec.length == 0 || this._curIdx == 0) {
             return null;
         }
         let searchResult = GameLogicIns.searchOutCard(handCardVec, this._sendCardVec, this._sendCardType);

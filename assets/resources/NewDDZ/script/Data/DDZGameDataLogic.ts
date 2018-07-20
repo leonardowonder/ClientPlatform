@@ -1,153 +1,140 @@
 //DDZ GameDataMgr
 import Singleton from '../../../../Script/Utils/Singleton';
 
-import { eRoomState } from '../Define/DDZDefine';
+import * as _ from 'lodash';
+
+export class DDZLastDiscardInfo {
+    idx: number = 0;
+    chu: number[] = [];
+
+    // updateInfo(info) {
+    //     if (info) {
+    //         this.idx = info.idx;
+    //         this.chu = info.chu;
+    //     }
+    // }
+
+    reset() {
+        this.idx = 0;
+        this.chu.length = 0;
+    }
+}
+
+export class DDZRoomOptsInfo {
+    deskFee: number = 0;
+    gameType: number = 0;
+    seatCnt: number = 0;
+
+    // updateInfo(info) {
+    //     if (info) {
+    //         this.deskFee = info.deskFee;
+    //         this.gameType = info.gameType;
+    //         this.seatCnt = info.seatCnt;
+    //     }
+    // }
+
+    reset() {
+        this.deskFee = 0;
+        this.gameType = 0;
+        this.seatCnt = 0;
+    }
+}
+
+export class DDZRoomStateInfo {
+    curActIdx: number = 0;
+    curMaxTimes: number = 0;
+    lastChu: DDZLastDiscardInfo[] = [];
+
+    // updateInfo(stateInfo) {
+    //     if (stateInfo) {
+    //         this.curActIdx = stateInfo.curActIdx;
+    //         this.curMaxTimes = stateInfo.curMaxTimes;
+    //         _.forEach(stateInfo.lastChu, (chuInfo) => {
+    //             if (chuInfo) {
+    //                 let newInfo: DDZLastDiscardInfo = new DDZLastDiscardInfo();
+    //                 newInfo.updateInfo(chuInfo);
+
+    //                 this.lastChu.push(newInfo);
+    //             }
+    //         })
+    //     }
+    // }
+
+    reset() {
+        this.curActIdx = 0;
+        this.curMaxTimes = 0;
+    }
+}
+
+export class DDZRoomInfo {
+    bombCnt: number = 0;
+    bottom: number = 0;
+    dzIdx: number = 0;
+    diPai: number[] = [];
+    opts: DDZRoomOptsInfo = null;
+    leftWaitTime: number = 0;
+    roomID: number = 0;
+    state: number = 0;
+    stateInfo: DDZRoomStateInfo = null;
+    stateTime: number = 0;
+
+    constructor() {
+        this.opts = new DDZRoomOptsInfo();
+        this.stateInfo = new DDZRoomStateInfo();
+    }
+
+    reset() {
+        this.bombCnt = 0;
+        this.bottom = 0;
+        this.dzIdx = 0;
+        this.diPai = [];
+        this.opts && this.opts.reset();
+        this.leftWaitTime = 0;
+        this.roomID = 0;
+        this.state = 0;
+        this.stateInfo && this.stateInfo.reset();
+        this.stateTime = 0;
+    }
+}
 
 class DDZGameDataLogic extends Singleton {
-    _roomID: number = 0
-    _roomState: number = 0
-    _leftCircle: number = 0;
-    _isOpen: boolean = false;
-    _waitTimer: number = 0
-    _curActIdex: number = 0
-    _stateTime: number = 0;
-    _createUID: number = 0;
-    _level: number = 0;//多少局
-    _payType: number = 0;
-    _leftWaitTime: number = 0;
-    _clubID: number = 0;
-    _clubName: number = 0;
-    _roomIdx: number = 0;
-    _isWaitingDismiss: boolean = false;
-    _applyDismissUID: number = 0;
-    _agreeIdxs: number[] = [];
-    _DismissLeftWaitTime: number = 0;
-    _seatCnt: number = 0;
-    _dzIdx: number = -1;
-    _curMaxTimes: number = 0;
-    _bombCnt: number = 0;
-    _isChaoZhuang: number = 0;
-    _forbidJoin: boolean = false;
-    _maxBet: number = 0;
-    _waitTiLaChuaiPlayers = [];
-    _chosed: boolean = false;
-    _readyPlayers = new Array();
-    _diPai = new Array();
-    _lastChu = new Array(3);
+    private _roomInfo: DDZRoomInfo = null;
 
     init() {//init all data
+        this._roomInfo = new DDZRoomInfo();
 
+        super.init();
+    }
+
+    getRoomInfo(): DDZRoomInfo {
+        return this._roomInfo;
     }
 
     clearAllData() {
-
+        this.clearRoomInfo();
     }
 
     setRoomInfo(info) {
         this.clearRoomInfo();
-        this._roomID = info.roomID;
-        this._roomState = info.state;
-        this._leftCircle = info.leftCircle - 1;
-        this._isOpen = info.isOpen == 1;
-        this._waitTimer = 15
-        this._stateTime = info.stateTime;
-        this._diPai = info.diPai;
-        this._dzIdx = info.dzIdx;
-        this._bombCnt = info.bombCnt;
-        this._curMaxTimes = info.curMaxTimes;
-        if (info.opts) {
-            this._clubName = info.opts.clubName;
-            this._roomIdx = info.opts.roomIdx;
-            this._clubID = info.opts.clubID;
-            this._createUID = info.opts.uid;
-            this._level = info.opts.level;//多少局
-            this._payType = info.opts.payType;
-            this._seatCnt = info.opts.seatCnt;
-            this._maxBet = info.opts.maxBet;
-            this._isChaoZhuang = info.opts.isChaoZhuang;
-            this._forbidJoin = info.opts.forbidJoin == 1;
-        }
-        this._leftWaitTime = info.leftWaitTime;
-        this._isWaitingDismiss = info.isWaitingDismiss == 1;
-        if (info.stateInfo) {
-            this._curActIdex = info.stateInfo.curActIdx
-            if (info.stateInfo.readyPlayers) this._readyPlayers = info.stateInfo.readyPlayers;
-            if (info.stateInfo.lastChu && info.stateInfo.lastChu.length) {
-                for (let i = 0; i < info.stateInfo.lastChu.length; i++) {
-                    this._lastChu[info.stateInfo.lastChu[i].idx] = info.stateInfo.lastChu[i].chu;
-                }
-            }
-            if (info.stateInfo.waitTiLaChuaiPlayers && info.stateInfo.waitTiLaChuaiPlayers.length) {
-                this._waitTiLaChuaiPlayers = info.stateInfo.waitTiLaChuaiPlayers
-            }
-            if (info.stateInfo.chosed && info.stateInfo.chosed.length) {
-                this._chosed = info.stateInfo.chosed;
-            }
-        }
-        if (this._isWaitingDismiss) {
-            this._applyDismissUID = info.applyDismissUID;
-            this._agreeIdxs = info.agreeIdxs;
-            this._DismissLeftWaitTime = info.leftWaitTime;
-        }
+        _.merge(this._roomInfo, info);
     }
 
-    setRoomOpen(open) {
-        this._isOpen = open;
-    }
-
-    changeRoomState(state) {
-        this._roomState = state;
+    changeRoomState(state: number) {
+        if (this._roomInfo) {
+            this._roomInfo.state = state;
+        }
     }
 
     clearRoomInfo() {
-        this._roomID = 0;
-        this._roomState = 0;
-        this._leftCircle = 0;
-        this._isOpen = false;
-        this._waitTimer = 0
-        this._curActIdex = 0
-        this._stateTime = 0;
-        this._createUID = 0;
-        this._level = 0;//多少局
-        this._payType = 0;
-        this._leftWaitTime = 0;
-        this._clubID = 0;
-        this._clubName = 0;
-        this._roomIdx = 0;
-        this._isWaitingDismiss = false;
-        this._applyDismissUID = 0;
-        this._agreeIdxs = [];
-        this._DismissLeftWaitTime = 0;
-        this._seatCnt = 0;
-        this._dzIdx = -1;
-        this._curMaxTimes = 0;
-        this._bombCnt = 0;
-        this._isChaoZhuang = 0;
-        this._forbidJoin = false;
-        this._readyPlayers = new Array();
-        this._diPai = new Array();
-        this._lastChu = new Array(3);
+        if (this._roomInfo) {
+            this._roomInfo.reset();
+        }
     }
 
     onceGameOver() {
-        this._roomState = eRoomState.eRoomSate_WaitReady;
-        this._dzIdx = -1;
-        this._curMaxTimes = 0;
-        this._readyPlayers = new Array();
-        this._bombCnt = 0;
-        this._diPai = new Array();
-        this._lastChu = new Array(3);
-        this._waitTiLaChuaiPlayers = new Array();
-        // if (DDZGameData.players) {
-        //     for (let idx = 0; idx < DDZGameData.players.length; idx++) {
-        //         if (DDZGameData.players[idx]) {
-        //             DDZGameData.players[idx].cards = new Array();
-        //             DDZGameData.players[idx].state = MyUtils.eRoomPeerState.eRoomPeer_WaitNextGame;
-        //             DDZGameData.players[idx].nJiaBei = 0;
-        //             DDZGameData.players[idx].isTiLaChuai = 0;
-        //         }
-        //     }
-        // }
+        if (this._roomInfo) {
+            this._roomInfo.reset();
+        }
     }
 };
 

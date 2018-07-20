@@ -14,8 +14,9 @@ export default class DDZPlayerRootLayer extends cc.Component {
     m_cards: HandCardLogic[] = [];
 
     init() {
-        _.forEach(this.m_players, (player: DDZPlayerItem) => {
+        _.forEach(this.m_players, (player: DDZPlayerItem, idx: number) => {
             player.init();
+            player.setLocalChairID(idx);
         });
 
         _.forEach(this.m_cards, (card: HandCardLogic, idx: number) => {
@@ -93,10 +94,10 @@ export default class DDZPlayerRootLayer extends cc.Component {
     setHandCard(idx: number, cardDataVec) {
         let card: HandCardLogic = this.getCardDataByClientIdx(idx);
 
-        card.setHandCard(cardDataVec);
+        card && card.setHandCard(cardDataVec);
     }
 
-    getHandCard(idx: number) {
+    getHandCard(idx: number): number[] {
         let card: HandCardLogic = this.getCardDataByClientIdx(idx);
 
         let ret = null;

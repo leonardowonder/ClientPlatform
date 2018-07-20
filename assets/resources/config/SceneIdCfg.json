@@ -4,5 +4,5 @@
     "LoginScene",
     "MainScene",
     "GameRoomScene",
-    "NewDDZGameScene"
+    "DDZGameRoomScene"
 ]

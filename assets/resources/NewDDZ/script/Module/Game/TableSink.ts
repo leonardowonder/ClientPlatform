@@ -53,7 +53,7 @@ class TableSink extends Singleton {
             idx: 100
         };
         Network.getInstance().sendMsg(enterRoomMessage,
-            eMsgType.MSG_PLAYER_SIT_DOWN, eMsgPort.ID_MSG_PORT_DOU_DI_ZHU, DDZGameDataLogic.getInstance()._roomID)
+            eMsgType.MSG_PLAYER_SIT_DOWN, eMsgPort.ID_MSG_PORT_DOU_DI_ZHU, DDZGameDataLogic.getInstance().getRoomInfo().roomID)
     }
 
     sendLeaveRoom() {
@@ -62,7 +62,7 @@ class TableSink extends Singleton {
         };
         Network.getInstance().sendMsg(deleteRoomMessage,
             eMsgType.MSG_PLAYER_LEAVE_ROOM, eMsgPort.ID_MSG_PORT_DOU_DI_ZHU,
-            DDZGameDataLogic.getInstance()._roomID);
+            DDZGameDataLogic.getInstance().getRoomInfo().roomID);
     }
 
     requestNotDiscard() {
@@ -72,7 +72,7 @@ class TableSink extends Singleton {
             },
             eMsgType.MSG_DDZ_PLAYER_CHU,
             eMsgPort.ID_MSG_PORT_DOU_DI_ZHU,
-            DDZGameDataLogic.getInstance()._roomID);
+            DDZGameDataLogic.getInstance().getRoomInfo().roomID);
     }
 
     requestCallBanker(times: number) {
@@ -83,31 +83,43 @@ class TableSink extends Singleton {
             },
             eMsgType.MSG_DDZ_PLAYER_ROBOT_DZ,
             eMsgPort.ID_MSG_PORT_DOU_DI_ZHU,
-            DDZGameDataLogic.getInstance()._roomID);
-    }
-
-    sendReady() {
-        var enterRoomMessage = {
-            dstRoomID: DDZGameDataLogic.getInstance()._roomID,
-            msgID: eMsgType.MSG_PLAYER_SET_READY,
-        };
-        Network.getInstance().sendMsg(enterRoomMessage, eMsgType.MSG_PLAYER_SET_READY,
-            eMsgPort.ID_MSG_PORT_DOU_DI_ZHU, DDZGameDataLogic.getInstance()._roomID);
+            DDZGameDataLogic.getInstance().getRoomInfo().roomID);
     }
 
     sendOpenRoom() {
         var message = {
             msgID: eMsgType.MSG_PLAYER_OPEN_ROOM,
-            dstRoomID: DDZGameDataLogic.getInstance()._roomID,
+            dstRoomID: DDZGameDataLogic.getInstance().getRoomInfo().roomID,
         };
         Network.getInstance().sendMsg(message, eMsgType.MSG_PLAYER_OPEN_ROOM,
-            eMsgPort.ID_MSG_PORT_DOU_DI_ZHU, DDZGameDataLogic.getInstance()._roomID);
+            eMsgPort.ID_MSG_PORT_DOU_DI_ZHU, DDZGameDataLogic.getInstance().getRoomInfo().roomID);
 
     }
 
-    reqOutCard(localChairID, sendCardData, cardType) {
-        console.log('sendCardData' + JSON.stringify(sendCardData) + ', cardType' +
-            GameLogicIns.switchCardTypeToServerType(cardType));
+    reqOutCard(localChairID, sendCardData: number[], cardType: DDZCardType) {
+        // console.log('sendCardData' + JSON.stringify(sendCardData) + ', cardType' +
+        //     GameLogicIns.switchCardTypeToServerType(cardType));
+        let serverType: DDZ_Type = GameLogicIns.switchCardTypeToServerType(cardType);
+        Network.getInstance().sendMsg(
+            {
+                msgID: eMsgType.MSG_DDZ_PLAYER_CHU,
+                cards: sendCardData,
+                type: serverType
+            },
+            eMsgType.MSG_DDZ_PLAYER_CHU,
+            eMsgPort.ID_MSG_PORT_DOU_DI_ZHU,
+            DDZGameDataLogic.getInstance().getRoomInfo().roomID);
+    }
+
+    requestReady() {
+        Network.getInstance().sendMsg(
+            {
+                dstRoomID: DDZGameDataLogic.getInstance().getRoomInfo().roomID,
+                msgID: eMsgType.MSG_PLAYER_SET_READY,
+            },
+            eMsgType.MSG_PLAYER_SET_READY,
+            eMsgPort.ID_MSG_PORT_DOU_DI_ZHU,
+            DDZGameDataLogic.getInstance().getRoomInfo().roomID);
     }
 
 
@@ -236,16 +248,16 @@ class TableSink extends Singleton {
             var enterRoomMessage = {
                 msgID: eMsgType.MSG_REQUEST_ROOM_INFO,
             };
-            if (Network.getInstance().sendMsg(enterRoomMessage, eMsgType.MSG_REQUEST_ROOM_INFO, eMsgPort.ID_MSG_PORT_DOU_DI_ZHU, DDZGameDataLogic.getInstance()._roomID)) {
+            if (Network.getInstance().sendMsg(enterRoomMessage, eMsgType.MSG_REQUEST_ROOM_INFO, eMsgPort.ID_MSG_PORT_DOU_DI_ZHU, DDZGameDataLogic.getInstance().getRoomInfo().roomID)) {
                 // MyUtils.cloneWaitMsgLayer(DDZLanguage.reEnterRoom, false);
             }
         } else {
             if (Network.getInstance().sendMsg(
                 {
                     msgID: eMsgType.MSG_ENTER_ROOM,
-                    roomID: DDZGameDataLogic.getInstance()._roomID,
+                    roomID: DDZGameDataLogic.getInstance().getRoomInfo().roomID,
                     uid: userData.uid,
-                }, eMsgType.MSG_ENTER_ROOM, eMsgPort.ID_MSG_PORT_DOU_DI_ZHU, DDZGameDataLogic.getInstance()._roomID)) {
+                }, eMsgType.MSG_ENTER_ROOM, eMsgPort.ID_MSG_PORT_DOU_DI_ZHU, DDZGameDataLogic.getInstance().getRoomInfo().roomID)) {
                 // MyUtils.cloneWaitMsgLayer(DDZLanguage.reEnterRoom, false);
             }
         }
@@ -265,6 +277,8 @@ class TableSink extends Singleton {
 
     onMsgRoomInfoRsp(jsonMessage) {
         DDZGameDataLogic.getInstance().setRoomInfo(jsonMessage);
+
+        this.m_curView && this.m_curView.onGetRoomInfo();
     }
 
     onMsgRoomPlayerReadyRsp(jsonMessage) {
@@ -296,13 +310,9 @@ class TableSink extends Singleton {
         if (userData.uid == player.uid) {
             if (jsonMessage.state == eRoomPeerState.eRoomPeer_WaitNextGame) {
                 //auto sendReady
-                var enterRoomMessage = {
-                    dstRoomID: DDZGameDataLogic.getInstance()._roomID,
-                    msgID: eMsgType.MSG_PLAYER_SET_READY,
-                };
-                Network.getInstance().sendMsg(enterRoomMessage, eMsgType.MSG_PLAYER_SET_READY, eMsgPort.ID_MSG_PORT_DOU_DI_ZHU, DDZGameDataLogic.getInstance()._roomID);
+                this.requestReady();
             }
-            for (let idx = 0; idx < DDZGameDataLogic.getInstance()._seatCnt; idx++) {
+            for (let idx = 0; idx < DDZGameDataLogic.getInstance().getRoomInfo().opts.seatCnt; idx++) {
                 let player = DDZPlayerDataManager.getInstance()._players[idx];
                 if (player && player.uid > 0) {
                     this.m_curView && this.m_curView.updatePlayerData(player, jsonMessage.idx);
@@ -328,7 +338,7 @@ class TableSink extends Singleton {
     }
 
     onMsgRequestPlayerDataRsp(jsonMessage) {
-        for (let idx = 0; idx < DDZGameDataLogic.getInstance()._seatCnt; idx++) {
+        for (let idx = 0; idx < DDZGameDataLogic.getInstance().getRoomInfo().opts.seatCnt; idx++) {
             let player = DDZPlayerDataManager.getInstance()._players[idx];
             if (player.uid == jsonMessage.uid) {
                 this.m_curView && this.m_curView.updatePlayerData(jsonMessage, idx);
@@ -357,19 +367,26 @@ class TableSink extends Singleton {
     }
 
     onMsgRoomStandUpRsp(jsonMessage) {
-        DDZPlayerDataManager.getInstance().onPlayerStandUp(jsonMessage);
-
-        this.m_curView && this.m_curView.standUp(jsonMessage.idx);
+        if (jsonMessage.uid == userData.uid) {
+            DDZPlayerDataManager.getInstance().clearAllPlayerData();
+            this.m_curView && this.m_curView.clearTable();
+        }
+        else {
+            DDZPlayerDataManager.getInstance().onPlayerStandUp(jsonMessage);
+    
+            this.m_curView && this.m_curView.standUp(jsonMessage.idx);
+        }
     }
 
     onMsgRoomDoOpenRsp() {
         this.m_curView && this.m_curView.openRoom();
-        DDZGameDataLogic.getInstance().setRoomOpen(true);
+        // DDZGameDataLogic.getInstance().setRoomOpen(true);
     }
 
     onMsgRoomWaitRobDZRsp(jsonMessage) {
         let serverIdxToRob: number = jsonMessage.idx;
 
+        this.m_curView && this.m_curView.setCurLocalChairID(serverIdxToRob);
         this.m_curView && this.m_curView.onWaitPlayerRob(serverIdxToRob);
     }
 
@@ -397,7 +414,7 @@ class TableSink extends Singleton {
         let cards = jsonMessage.cards;
 
         this.m_curView && this.m_curView.onBankerProduced(bankerIdx);
-        this.m_curView && this.m_curView.updateBaseScore(baseScore, cards);
+        this.m_curView && this.m_curView.updateBaseScore(bankerIdx, baseScore, cards);
     }
 
     onMsgDDZRoomWaitChuRsp(jsonMessage) {
@@ -422,7 +439,8 @@ class TableSink extends Singleton {
     }
 
     onMsgDDZRoomResutRsp() {
-
+        DDZPlayerDataManager.getInstance().clearAllPlayerData();
+        this.m_curView && this.m_curView.clearTable();
     }
 
     onMsgDDZPlayerUpdateTuoGuanRsp() {

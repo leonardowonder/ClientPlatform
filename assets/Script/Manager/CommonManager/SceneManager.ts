@@ -13,6 +13,7 @@ export enum EmSceneID {
 }
 
 class SceneManager extends Singleton {
+    private _curScenID: EmSceneID = EmSceneID.SceneID_Max;
     
     changeScene(sceneID: EmSceneID, callback = null) {
         let key: string = SceneIdConfigManager.getInstance().getSceneKeyBySceneID(sceneID);
@@ -20,8 +21,11 @@ class SceneManager extends Singleton {
             cc.warn(`SceneManager changeScene invalid sceneID = ${sceneID}`);
             return;
         }
-        
-        cc.director.loadScene(key, callback);
+
+        if (this._curScenID != sceneID) {
+            this._curScenID = sceneID;
+            cc.director.loadScene(key, callback);
+        }
     }
 };
 

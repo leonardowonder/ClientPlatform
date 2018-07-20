@@ -36,7 +36,9 @@ export default class DDZPlayerItem extends cc.Component {
     _data: DDZPlayerData = null;
 
     init() {
+        this._data = new DDZPlayerData();
         this.reset();
+        this.hide();
     }
 
     hide() {
@@ -49,6 +51,7 @@ export default class DDZPlayerItem extends cc.Component {
     }
 
     reset() {
+        this._data.reset();
         this.m_landlordTag.active = false;
         this.m_stateSprite.spriteFrame = null;
         this.m_restCardNumLabel.string = '';
@@ -59,15 +62,15 @@ export default class DDZPlayerItem extends cc.Component {
     }
 
     setPlayerData(data) {
-        this.node.active = true;
-        
         this._data.setPlayerData(data);
 
-        this.setName(data.name);
-        this.setHead(data.head);
-        this.setCoin(data.chips);
+        this.node.active = this._data.uid != 0;
+
+        this.setName(this._data.name);
+        this.setHead(this._data.head);
+        this.setCoin(this._data.chips);
         this.setState(EmDDZPlayerState.State_None);
-        if (data.state == eRoomPeerState.eRoomPeer_Ready && DDZGameDataLogic.getInstance()._roomState == eRoomState.eRoomSate_WaitReady) {
+        if (this._data.state == eRoomPeerState.eRoomPeer_Ready && DDZGameDataLogic.getInstance().getRoomInfo().state == eRoomState.eRoomSate_WaitReady) {
             this.setState(EmDDZPlayerState.State_None);
         }
     }

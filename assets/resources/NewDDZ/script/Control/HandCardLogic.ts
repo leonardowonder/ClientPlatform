@@ -31,7 +31,7 @@ export default class HandCardLogic extends cc.Component {
         this.m_serverChairID = serverID;
     }
 
-    setHandCard (cardData) {
+    setHandCard (cardData: number[]) {
         this.m_handCardData = GameLogicIns.sortCardList(cardData, SortType.ST_NORMAL);
         console.log(JSON.stringify(this.m_handCardData));
     }
