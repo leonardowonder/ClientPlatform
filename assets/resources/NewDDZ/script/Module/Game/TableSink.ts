@@ -1,4 +1,6 @@
 import Singleton from '../../../../../Script/Utils/Singleton';
+
+import * as _ from 'lodash';
 import ClientDefine from '../../../../../Script/Define/ClientDefine';
 import { eMsgPort, eMsgType } from '../../../../../Script/Define/MessageIdentifer';
 import Network from '../../../../../Script/Utils/Network';
@@ -11,6 +13,7 @@ import DDZLanguage from '../../Data/DDZLanguage';
 import PrefabManager, { EmPrefabEnum } from '../../../../../Script/Manager/CommonManager/PrefabManager';
 import TableMainUI from '../../UI/TableMainUI';
 import { DDZCardType, DDZ_Type } from '../DDZGameDefine';
+import PlayerDataManager from '../../../../../Script/Manager/DataManager/PlayerDataManager';
 
 import { EmDDZPlayerState } from '../DDZGameDefine';
 
@@ -122,13 +125,6 @@ class TableSink extends Singleton {
             DDZGameDataLogic.getInstance().getRoomInfo().roomID);
     }
 
-
-
-
-
-
-
-
     //receive
     onMsg(event: cc.Event.EventCustom) {
         let jsonMessage = event.detail.msg;
@@ -166,10 +162,10 @@ class TableSink extends Singleton {
                 this.onMsgRoomSitDownRsp(jsonMessage);
                 break;
             }
-            case eMsgType.MSG_REQUEST_PLAYER_DATA: {
-                this.onMsgRequestPlayerDataRsp(jsonMessage);
-                break;
-            }
+            // case eMsgType.MSG_REQUEST_PLAYER_DATA: {
+            //     this.onMsgRequestPlayerDataRsp(jsonMessage);
+            //     break;
+            // }
             case eMsgType.MSG_PLAYER_LEAVE_ROOM: {
                 this.onMsgPlayerLeaveRoomRsp(jsonMessage);
                 break;
@@ -326,26 +322,18 @@ class TableSink extends Singleton {
             this.m_curView && this.m_curView.updatePlayerData(player, jsonMessage.idx);
         }
 
-        Network.getInstance().sendMsg(
-            {
-                msgID: eMsgType.MSG_REQUEST_PLAYER_DATA,
-                nReqID: player.uid,
-                isDetail: false,
-            },
-            eMsgType.MSG_REQUEST_PLAYER_DATA,
-            eMsgPort.ID_MSG_PORT_DATA,
-            UserData.getInstance().uid);
+        PlayerDataManager.getInstance().reqPlayerData([player.uid]);
     }
 
-    onMsgRequestPlayerDataRsp(jsonMessage) {
-        for (let idx = 0; idx < DDZGameDataLogic.getInstance().getRoomInfo().opts.seatCnt; idx++) {
-            let player = DDZPlayerDataManager.getInstance()._players[idx];
-            if (player.uid == jsonMessage.uid) {
-                this.m_curView && this.m_curView.updatePlayerData(jsonMessage, idx);
-                break;
-            }
-        }
-    }
+    // onMsgRequestPlayerDataRsp(jsonMessage) {
+    //     for (let idx = 0; idx < DDZGameDataLogic.getInstance().getRoomInfo().opts.seatCnt; idx++) {
+    //         let player = DDZPlayerDataManager.getInstance()._players[idx];
+    //         if (player.uid == jsonMessage.uid) {
+    //             this.m_curView && this.m_curView.updatePlayerData(jsonMessage, idx);
+    //             break;
+    //         }
+    //     }
+    // }
 
     onMsgPlayerLeaveRoomRsp(jsonMessage) {
         // var errorText = null;
@@ -373,7 +361,7 @@ class TableSink extends Singleton {
         }
         else {
             DDZPlayerDataManager.getInstance().onPlayerStandUp(jsonMessage);
-    
+
             this.m_curView && this.m_curView.standUp(jsonMessage.idx);
         }
     }
@@ -466,6 +454,15 @@ class TableSink extends Singleton {
 
     onMsgRoomPlayerInfoRsp(jsonMessage) {
         DDZPlayerDataManager.getInstance().updatePlayerInfo(jsonMessage);
+        let players = jsonMessage.players;
+        if (players && players.length > 0) {
+            let uidList: number[] = [];
+            _.forEach(players, (player) => {
+                uidList.push(player.uid);
+            });
+
+            PlayerDataManager.getInstance().reqPlayerData(uidList);
+        }
         this.m_curView && this.m_curView.updateAllPlayerDatas();
     }
 

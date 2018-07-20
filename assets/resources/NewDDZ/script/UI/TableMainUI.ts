@@ -17,6 +17,9 @@ import SceneManager, { EmSceneID } from '../../../../Script/Manager/CommonManage
 import DDZButtonGroupController from '../Controller/DDZButtonGroupController';
 import DDZPlayerItem from './DDZPlayerItem';
 import { eRoomState } from '../Define/DDZDefine';
+import PlayerDataManager from '../../../../Script/Manager/DataManager/PlayerDataManager';
+
+import ClientEventDefine from '../../../../Script/Define/ClientEventDefine';
 
 let userData = UserData.getInstance();
 let ResMgrIns = ResManager.getInstance();
@@ -49,6 +52,10 @@ export default class TableMainUI extends cc.Component {
     @property(cc.Label)
     m_testLabel: cc.Label = null;
 
+    regisEvent() {
+        cc.systemEvent.on(ClientEventDefine.CUSTOM_EVENT_PLAYER_DATA_REQ_FINISHED, this.onPlayerReqFinished, this);
+    }
+
     reset() {
         this.m_consoleNode.init(this);
         this.m_cardHelper.init(this);
@@ -59,6 +66,7 @@ export default class TableMainUI extends cc.Component {
     }
 
     onLoad() {
+        this.regisEvent();
         this.reset();
         NetSink.getInstance().setCurView(this);
         this.m_topNode.setLocalZOrder(TopNodeZOrder);
@@ -206,6 +214,10 @@ export default class TableMainUI extends cc.Component {
         this.refreshView();
     }
 
+    onPlayerReqFinished() {
+        this.updateAllPlayerDatas();
+    }
+
 
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -278,7 +290,7 @@ export default class TableMainUI extends cc.Component {
     }
 
     analyeMyCard() {
-        let result = this.m_cardHelper.searchOutCard(this.m_playerRootLayer.getHandCard(0));
+        let result = this.m_cardHelper.searchOutCard(this.m_consoleNode.getSelectedCardsVec());
 
         this.m_btnGroupController.hideAll();
 
@@ -409,6 +421,10 @@ export default class TableMainUI extends cc.Component {
         _.forEach(playerDatas, (playerData: DDZPlayerData) => {
             let serverIdx = playerData.idx;
 
+            let targetPlayerData = PlayerDataManager.getInstance().getPlayerData(playerData.uid);
+            if (targetPlayerData) {
+                _.merge(playerData, targetPlayerData);
+            }
             this.updatePlayerData(playerData, serverIdx);
 
             let localChairID = this.getLocalIDByChairID(serverIdx);
@@ -425,6 +441,7 @@ export default class TableMainUI extends cc.Component {
     updatePlayerData(playerData, serverChairID) {
         let clientIdx = this.getLocalIDByChairID(serverChairID);
         if (clientIdx == -1) {
+            cc.warn('updatePlayerData invalid clientIdx, serverChairID =', serverChairID);
             return;
         }
 

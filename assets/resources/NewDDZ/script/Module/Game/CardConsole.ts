@@ -1,11 +1,10 @@
 const { ccclass, property } = cc._decorator;
 
-import ResManager from '../Custom/ResManager';
 import GameLogic from './GameLogic';
 import { DDZCardType, SortType, DDZ_Type } from '../DDZGameDefine';
 import TableMainUI from '../../UI/TableMainUI';
+import CardHelper from '../../Control/CardHelper';
 
-let ResMgrIns = ResManager.getInstance();
 let GameLogicIns = GameLogic.getInstance();
 
 var PlayerCount = 3;
@@ -24,6 +23,9 @@ export default class CardConsole extends cc.Component {
     m_startCardPosNode: cc.Node[] = [];
     @property(cc.Node)
     m_outCardPosNode: cc.Node[] = [];
+
+    @property(CardHelper)
+    m_helper: CardHelper = null;
 
     @property(cc.Prefab)
     m_cardPrefab: cc.Prefab = null;
@@ -466,7 +468,8 @@ export default class CardConsole extends cc.Component {
         // console.log("selectedCard0: " + this._selectedCardVec.length);
         if (this.m_tableMainView && this.m_consoleActive) {
             let selectedCardDataVec = this.getSelectedCardsVec();
-            this.m_tableMainView.checkSelectedCardCanOffer(selectedCardDataVec, true);
+            let needCompare = this.m_helper._curIdx != 0;
+            this.m_tableMainView.checkSelectedCardCanOffer(selectedCardDataVec, needCompare);
         }
 
     }

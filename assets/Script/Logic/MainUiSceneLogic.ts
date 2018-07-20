@@ -111,49 +111,13 @@ class MainUiSceneLogic extends Singleton {
     }
 
     private _onMsgRoomInfoRsp(jsMsg) {
-        //     var gameType = MyUtils.parePortTypte(jsMsg.roomID);
-        //     if (gameType == eMsgPort.ID_MSG_PORT_DOU_DI_ZHU) {
-        //if (false) {
-
-        // cc.loader.loadRes("com/prefab/CommonLoading", cc.Prefab, function (err, prefab) {
-        //     if (err) {
-        //         console.log("load[com/prefab/CommonLoading] failed");
-        //     }
-        //     let loadNode = cc.instantiate(prefab);
-        //     loadNode.parent = cc.director.getScene();
-        //     loadNode.parent = this.node;
-        //     let loadComp = loadNode.getComponent('CommonLoading');
-        //     loadComp.initWithResPathList(eMsgPort.ID_MSG_PORT_DOU_DI_ZHU, () => {
-        //         cc.view.adjustViewPort(true);
-        //         cc.view.resizeWithBrowserSize(true);
-        //         cc.view.setOrientation(cc.macro.ORIENTATION_LANDSCAPE);
-        //         cc.director.loadScene("DDZGameRoomScene");
-        //     });
-        // }.bind(this));
-        // }
         SceneManager.changeScene(EmSceneID.SceneID_DDZScene);
     }
 
     private _onMsgEnterCoinGameRsp(jsMsg) {
-        // if (jsMsg.ret == 0) {
-        //     cc.loader.loadRes("com/prefab/CommonLoading", cc.Prefab, function (err, prefab) {
-        //         if (err) {
-        //             console.log("load[com/prefab/CommonLoading] failed");
-        //         }
-        //         let loadNode = cc.instantiate(prefab);
-        //         loadNode.parent = cc.director.getScene();
-        //         loadNode.parent = this.node;
-        //         let loadComp = loadNode.getComponent('CommonLoading');
-        //         loadComp.initWithResPathList(eMsgPort.ID_MSG_PORT_DOU_DI_ZHU, () => {
-        //             cc.view.adjustViewPort(true);
-        //             cc.view.resizeWithBrowserSize(true);
-        //             cc.view.setOrientation(cc.macro.ORIENTATION_LANDSCAPE);
-        //             cc.director.loadScene("DDZGameRoomScene");
-        //         });
-        //     }.bind(this));
-        // }
-        
-        SceneManager.changeScene(EmSceneID.SceneID_DDZScene);
+        if (jsMsg.ret == 0) {
+            SceneManager.changeScene(EmSceneID.SceneID_DDZScene);
+        }
     }
 
     //private

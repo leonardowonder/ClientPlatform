@@ -40,6 +40,7 @@ export default class CardHelper extends cc.Component {
 
         this._sendCardVec = cardDataVec;
         this._curIdx = clientIdx;
+        cc.log('wd debug setCurSendCard this._curIdx =', this._curIdx);
 
         this._sendCardVec = GameLogicIns.sortCardList(this._sendCardVec, SortType.ST_NORMAL);
         this._sendCardType = GameLogicIns.switchServerTypeToCardType(serverCardType, this._sendCardVec);
@@ -56,6 +57,7 @@ export default class CardHelper extends cc.Component {
     }
 
     searchOutCard(handCardVec) {
+        cc.log('wd debug searchOutCard this._curIdx =', this._curIdx);
         if (this._sendCardVec.length == 0 || this._curIdx == 0) {
             return null;
         }
