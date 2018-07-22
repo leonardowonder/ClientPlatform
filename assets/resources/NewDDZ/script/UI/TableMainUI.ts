@@ -172,9 +172,9 @@ export default class TableMainUI extends cc.Component {
         }
         else {
             if (isDiscard) {
-                this.m_btnGroupController.updateMyTurnNode(true, false);
+                this.analyeMyCard();
             }
-            else {                
+            else {
                 this.m_btnGroupController.showRobNode();
             }
         }
@@ -290,13 +290,21 @@ export default class TableMainUI extends cc.Component {
     }
 
     analyeMyCard() {
-        let result = this.m_cardHelper.searchOutCard(this.m_consoleNode.getSelectedCardsVec());
-
         this.m_btnGroupController.hideAll();
+
+        if (this.m_curActIdx != 0) {
+            return;
+        }
+
+        let result = this.m_cardHelper.searchOutCard(this.m_consoleNode.getSelectedCardsVec());
 
         let canDiscard: boolean = result == null || result.cbSearchCount != 0;
         let mustOffer: boolean = result == null;
         this.m_btnGroupController.updateMyTurnNode(canDiscard, mustOffer);
+
+        if (this.m_consoleNode.getSelectedCardsVec().length < 1) {
+            this.m_btnGroupController.updateDiscardButton(false);
+        }
 
         if (result && result.cbSearchCount != 0) {
             this.m_cardHelper.setCurTipResult(result);
@@ -353,6 +361,11 @@ export default class TableMainUI extends cc.Component {
         selectedCard = GameLogicIns.sortCardList(selectedCard, SortType.ST_NORMAL);
         let curCardType = this.m_cardHelper._sendCardType;
         let cardType = GameLogicIns.getCardType(selectedCard);
+        if (this.m_cardHelper._curIdx == 0) {            
+            this.reqOutCard(0, selectedCard, cardType[0]);
+            return true;
+        }
+        
         if (curCardType == DDZCardType.Type_None) {
             if (cardType.length == 0) {
                 return false;

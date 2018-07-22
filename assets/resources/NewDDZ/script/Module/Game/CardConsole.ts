@@ -1,5 +1,7 @@
 const { ccclass, property } = cc._decorator;
 
+import * as _ from 'lodash';
+
 import GameLogic from './GameLogic';
 import { DDZCardType, SortType, DDZ_Type } from '../DDZGameDefine';
 import TableMainUI from '../../UI/TableMainUI';
@@ -256,7 +258,7 @@ export default class CardConsole extends cc.Component {
                     n.setPosition(cc.p(startPos.x + n.width / 3.5 * i, startPos.y));
                 }
             } else if (curHandCardNodeVec.length > handCardData.length) {
-                this.showHandCardNeedRomove(localChairID, handCardData);
+                this.showHandCardNeedRomoveNew(localChairID, handCardData);
             } else {
                 this.showHandCardNeedAdd(localChairID, handCardData);
             }
@@ -567,27 +569,68 @@ export default class CardConsole extends cc.Component {
         return false;
     }
 
-    showHandCardNeedRomove(localChairID, handCardData) {
+    showHandCardNeedRomoveNew(localChairID, handCardData) {
         let curCardNodeVec = this.m_handCardNodeMap[localChairID];
         let curCardNum = handCardData.length;
         if (curCardNum == curCardNodeVec.length) {
             return;
         }
-        for (let i = 0; i < curCardNodeVec.length; i++) {
-            let curNode = curCardNodeVec[i];
-            let cardNum = curNode.getComponent('PokerCardNode')._cardData;
-            if (!this.checkContain(handCardData, cardNum)) {
-                curNode.destroy();
-                curCardNodeVec.splice(i, 1);
-                i--;
+
+        let restIdxList: number[] = [];
+        for (let i = 0; i < handCardData.length; i++) {
+            let curCard = handCardData[i];
+            for (let j = 0; j < curCardNodeVec.length; j++) {
+                let curNode = curCardNodeVec[j];
+                let cardNum = curNode.getComponent('PokerCardNode')._cardData;
+                if (curCard == cardNum) {
+                    restIdxList.push(j);
+                    break;
+                }
             }
         }
-        this.m_handCardNodeMap[localChairID] = curCardNodeVec;
-        if (curCardNodeVec.length == 0) {
+        cc.log('wd debug restIdxList =', restIdxList);
+
+        let newVec: cc.Node[] = [];
+        for (let i = 0; i < curCardNodeVec.length; i++) {
+            if (-1 != _.findIndex(restIdxList, (number) => {
+                return number == i;
+            })) {
+                newVec.push(curCardNodeVec[i]);
+            }
+            else {
+                curCardNodeVec[i].destroy();
+            }
+        }
+        cc.log('wd debug newVec.length =', newVec.length);
+
+        this.m_handCardNodeMap[localChairID] = newVec;
+        if (newVec.length == 0) {
             return;
         }
         this.moveCards(localChairID, handCardData);
     }
+
+    // showHandCardNeedRomove(localChairID, handCardData) {
+    //     let curCardNodeVec = this.m_handCardNodeMap[localChairID];
+    //     let curCardNum = handCardData.length;
+    //     if (curCardNum == curCardNodeVec.length) {
+    //         return;
+    //     }
+    //     for (let i = 0; i < curCardNodeVec.length; i++) {
+    //         let curNode = curCardNodeVec[i];
+    //         let cardNum = curNode.getComponent('PokerCardNode')._cardData;
+    //         if (!this.checkContain(handCardData, cardNum)) {
+    //             curNode.destroy();
+    //             curCardNodeVec.splice(i, 1);
+    //             i--;
+    //         }
+    //     }
+    //     this.m_handCardNodeMap[localChairID] = curCardNodeVec;
+    //     if (curCardNodeVec.length == 0) {
+    //         return;
+    //     }
+    //     this.moveCards(localChairID, handCardData);
+    // }
 
     showHandCardNeedAdd(localChairID, handCardData) {
         let curCardNodeVec = this.m_handCardNodeMap[localChairID];
