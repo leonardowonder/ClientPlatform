@@ -263,6 +263,25 @@ export default class TableMainUI extends cc.Component {
         });
     }
 
+    onRoomResult(jsonMessage) {
+        let players = jsonMessage.players;
+        _.forEach(players, (player) => {
+            let clientIdx = this.getLocalIDByChairID(player.idx);
+
+            let playerItem: DDZPlayerItem = this.m_playerRootLayer.getPlayerByClientIdx(clientIdx);
+
+            playerItem.setResult(player.offset);
+
+            // if (clientIdx != 0 && player.cards && player.cards.length > 0) {
+            //     this.sendOutCard()
+            // }
+        });
+
+        this.scheduleOnce(() => {
+            this.clearTable();
+        }, 2);
+    }
+
     refreshView() {
         this._updateHelperAndConsole();
 
@@ -517,8 +536,13 @@ export default class TableMainUI extends cc.Component {
     standUp(serverChairID) {
         let clientIdx = this.getLocalIDByChairID(serverChairID);
 
-        this.m_playerRootLayer.clearPlayerData(clientIdx);
-        this.m_playerRootLayer.hide(clientIdx);
+        if (clientIdx == 0) {
+            this.clearTable();
+        }
+        else {
+            this.m_playerRootLayer.clearPlayerData(clientIdx);
+            this.m_playerRootLayer.hide(clientIdx);
+        }
     }
 
     setStateTag(serverID, stateTag) {

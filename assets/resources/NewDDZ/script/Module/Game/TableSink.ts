@@ -218,7 +218,7 @@ class TableSink extends Singleton {
                 break;
             }
             case eMsgType.MSG_DDZ_ROOM_RESULT: {
-                this.onMsgDDZRoomResutRsp();
+                this.onMsgDDZRoomResutRsp(jsonMessage);
                 break;
             }
             case eMsgType.MSG_DDZ_PLAYER_UPDATE_TUO_GUAN: {
@@ -437,9 +437,9 @@ class TableSink extends Singleton {
         this.m_curView && this.m_curView.onRoomPlayerDiscard(cards, clientType, serverIdx);
     }
 
-    onMsgDDZRoomResutRsp() {
+    onMsgDDZRoomResutRsp(jsonMessage) {
         DDZPlayerDataManager.getInstance().clearAllPlayerData();
-        this.m_curView && this.m_curView.clearTable();
+        this.m_curView && this.m_curView.onRoomResult(jsonMessage);
     }
 
     onMsgDDZPlayerUpdateTuoGuanRsp() {

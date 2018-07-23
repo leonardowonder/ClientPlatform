@@ -28,6 +28,12 @@ export default class DDZPlayerItem extends cc.Component {
     @property(cc.SpriteFrame)
     m_stateFrames: cc.SpriteFrame[] = [];
 
+    @property(cc.Font)
+    m_resultFonts: cc.Font[] = [];
+
+    @property(cc.Label)
+    m_resultLabel: cc.Label = null;
+
     @property
     m_localChairID: number = -1;
     @property
@@ -55,6 +61,7 @@ export default class DDZPlayerItem extends cc.Component {
         this.m_landlordTag.active = false;
         this.m_stateSprite.spriteFrame = null;
         this.m_restCardNumLabel.string = '';
+        this.m_resultLabel.string = '';
 
         this.setName('');
         this.setHead('');
@@ -136,6 +143,18 @@ export default class DDZPlayerItem extends cc.Component {
 
         let idx: number = this._getIdxByState(state);
         this.m_stateSprite.spriteFrame = this.m_stateFrames[idx];
+    }
+
+    setResult(offset: number) {
+        if (offset < 0) {
+            this.m_resultLabel.font = this.m_resultFonts[1];
+        }
+        else {
+            this.m_resultLabel.font = this.m_resultFonts[0];
+            this.m_resultLabel.string = '+';
+        }
+
+        this.m_resultLabel.string += offset.toString();
     }
 
     private _getIdxByState(state: EmDDZPlayerState): number {
