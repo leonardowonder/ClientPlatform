@@ -77,6 +77,8 @@ export enum EmDDZPlayerState {
     State_Max
 }
 
+export let DDZ_WaitRobBankerTime = 15;
+export let DDZ_WaitPlayerActTime = 15;
 
 //出牌结果
 // struct tagOutCardResult

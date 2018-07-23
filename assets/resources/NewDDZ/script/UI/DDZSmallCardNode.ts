@@ -7,17 +7,13 @@ let GameLogicIns = GameLogic.getInstance();
 var StandOffset = 20.0;
 
 @ccclass
-export default class PokerCardNode extends cc.Component {
+export default class DDZSmallCardNode extends cc.Component {
     @property(cc.Sprite)
     m_jokerSprite: cc.Sprite = null;
-    @property(cc.SpriteFrame)
-    m_jokerSpriteFrames: cc.SpriteFrame[] = [];
     @property(cc.Sprite)
     m_cardNumSprite: cc.Sprite = null;
     @property(cc.Sprite)
     m_cardColorSprite: cc.Sprite = null;
-    @property(cc.Sprite)
-    m_cardLargeColorSprite: cc.Sprite = null;
     @property(cc.Node)
     m_cardBgNode: cc.Node = null;
 
@@ -31,7 +27,7 @@ export default class PokerCardNode extends cc.Component {
     _selectedState: boolean = false;
     _isGray: boolean = false;
 
-    initWithCardData (cardData) {
+    initWithCardData (cardData: number) {
         this.setCardFace();
         this.setCardGray(false);
         this._cardData = cardData;
@@ -43,14 +39,12 @@ export default class PokerCardNode extends cc.Component {
             this.m_jokerSprite.spriteFrame = spriteAtlas.getSpriteFrame(spriteFrameStruct.JokerNum);
             this.m_cardNumSprite.node.active = false;
             this.m_cardColorSprite.node.active = false;
-            this.m_cardLargeColorSprite.node.active = false;
         } else {
             this.m_jokerSprite.node.active = false,
             this.m_cardNumSprite.node.active = true;
             this.m_cardColorSprite.node.active = true;
             this.m_cardNumSprite.spriteFrame = spriteAtlas.getSpriteFrame(spriteFrameStruct.cardNumSp);
             this.m_cardColorSprite.spriteFrame = spriteAtlas.getSpriteFrame(spriteFrameStruct.cardColorSp);
-            this.m_cardLargeColorSprite.spriteFrame = spriteAtlas.getSpriteFrame(spriteFrameStruct.cardColorSp);
         }
     }
 
@@ -80,9 +74,9 @@ export default class PokerCardNode extends cc.Component {
                 break;
             case EPokerType.ePoker_Joker:
                 if (cardValue == 18) {
-                    imageName = "LargeCard_king_14";
+                    imageName = "SmallCard_king_huase_14";
                 } else {
-                    imageName = "LargeCard_king_15";
+                    imageName = "SmallCard_king_huase_15";
                 }
                 return {
                     cardNumSp: null,

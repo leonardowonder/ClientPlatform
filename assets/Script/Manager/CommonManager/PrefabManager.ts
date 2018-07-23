@@ -7,6 +7,7 @@ export enum EmPrefabEnum {
     Prefab_TendencyChart,
     Prefab_MessageBox,
     Prefab_PromptDialogLayer,
+    Prefab_DDZCountDown,
     Prefab_Max
 }
 
@@ -26,6 +27,7 @@ class PrefabManager extends Singleton {
         { path: 'prefab/gamePlay/tendencyChart/TendencyChart', componentName: 'TendencyChart' },
         { path: 'prefab/common/MessageBoxLayer', componentName: 'MessageBoxLayer' },
         { path: 'prefab/common/PromptDialogLayer', componentName: 'PromptDialogLayer' },
+        { path: 'NewDDZ/prefab/DDZCountDown', componentName: 'DDZCountDown' },
     ];
 
     private _loadingList: EmPrefabEnum[] = [];
@@ -61,13 +63,14 @@ class PrefabManager extends Singleton {
                     if (!this._hasBeenUnloaded(key)) {
                         if (err == null) {
                             let prefab: cc.Node = cc.instantiate(res);
+                            prefab.setPosition(0, 0);
+                            
                             this._initPrefab(prefab, key, params);
 
                             this._processAutoHide(parentNode, needAutoHide);
 
                             this._pushPrefabHistoryStack(key, params, node);
 
-                            prefab.setPosition(0, 0);
                             parentNode.addChild(prefab);
                         }
                         else {

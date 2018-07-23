@@ -413,7 +413,7 @@ class TableSink extends Singleton {
         let cards = jsonMessage.cards;
 
         this.m_curView && this.m_curView.onBankerProduced(bankerIdx);
-        this.m_curView && this.m_curView.updateBaseScore(bankerIdx, baseScore, cards);
+        this.m_curView && this.m_curView.onRoomProducedDZ(bankerIdx, baseScore, cards);
     }
 
     onMsgDDZRoomWaitChuRsp(jsonMessage) {
