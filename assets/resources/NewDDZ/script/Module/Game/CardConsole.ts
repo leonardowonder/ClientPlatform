@@ -72,6 +72,9 @@ export default class CardConsole extends cc.Component {
     }
 
     showDisPatchCards(localChairID, handCardData) {
+        if (this.m_moveCards) {
+            return;
+        }
         var cardNodePrefab = this.m_cardPrefab;
         let demoNode = cc.instantiate(cardNodePrefab);
         let cardNum = handCardData.length;
@@ -247,6 +250,7 @@ export default class CardConsole extends cc.Component {
                 n.setPosition(cc.p(startPos.x + n.width / 3.5 * i, startPos.y));
             }
             this.m_handCardNodeMap[localChairID] = curHandCardNodeVec;
+            cc.log('wd debug showHandCard curHandCardNodeVec =', curHandCardNodeVec, 'handCardData =', handCardData);
         } else {
             //need move act
             //same card checkPos
@@ -588,7 +592,6 @@ export default class CardConsole extends cc.Component {
                 }
             }
         }
-        cc.log('wd debug restIdxList =', restIdxList);
 
         let newVec: cc.Node[] = [];
         for (let i = 0; i < curCardNodeVec.length; i++) {
@@ -601,7 +604,6 @@ export default class CardConsole extends cc.Component {
                 curCardNodeVec[i].destroy();
             }
         }
-        cc.log('wd debug newVec.length =', newVec.length);
 
         this.m_handCardNodeMap[localChairID] = newVec;
         if (newVec.length == 0) {
@@ -679,6 +681,7 @@ export default class CardConsole extends cc.Component {
             curCardNodeVec.push(nodeCardMap[handCardData[i]]);
         }
         this.m_handCardNodeMap[localChairID] = curCardNodeVec;
+        cc.log('wd debug showHandCardNeedAdd handCardData.length =', handCardData.length, 'curCardNodeVec =', curCardNodeVec, 'localChairID =', localChairID);
         this.sortZOrder(localChairID);
         this.addMoveCards(localChairID, handCardData, addCardDataVec, addCardNodeVec);
     }

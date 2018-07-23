@@ -49,11 +49,9 @@ export default class TableMainUI extends cc.Component {
 
     @property(cc.Node)
     m_topNode: cc.Node = null;
-    @property(cc.Label)
-    m_roomIDLabel: cc.Label = null;
 
-    @property(cc.Label)
-    m_testLabel: cc.Label = null;
+    // @property(cc.Label)
+    // m_testLabel: cc.Label = null;
 
     regisEvent() {
         cc.systemEvent.on(ClientEventDefine.CUSTOM_EVENT_PLAYER_DATA_REQ_FINISHED, this.onPlayerReqFinished, this);
@@ -236,15 +234,13 @@ export default class TableMainUI extends cc.Component {
             }
             this.updatePlayerData(playerData, serverIdx);
 
-            cc.log('wd debug player data tuo guan =', playerData.isTuoGuan());
-
             let localChairID = this.getLocalIDByChairID(serverIdx);
             if (localChairID != -1) {
                 this.m_playerRootLayer.setHandCard(localChairID, playerData.holdCards);
 
                 if (localChairID == 0) {
                     this.m_tuoGuanNode.active = playerData.isTuoGuan();
-                    this.m_consoleNode.showDisPatchCards(0, playerData.holdCards);
+                    this.showDispatchCards(0);
                 }
             }
         });
@@ -333,7 +329,7 @@ export default class TableMainUI extends cc.Component {
         for (let i = 0; i < cardType.length; i++) {
             str += GameLogicIns.debugShowCardType(cardType[i]);
         }
-        this.m_testLabel.string = str;
+        // this.m_testLabel.string = str;
         return cardType;
     }
 
@@ -347,8 +343,8 @@ export default class TableMainUI extends cc.Component {
         let result = this.m_cardHelper.searchOutCard(this.m_playerRootLayer.getHandCard(0));
 
         let canDiscard: boolean = result == null || result.cbSearchCount != 0;
-        let mustOffer: boolean = this.m_curActIdx == this.m_cardHelper._curIdx;
-        
+        let mustOffer: boolean = this.m_curActIdx == this.m_cardHelper._curIdx || this.m_cardHelper._curIdx == -1;
+
         this.m_btnGroupController.updateMyTurnNode(canDiscard, mustOffer);
 
         if (this.m_consoleNode.getSelectedCardsVec().length < 1) {
@@ -459,14 +455,16 @@ export default class TableMainUI extends cc.Component {
 
     updateRoomView() {
         let roomInfo: DDZRoomInfo = DDZGameDataLogic.getInstance().getRoomInfo();
-        this.m_roomIDLabel.string = DDZGameDataLogic.getInstance().getRoomInfo().roomID.toString();
 
         if (roomInfo) {
             let state: eRoomState = roomInfo.state;
             let stateInfo: DDZRoomStateInfo = roomInfo.stateInfo;
             if (stateInfo) {
                 this.setCurLocalChairID(stateInfo.curActIdx);
-                if (state == eRoomState.eRoomState_DecideBanker) {
+                if (state == eRoomState.eRoomSate_WaitReady || state == eRoomState.eRoomState_GameEnd) {
+                    this.m_btnGroupController.hideAll();
+                }
+                else if (state == eRoomState.eRoomState_DecideBanker) {
                     this.updateOptions(false);
                 }
                 else {
@@ -590,7 +588,6 @@ export default class TableMainUI extends cc.Component {
                 let clientIdx: number = this.getLocalIDByChairID(targetDiscardInfo.idx);
 
                 if (myType.length > 0) {
-                    cc.log('wd debug _updateCardHelperData clientIdx =', clientIdx);
                     let serverType: DDZ_Type = GameLogic.getInstance().switchCardTypeToServerType(myType[0]);
 
                     this.setCurOutCard(targetDiscardInfo.chu, serverType, clientIdx);
