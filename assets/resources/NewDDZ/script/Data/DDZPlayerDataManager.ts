@@ -8,6 +8,10 @@ var PlayerCount = 3;
 
 let userData = UserData.getInstance();
 
+let haveState = function(myState: number, targetState: number): boolean {
+    return (myState & targetState) == targetState;
+}
+
 export class DDZPlayerData {
     uid: number = 0;
 
@@ -22,6 +26,10 @@ export class DDZPlayerData {
 
     setPlayerData(jsonMessage) {
         _.merge(this, jsonMessage);
+    }
+
+    isTuoGuan(): boolean {
+        return haveState(this.state, eRoomPeerState.eRoomPeer_SysAutoAct);
     }
 
     reset() {

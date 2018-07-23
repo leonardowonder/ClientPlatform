@@ -125,6 +125,17 @@ class TableSink extends Singleton {
             DDZGameDataLogic.getInstance().getRoomInfo().roomID);
     }
 
+    requestTuoGuan(isTuoGuan: number) {
+        Network.getInstance().sendMsg(
+            {
+                msgID: eMsgType.MSG_DDZ_PLAYER_UPDATE_TUO_GUAN,
+                isTuoGuan: isTuoGuan
+            },
+            eMsgType.MSG_DDZ_PLAYER_UPDATE_TUO_GUAN,
+            eMsgPort.ID_MSG_PORT_DOU_DI_ZHU,
+            DDZGameDataLogic.getInstance().getRoomInfo().roomID);
+    }
+
     //receive
     onMsg(event: cc.Event.EventCustom) {
         let jsonMessage = event.detail.msg;
@@ -215,7 +226,7 @@ class TableSink extends Singleton {
                 break;
             }
             case eMsgType.MSG_DDZ_ROOM_UPDATE_TUO_GUAN: {
-                this.onMsgDDZRoomUpdateTuoGuanRsp();
+                this.onMsgDDZRoomUpdateTuoGuanRsp(jsonMessage);
                 break;
             }
             case eMsgType.MSG_ROOM_DDZ_START_GAME: {
@@ -435,8 +446,11 @@ class TableSink extends Singleton {
 
     }
 
-    onMsgDDZRoomUpdateTuoGuanRsp() {
+    onMsgDDZRoomUpdateTuoGuanRsp(jsonMessage) {
+        let trusteeshipIdx: number = jsonMessage.idx;
+        let isTrusteeship: boolean = jsonMessage.isTuoGuan != 0;
 
+        this.m_curView && this.m_curView.onPlayerTuoGuan(trusteeshipIdx, isTrusteeship);
     }
 
     onMsgRoomDDZStartGameRsp(jsonMessage) {

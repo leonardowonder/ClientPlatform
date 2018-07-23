@@ -41,6 +41,9 @@ export default class TableMainUI extends cc.Component {
     @property(DDZPlayerRootLayer)
     m_playerRootLayer: DDZPlayerRootLayer = null;
 
+    @property(cc.Node)
+    m_tuoGuanNode: cc.Node = null;
+
     @property
     m_curActIdx: number = -1;
 
@@ -87,6 +90,14 @@ export default class TableMainUI extends cc.Component {
 
     onQuitClick() {
         NetSink.getInstance().sendLeaveRoom();
+    }
+
+    onTuoGuanClick() {
+        NetSink.getInstance().requestTuoGuan(1);
+    }
+
+    onCancelTuoGuanClick() {
+        NetSink.getInstance().requestTuoGuan(0);
     }
 
     clearTable() {
@@ -199,14 +210,51 @@ export default class TableMainUI extends cc.Component {
         }
     }
 
+    onPlayerTuoGuan(serverIdx: number, isTuoGuan: boolean) {
+        let clientIdx: number = this.getLocalIDByChairID(serverIdx);
+
+        if (clientIdx == 0) {
+            this.m_tuoGuanNode.active = isTuoGuan;
+        }
+    }
+
     onDistrbuteCards(cards: number[]) {
         this.setHandCard(0, cards);
 
         this.showDispatchCards(0);
     }
 
+    updateAllPlayerDatas() {
+        let playerDatas = DDZPlayerDataManager.getInstance()._players;
+
+        _.forEach(playerDatas, (playerData: DDZPlayerData) => {
+            let serverIdx = playerData.idx;
+
+            let targetPlayerData = PlayerDataManager.getInstance().getPlayerData(playerData.uid);
+            if (targetPlayerData) {
+                _.merge(playerData, targetPlayerData);
+            }
+            this.updatePlayerData(playerData, serverIdx);
+
+            cc.log('wd debug player data tuo guan =', playerData.isTuoGuan());
+
+            let localChairID = this.getLocalIDByChairID(serverIdx);
+            if (localChairID != -1) {
+                this.m_playerRootLayer.setHandCard(localChairID, playerData.holdCards);
+
+                if (localChairID == 0) {
+                    this.m_tuoGuanNode.active = playerData.isTuoGuan();
+                    this.m_consoleNode.showDisPatchCards(0, playerData.holdCards);
+                }
+            }
+        });
+    }
+
     refreshView() {
+        this._updateHelperAndConsole();
+
         this.updateAllPlayerDatas();
+
         this.updateRoomView();
     }
 
@@ -296,10 +344,11 @@ export default class TableMainUI extends cc.Component {
             return;
         }
 
-        let result = this.m_cardHelper.searchOutCard(this.m_consoleNode.getSelectedCardsVec());
+        let result = this.m_cardHelper.searchOutCard(this.m_playerRootLayer.getHandCard(0));
 
         let canDiscard: boolean = result == null || result.cbSearchCount != 0;
-        let mustOffer: boolean = result == null;
+        let mustOffer: boolean = this.m_curActIdx == this.m_cardHelper._curIdx;
+        
         this.m_btnGroupController.updateMyTurnNode(canDiscard, mustOffer);
 
         if (this.m_consoleNode.getSelectedCardsVec().length < 1) {
@@ -361,11 +410,11 @@ export default class TableMainUI extends cc.Component {
         selectedCard = GameLogicIns.sortCardList(selectedCard, SortType.ST_NORMAL);
         let curCardType = this.m_cardHelper._sendCardType;
         let cardType = GameLogicIns.getCardType(selectedCard);
-        if (this.m_cardHelper._curIdx == 0) {            
+        if (this.m_cardHelper._curIdx == 0) {
             this.reqOutCard(0, selectedCard, cardType[0]);
             return true;
         }
-        
+
         if (curCardType == DDZCardType.Type_None) {
             if (cardType.length == 0) {
                 return false;
@@ -426,29 +475,6 @@ export default class TableMainUI extends cc.Component {
             }
         }
 
-    }
-
-    updateAllPlayerDatas() {
-        let playerDatas = DDZPlayerDataManager.getInstance()._players;
-
-        _.forEach(playerDatas, (playerData: DDZPlayerData) => {
-            let serverIdx = playerData.idx;
-
-            let targetPlayerData = PlayerDataManager.getInstance().getPlayerData(playerData.uid);
-            if (targetPlayerData) {
-                _.merge(playerData, targetPlayerData);
-            }
-            this.updatePlayerData(playerData, serverIdx);
-
-            let localChairID = this.getLocalIDByChairID(serverIdx);
-            if (localChairID != -1) {
-                this.m_playerRootLayer.setHandCard(localChairID, playerData.holdCards);
-
-                if (localChairID == 0) {
-                    this.m_consoleNode.showDisPatchCards(0, playerData.holdCards);
-                }
-            }
-        });
     }
 
     updatePlayerData(playerData, serverChairID) {
@@ -532,5 +558,63 @@ export default class TableMainUI extends cc.Component {
         }
 
         return state;
+    }
+
+    private _updateHelperAndConsole() {
+        let roomInfo: DDZRoomInfo = DDZGameDataLogic.getInstance().getRoomInfo();
+
+        if (roomInfo && roomInfo.stateInfo && roomInfo.stateInfo.lastChu) {
+            this._updateCardHelperData(roomInfo.stateInfo.lastChu);
+
+            this._updateCardConsole(roomInfo.stateInfo.lastChu)
+        }
+    }
+
+    private _getPreActIdx(idx: number): number {
+        return (idx + MAXPLAYER - 1) % MAXPLAYER;
+    }
+
+    private _updateCardHelperData(lastDiscardInfos: DDZLastDiscardInfo[]) {
+        let tmpActIdx: number = this.m_curActIdx;
+
+        for (let i = 0; i < MAXPLAYER; ++i) {
+            let lastActIdx: number = this._getPreActIdx(tmpActIdx);
+
+            let targetDiscardInfo: DDZLastDiscardInfo =
+                _.find(lastDiscardInfos, (info: DDZLastDiscardInfo) => {
+                    return info.idx == lastActIdx;
+                });
+
+            if (targetDiscardInfo && targetDiscardInfo.chu != null && targetDiscardInfo.chu.length > 0) {
+                let myType: DDZCardType[] = GameLogic.getInstance().getCardType(targetDiscardInfo.chu);
+                let clientIdx: number = this.getLocalIDByChairID(targetDiscardInfo.idx);
+
+                if (myType.length > 0) {
+                    cc.log('wd debug _updateCardHelperData clientIdx =', clientIdx);
+                    let serverType: DDZ_Type = GameLogic.getInstance().switchCardTypeToServerType(myType[0]);
+
+                    this.setCurOutCard(targetDiscardInfo.chu, serverType, clientIdx);
+                }
+
+                break;
+            }
+
+            tmpActIdx = this._getPreActIdx(tmpActIdx);
+        }
+    }
+
+    private _updateCardConsole(lastDiscardInfos: DDZLastDiscardInfo[]) {
+        _.forEach(lastDiscardInfos, (info: DDZLastDiscardInfo) => {
+            if (info.chu != null && info.chu.length > 0) {
+                let myType: DDZCardType[] = GameLogic.getInstance().getCardType(info.chu);
+                let clientIdx: number = this.getLocalIDByChairID(info.idx);
+
+                if (myType.length > 0) {
+                    let serverType: DDZ_Type = GameLogic.getInstance().switchCardTypeToServerType(myType[0]);
+
+                    this.m_consoleNode.showOutCard(clientIdx, info.chu, serverType);
+                }
+            }
+        });
     }
 };
