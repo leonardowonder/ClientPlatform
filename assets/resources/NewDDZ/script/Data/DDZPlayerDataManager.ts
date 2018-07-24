@@ -8,9 +8,6 @@ var PlayerCount = 3;
 
 let userData = UserData.getInstance();
 
-let haveState = function(myState: number, targetState: number): boolean {
-    return (myState & targetState) == targetState;
-}
 
 export class DDZPlayerData {
     uid: number = 0;
@@ -29,12 +26,16 @@ export class DDZPlayerData {
     }
 
     isTuoGuan(): boolean {
-        return haveState(this.state, eRoomPeerState.eRoomPeer_SysAutoAct);
+        return this.haveState(eRoomPeerState.eRoomPeer_SysAutoAct);
+    }
+
+    haveState(targetState: number): boolean {
+        return (this.state & targetState) == targetState;
     }
 
     reset() {
         this.uid = 0;
-    
+
         this.idx = 0;
         this.chips = 0;
         this.holdCards = [];
@@ -79,6 +80,16 @@ class DDZPlayerDataManager extends Singleton {
         return data;
     }
 
+    getPlayerDataByServerIdx(idx: number) {
+        var data = null;
+
+        if (idx >= 0 && idx < this._players.length) {
+            data = this._players[idx];
+        }
+
+        return data;
+    }
+
     updatePlayerInfo(jsonMessage) {
         this.clearAllPlayerData();
         if (jsonMessage.players && jsonMessage.players.length) {
@@ -100,10 +111,7 @@ class DDZPlayerDataManager extends Singleton {
 
     onPlayerSitDown(jsonMessage) {
         let playerData = this._players[jsonMessage.idx];
-        playerData.uid = jsonMessage.uid;
-        playerData.chips = jsonMessage.chips;
-        playerData.state = jsonMessage.state;
-        playerData.isOnline = jsonMessage.isOnline;
+        playerData.setPlayerData(jsonMessage);
         if (playerData.uid == userData.uid) {
             this._meServerID = jsonMessage.idx;
             this.showMeServerID();
@@ -140,7 +148,7 @@ class DDZPlayerDataManager extends Singleton {
     }
 
     showMeServerID() {
-        console.log('meServerID:' + this._meServerID);
+        cc.log('DDZPlayerDataManager showMeServerID meServerID:' + this._meServerID);
     }
 
     onceGameOver() {

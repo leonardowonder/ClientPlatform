@@ -23,6 +23,7 @@ export default class LoginScene extends cc.Component {
 
     onLoad() {
         // this.test();
+        cc.director.setDisplayStats(false);
         this._registEvent();
         this._doLoadings();
     }

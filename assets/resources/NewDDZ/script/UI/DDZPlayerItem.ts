@@ -5,6 +5,9 @@ import * as _ from 'lodash';
 import DDZGameDataLogic from '../Data/DDZGameDataLogic';
 import { eRoomPeerState, eRoomState } from '../Define/DDZDefine';
 import { EmDDZPlayerState } from '../Module/DDZGameDefine';
+import HandCardLogic from '../Control/HandCardLogic';
+import DDZPlayerDataManager from '../Data/DDZPlayerDataManager';
+import PlayerDataManager from '../../../../Script/Manager/DataManager/PlayerDataManager';
 
 import { DDZPlayerData } from '../Data/DDZPlayerDataManager';
 
@@ -39,10 +42,10 @@ export default class DDZPlayerItem extends cc.Component {
     @property
     m_serverChairID: number = -1;
 
-    _data: DDZPlayerData = null;
+    _ddzCardData: HandCardLogic = null;
 
     init() {
-        this._data = new DDZPlayerData();
+        this._ddzCardData = new HandCardLogic();
         this.reset();
         this.hide();
     }
@@ -57,7 +60,7 @@ export default class DDZPlayerItem extends cc.Component {
     }
 
     reset() {
-        this._data.reset();
+        this._ddzCardData.clear();
         this.m_landlordTag.active = false;
         this.m_stateSprite.spriteFrame = null;
         this.m_restCardNumLabel.string = '';
@@ -68,22 +71,39 @@ export default class DDZPlayerItem extends cc.Component {
         this.setCoin(0);
     }
 
-    setPlayerData(data) {
-        this._data.setPlayerData(data);
+    refreshView() {
+        if (this.m_serverChairID == -1) {
+            cc.warn('DDZPlayerItem refreshView this.m_serverChairID = -1');
+            return;
+        }
 
-        this.node.active = this._data.uid != 0;
+        let ddzPlayerData: DDZPlayerData = DDZPlayerDataManager.getInstance().getPlayerDataByServerIdx(this.m_serverChairID);
 
-        this.setName(this._data.name);
-        this.setHead(this._data.head);
-        this.setCoin(this._data.chips);
-        this.setState(EmDDZPlayerState.State_None);
-        if (this._data.state == eRoomPeerState.eRoomPeer_Ready && DDZGameDataLogic.getInstance().getRoomInfo().state == eRoomState.eRoomSate_WaitReady) {
-            this.setState(EmDDZPlayerState.State_None);
+        if (ddzPlayerData == null) {
+            cc.warn('DDZPlayerItem refreshView ddzPlayerData = null');
+            this.node.active = false;
+            return;
+        }
+
+        this.node.active = ddzPlayerData.uid != 0;
+
+        if (ddzPlayerData.uid != 0) {
+            let player = PlayerDataManager.getInstance().getPlayerData(ddzPlayerData.uid);
+            if (player) {
+                this.setName(player.name);
+                this.setHead(player.headIcon);
+            }
+
+            this.setCoin(ddzPlayerData.chips);
+
+            if (ddzPlayerData.haveState(eRoomPeerState.eRoomPeer_Ready) && DDZGameDataLogic.getInstance().getRoomInfo().state == eRoomState.eRoomSate_WaitReady) {
+                this.setState(EmDDZPlayerState.State_None);
+            }
         }
     }
 
-    clearPlayerData() {
-        this.reset();
+    clearCards() {
+        this._ddzCardData.clear();
     }
 
     setName(name) {
@@ -109,7 +129,7 @@ export default class DDZPlayerItem extends cc.Component {
     setHead(headUrl) {
         if (headUrl && headUrl.length && headUrl != 'undefine') {
             if (cc.sys.isNative) {
-                // NativeWXHeadDonload.donloadHead(headUrl, this._data.uid.toString() + ".png", (event) => {
+                // NativeWXHeadDonload.donloadHead(headUrl, this._ddzPlayerData.uid.toString() + ".png", (event) => {
                 //     cc.loader.load(event, function (err, texture) {
                 //         if (!err) {
                 //             this.m_pHeadSprite.spriteFrame = new cc.SpriteFrame(texture);
@@ -155,6 +175,22 @@ export default class DDZPlayerItem extends cc.Component {
         }
 
         this.m_resultLabel.string += offset.toString();
+    }
+
+    getHandCard(): HandCardLogic {
+        return this._ddzCardData;
+    }
+
+    setHandCard(cardDataVec: number[]) {
+        this._ddzCardData.setHandCard(cardDataVec);
+    }
+
+    addHandCard(addVec: number[]) {
+        this._ddzCardData.addHandCard(addVec);
+    }
+
+    removeHandCard(removeVec: number[]) {
+        this._ddzCardData.removeHandCard(removeVec);
     }
 
     private _getIdxByState(state: EmDDZPlayerState): number {

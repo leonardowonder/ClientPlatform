@@ -43,7 +43,7 @@ export default class PokerCardNode extends cc.Component {
             this.m_jokerSprite.spriteFrame = spriteAtlas.getSpriteFrame(spriteFrameStruct.JokerNum);
             this.m_cardNumSprite.node.active = false;
             this.m_cardColorSprite.node.active = false;
-            this.m_cardLargeColorSprite.node.active = false;
+            this.m_cardLargeColorSprite.spriteFrame = spriteAtlas.getSpriteFrame(spriteFrameStruct.cardColorSp);
         } else {
             this.m_jokerSprite.node.active = false,
             this.m_cardNumSprite.node.active = true;
@@ -81,12 +81,14 @@ export default class PokerCardNode extends cc.Component {
             case EPokerType.ePoker_Joker:
                 if (cardValue == 18) {
                     imageName = "LargeCard_king_14";
+                    typeName = "LargeCard_king_huase_14";
                 } else {
                     imageName = "LargeCard_king_15";
+                    typeName = "LargeCard_king_huase_15";
                 }
                 return {
                     cardNumSp: null,
-                    cardColorSp: null,
+                    cardColorSp: typeName,
                     JokerNum: imageName,
                 };
         }

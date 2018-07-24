@@ -319,32 +319,12 @@ class TableSink extends Singleton {
                 //auto sendReady
                 this.requestReady();
             }
-            for (let idx = 0; idx < DDZGameDataLogic.getInstance().getRoomInfo().opts.seatCnt; idx++) {
-                let player = DDZPlayerDataManager.getInstance()._players[idx];
-                if (player && player.uid > 0) {
-                    this.m_curView && this.m_curView.updatePlayerData(player, jsonMessage.idx);
-                } else {
-                    this.m_curView && this.m_curView.standUp(idx);
-                }
-            }
-        } else {
-            //AudioManager.playerEffect("resources/ddz/sound/Player_Come_In.mp3");
-            let player = DDZPlayerDataManager.getInstance()._players[jsonMessage.idx];
-            this.m_curView && this.m_curView.updatePlayerData(player, jsonMessage.idx);
         }
+
+        this.m_curView && this.m_curView.updatePlayerData(jsonMessage.idx);
 
         PlayerDataManager.getInstance().reqPlayerData([player.uid]);
     }
-
-    // onMsgRequestPlayerDataRsp(jsonMessage) {
-    //     for (let idx = 0; idx < DDZGameDataLogic.getInstance().getRoomInfo().opts.seatCnt; idx++) {
-    //         let player = DDZPlayerDataManager.getInstance()._players[idx];
-    //         if (player.uid == jsonMessage.uid) {
-    //             this.m_curView && this.m_curView.updatePlayerData(jsonMessage, idx);
-    //             break;
-    //         }
-    //     }
-    // }
 
     onMsgPlayerLeaveRoomRsp(jsonMessage) {
         // var errorText = null;
@@ -477,6 +457,7 @@ class TableSink extends Singleton {
 
             PlayerDataManager.getInstance().reqPlayerData(uidList);
         }
+        
         this.m_curView && this.m_curView.updateAllPlayerDatas();
     }
 

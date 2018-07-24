@@ -4,7 +4,7 @@ import * as _ from 'lodash';
 import UserData from '../../../../Script/Data/UserData';
 import GameLogic from '../Module/Game/GameLogic';
 import ResManager from '../Module/Custom/ResManager';
-import DDZGameDataLogic, { DDZRoomInfo, DDZRoomOptsInfo, DDZLastDiscardInfo, DDZRoomStateInfo } from '../Data/DDZGameDataLogic';
+import DDZGameDataLogic, { DDZRoomInfo, DDZRoomOptsInfo, DDZLastDiscardInfo, DDZRoomStateInfo, DDZRobInfo } from '../Data/DDZGameDataLogic';
 import { DDZCardType, SortType, EmDDZPlayerState, DDZ_Type, DDZ_WaitPlayerActTime, DDZ_WaitRobBankerTime } from '../Module/DDZGameDefine';
 import NetSink from '../Module/Game/TableSink';
 import DDZPlayerDataManager, { DDZPlayerData } from '../Data/DDZPlayerDataManager';
@@ -17,7 +17,6 @@ import SceneManager, { EmSceneID } from '../../../../Script/Manager/CommonManage
 import DDZButtonGroupController from '../Controller/DDZButtonGroupController';
 import DDZPlayerItem from './DDZPlayerItem';
 import { eRoomState } from '../Define/DDZDefine';
-import PlayerDataManager from '../../../../Script/Manager/DataManager/PlayerDataManager';
 import DDZCountDownRootLayer from './DDZCountDownRootLayer';
 import DDZBottomCardRootLayer from './DDZBottomCardRootLayer';
 
@@ -45,7 +44,7 @@ export default class TableMainUI extends cc.Component {
 
     @property(DDZCountDownRootLayer)
     m_countDownRootLayer: DDZCountDownRootLayer = null;
-    
+
     @property(DDZBottomCardRootLayer)
     m_bottomCardRootLayer: DDZBottomCardRootLayer = null;
 
@@ -53,7 +52,7 @@ export default class TableMainUI extends cc.Component {
     m_tuoGuanNode: cc.Node = null;
 
     @property
-    m_curActIdx: number = -1;
+    m_curServerActIdx: number = -1;
 
     @property(cc.Node)
     m_topNode: cc.Node = null;
@@ -119,6 +118,8 @@ export default class TableMainUI extends cc.Component {
     }
 
     onWaitPlayerRob(serverIdx: number) {
+        this.setStateTag(serverIdx, EmDDZPlayerState.State_None);
+
         let clientIdx: number = this.getLocalIDByChairID(serverIdx);
         if (clientIdx == -1) {
             cc.warn('TableMainUI onWaitPlayerRob invalid serverIdx =', serverIdx);
@@ -134,16 +135,19 @@ export default class TableMainUI extends cc.Component {
     }
 
     onRoomPlayerRob(serverIdx: number, times: number) {
-        let clientIdx: number = this.getLocalIDByChairID(serverIdx);
-        if (clientIdx == -1) {
-            cc.warn('TableMainUI onRoomPlayerRob invalid serverIdx =', serverIdx);
-            return;
-        }
+        // let clientIdx: number = this.getLocalIDByChairID(serverIdx);
+        // if (clientIdx == -1) {
+        //     cc.warn('TableMainUI onRoomPlayerRob invalid serverIdx =', serverIdx);
+        //     return;
+        // }
 
         let state = this._getStateByTimes(times);
-        let player: DDZPlayerItem = this.m_playerRootLayer.getPlayerByClientIdx(clientIdx);
 
-        player && player.setState(state);
+        this.m_btnGroupController.updateRobEnable(times);
+        this.setStateTag(serverIdx, state);
+        // let player: DDZPlayerItem = this.m_playerRootLayer.getPlayerByClientIdx(clientIdx);
+
+        // player && player.setState(state);
     }
 
     onBankerProduced(serverIdx: number) {
@@ -164,6 +168,8 @@ export default class TableMainUI extends cc.Component {
             return;
         }
 
+        this._clearAllPlayerState();
+
         this.updateBottomRootLayer(cards, baseScore);
 
         if (clientIdx == 0) {
@@ -172,6 +178,8 @@ export default class TableMainUI extends cc.Component {
     }
 
     onWaitPlayerDiscard(serverIdx: number) {
+        this.setStateTag(serverIdx, EmDDZPlayerState.State_None);
+
         let clientIdx: number = this.getLocalIDByChairID(serverIdx);
         if (clientIdx == -1) {
             cc.warn('TableMainUI onBankerProduced invalid serverIdx =', serverIdx);
@@ -185,7 +193,7 @@ export default class TableMainUI extends cc.Component {
     }
 
     updateOptions(isDiscard: boolean) {
-        let isMyTurn: boolean = this.m_curActIdx == 0;
+        let isMyTurn: boolean = this.getLocalIDByChairID(this.m_curServerActIdx) == 0;
         this.m_consoleNode.setConsoleEnable(isMyTurn);
 
         if (!isMyTurn) {
@@ -211,13 +219,15 @@ export default class TableMainUI extends cc.Component {
     }
 
     onRoomPlayerDiscard(cards: number[], type: DDZCardType, serverIdx: number) {
+        let clientIdx: number = this.getLocalIDByChairID(serverIdx);
+
         if (cards == null) {
-            cc.log('wd debug cards null');
+            this.setStateTag(serverIdx, EmDDZPlayerState.State_NoDiscard);
+
+            this.sendOutCard(clientIdx, [], DDZ_Type.DDZ_Max);
         }
         else {
             let serverCardType: DDZ_Type = GameLogicIns.switchCardTypeToServerType(type);
-
-            let clientIdx: number = this.getLocalIDByChairID(serverIdx);
 
             this.setCurOutCard(cards, serverCardType, clientIdx);
 
@@ -245,15 +255,11 @@ export default class TableMainUI extends cc.Component {
         _.forEach(playerDatas, (playerData: DDZPlayerData) => {
             let serverIdx = playerData.idx;
 
-            let targetPlayerData = PlayerDataManager.getInstance().getPlayerData(playerData.uid);
-            if (targetPlayerData) {
-                _.merge(playerData, targetPlayerData);
-            }
-            this.updatePlayerData(playerData, serverIdx);
+            this.updatePlayerData(serverIdx);
 
             let localChairID = this.getLocalIDByChairID(serverIdx);
             if (localChairID != -1) {
-                this.m_playerRootLayer.setHandCard(localChairID, playerData.holdCards);
+                this.setHandCard(localChairID, playerData.holdCards);
 
                 if (localChairID == 0) {
                     this.m_tuoGuanNode.active = playerData.isTuoGuan();
@@ -279,7 +285,7 @@ export default class TableMainUI extends cc.Component {
 
         this.scheduleOnce(() => {
             this.clearTable();
-        }, 2);
+        }, 3);
     }
 
     refreshView() {
@@ -314,8 +320,7 @@ export default class TableMainUI extends cc.Component {
     }
 
     setCurLocalChairID(serverIdx: number) {
-        let localChairID = this.getLocalIDByChairID(serverIdx);
-        this.m_curActIdx = localChairID;
+        this.m_curServerActIdx = serverIdx;
     }
 
     setHandCard(localChairID: number, cardDataVec: number[]) {
@@ -372,14 +377,14 @@ export default class TableMainUI extends cc.Component {
     analyeMyCard() {
         this.m_btnGroupController.hideAll();
 
-        if (this.m_curActIdx != 0) {
+        if (this.getLocalIDByChairID(this.m_curServerActIdx) != 0) {
             return;
         }
 
         let result = this.m_cardHelper.searchOutCard(this.m_playerRootLayer.getHandCard(0));
 
         let canDiscard: boolean = result == null || result.cbSearchCount != 0;
-        let mustOffer: boolean = this.m_curActIdx == this.m_cardHelper._curIdx || this.m_cardHelper._curIdx == -1;
+        let mustOffer: boolean = this.getLocalIDByChairID(this.m_curServerActIdx) == this.m_cardHelper._curLocalIdx || this.m_cardHelper._curLocalIdx == -1;
 
         this.m_btnGroupController.updateMyTurnNode(canDiscard, mustOffer);
 
@@ -391,6 +396,8 @@ export default class TableMainUI extends cc.Component {
             this.m_cardHelper.setCurTipResult(result);
             this.checkSelectedCardCanOffer(this.m_consoleNode.getSelectedCardsVec(), true);
         }
+
+        this.m_btnGroupController.updateTipButton(-1 != this.m_cardHelper.getTip());
     }
 
     showTip() {
@@ -442,7 +449,7 @@ export default class TableMainUI extends cc.Component {
         selectedCard = GameLogicIns.sortCardList(selectedCard, SortType.ST_NORMAL);
         let curCardType = this.m_cardHelper._sendCardType;
         let cardType = GameLogicIns.getCardType(selectedCard);
-        if (this.m_cardHelper._curIdx == 0) {
+        if (this.m_cardHelper._curLocalIdx == 0) {
             this.reqOutCard(0, selectedCard, cardType[0]);
             return true;
         }
@@ -495,7 +502,7 @@ export default class TableMainUI extends cc.Component {
         if (roomInfo) {
             let state: eRoomState = roomInfo.state;
             let stateInfo: DDZRoomStateInfo = roomInfo.stateInfo;
-            if (roomInfo.diPai && roomInfo.diPai.length > 0) {
+            if (state > eRoomState.eRoomState_DecideBanker && roomInfo.diPai && roomInfo.diPai.length > 0) {
                 this.m_bottomCardRootLayer.setBottomCards(roomInfo.diPai);
                 this.m_bottomCardRootLayer.setBaseScroe(roomInfo.bottom);
                 this.m_bottomCardRootLayer.setTimesLabel(roomInfo.bombCnt);
@@ -507,13 +514,15 @@ export default class TableMainUI extends cc.Component {
             if (stateInfo) {
                 this.setCurLocalChairID(stateInfo.curActIdx);
 
-                this.m_countDownRootLayer.showCountDown(roomInfo.stateTime, this.m_curActIdx);
+                this.m_countDownRootLayer.showCountDown(roomInfo.stateTime, this.getLocalIDByChairID(this.m_curServerActIdx));
 
                 if (state == eRoomState.eRoomSate_WaitReady || state == eRoomState.eRoomState_GameEnd) {
                     this.m_btnGroupController.hideAll();
                 }
                 else if (state == eRoomState.eRoomState_DecideBanker) {
                     this.updateOptions(false);
+                    let robInfos: DDZRobInfo[] = stateInfo.readyPlayers;
+                    this._updateRobState(stateInfo.curActIdx, robInfos);
                 }
                 else {
                     this.updateOptions(true);
@@ -523,26 +532,25 @@ export default class TableMainUI extends cc.Component {
 
     }
 
-    updatePlayerData(playerData, serverChairID) {
+    updatePlayerData(serverChairID) {
         let clientIdx = this.getLocalIDByChairID(serverChairID);
         if (clientIdx == -1) {
             cc.warn('updatePlayerData invalid clientIdx, serverChairID =', serverChairID);
             return;
         }
 
-        this.m_playerRootLayer.setPlayerData(clientIdx, playerData);
+        this.m_playerRootLayer.refreshPlayerItem(clientIdx, serverChairID);
     }
 
     standUp(serverChairID) {
-        let clientIdx = this.getLocalIDByChairID(serverChairID);
+        // let clientIdx = this.getLocalIDByChairID(serverChairID);
 
-        if (clientIdx == 0) {
-            this.clearTable();
-        }
-        else {
-            this.m_playerRootLayer.clearPlayerData(clientIdx);
-            this.m_playerRootLayer.hide(clientIdx);
-        }
+        // if (clientIdx == 0) {
+        //     this.clearTable();
+        // }
+        // else {
+        //     this.m_playerRootLayer.hide(clientIdx);
+        // }
     }
 
     setStateTag(serverID, stateTag) {
@@ -615,6 +623,8 @@ export default class TableMainUI extends cc.Component {
         let roomInfo: DDZRoomInfo = DDZGameDataLogic.getInstance().getRoomInfo();
 
         if (roomInfo && roomInfo.stateInfo && roomInfo.stateInfo.lastChu) {
+            this.setCurLocalChairID(roomInfo.stateInfo.curActIdx);
+
             this._updateCardHelperData(roomInfo.stateInfo.lastChu);
 
             this._updateCardConsole(roomInfo.stateInfo.lastChu)
@@ -626,14 +636,14 @@ export default class TableMainUI extends cc.Component {
     }
 
     private _updateCardHelperData(lastDiscardInfos: DDZLastDiscardInfo[]) {
-        let tmpActIdx: number = this.m_curActIdx;
+        let tmpServerActIdx: number = this.m_curServerActIdx;
 
         for (let i = 0; i < MAXPLAYER; ++i) {
-            let lastActIdx: number = this._getPreActIdx(tmpActIdx);
+            let lastServerIdx: number = this._getPreActIdx(tmpServerActIdx);
 
             let targetDiscardInfo: DDZLastDiscardInfo =
                 _.find(lastDiscardInfos, (info: DDZLastDiscardInfo) => {
-                    return info.idx == lastActIdx;
+                    return info.idx == lastServerIdx;
                 });
 
             if (targetDiscardInfo && targetDiscardInfo.chu != null && targetDiscardInfo.chu.length > 0) {
@@ -649,7 +659,7 @@ export default class TableMainUI extends cc.Component {
                 break;
             }
 
-            tmpActIdx = this._getPreActIdx(tmpActIdx);
+            tmpServerActIdx = this._getPreActIdx(tmpServerActIdx);
         }
     }
 
@@ -666,5 +676,24 @@ export default class TableMainUI extends cc.Component {
                 }
             }
         });
+    }
+
+    private _clearAllPlayerState() {
+        for (let i = 0; i < MAXPLAYER; ++i) {
+            this.setStateTag(i, EmDDZPlayerState.State_None);
+        }
+    }
+
+    private _updateRobState(curIdx: number, robInfos: DDZRobInfo[]) {
+        if (robInfos && robInfos.length > 0) {
+            _.forEach(robInfos, (robInfo: DDZRobInfo) => {
+                if (this.getLocalIDByChairID(curIdx) == 0) {
+                    this.m_btnGroupController.updateRobEnable(robInfo.times);
+                }
+                else {
+                    this.setStateTag(robInfo.idx, this._getStateByTimes(robInfo.times));
+                }
+            });
+        }
     }
 };

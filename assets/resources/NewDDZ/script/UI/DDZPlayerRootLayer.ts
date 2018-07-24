@@ -10,49 +10,34 @@ export default class DDZPlayerRootLayer extends cc.Component {
     @property(DDZPlayerItem)
     m_players: DDZPlayerItem[] = [];
 
-    @property(HandCardLogic)
-    m_cards: HandCardLogic[] = [];
-
     init() {
         _.forEach(this.m_players, (player: DDZPlayerItem, idx: number) => {
             player.init();
             player.setLocalChairID(idx);
         });
-
-        _.forEach(this.m_cards, (card: HandCardLogic, idx: number) => {
-            card.setLocalChairID(idx);
-        });
     }
 
-    setPlayerData(idx: number, data) {
+    refreshPlayerItem(idx: number, serverChairID: number) {
         if (!this._checkIdxValid(idx)) {
             cc.warn(`PlayerRootLayer setPlayerData invalid idx = ${idx}`);
             return;
         }
 
-        this.m_players[idx].setPlayerData(data);
+        this.m_players[idx].setServerChairID(serverChairID);
+        this.m_players[idx].refreshView();
     }
 
     clearAllCards() {
-        _.forEach(this.m_cards, (card: HandCardLogic, idx: number) => {
-            card.clear();
+        _.forEach(this.m_players, (player: DDZPlayerItem, idx: number) => {
+            player.clearCards();
         });
     }
 
     clearAllPlayers() {
         _.forEach(this.m_players, (player: DDZPlayerItem) => {
-            player.clearPlayerData();
+            player.clearCards();
             player.hide();
         });
-    }
-
-    clearPlayerData(idx: number) {
-        if (!this._checkIdxValid(idx)) {
-            cc.warn(`PlayerRootLayer clearPlayerData invalid idx = ${idx}`);
-            return;
-        }
-
-        this.m_players[idx].clear();
     }
 
     hide(idx: number) {
@@ -88,13 +73,16 @@ export default class DDZPlayerRootLayer extends cc.Component {
             return null;
         }
 
-        return this.m_cards[idx];
+        return this.m_players[idx].getHandCard();
     }
 
-    setHandCard(idx: number, cardDataVec) {
-        let card: HandCardLogic = this.getCardDataByClientIdx(idx);
+    setHandCard(idx: number, cardDataVec: number[]) {
+        if (!this._checkIdxValid(idx)) {
+            cc.warn(`PlayerRootLayer removeHandCard invalid idx = ${idx}`);
+            return null;
+        }
 
-        card && card.setHandCard(cardDataVec);
+        this.m_players[idx].setHandCard(cardDataVec);
     }
 
     getHandCard(idx: number): number[] {
@@ -107,25 +95,25 @@ export default class DDZPlayerRootLayer extends cc.Component {
         return ret;
     }
 
-    removeHandCard(idx: number, removeVec) {
+    removeHandCard(idx: number, removeVec: number[]) {
         if (!this._checkIdxValid(idx)) {
             cc.warn(`PlayerRootLayer removeHandCard invalid idx = ${idx}`);
             return null;
         }
-        
-        this.m_cards[idx].removeHandCard(removeVec);
+
+        this.m_players[idx].removeHandCard(removeVec);
     }
 
-    addHandCard(idx: number, addVec) {
+    addHandCard(idx: number, addVec: number[]) {
         if (!this._checkIdxValid(idx)) {
             cc.warn(`PlayerRootLayer addHandCard invalid idx = ${idx}`);
             return null;
         }
 
-        this.m_cards[idx].addHandCard(addVec);
+        this.m_players[idx].addHandCard(addVec);
     }
 
     private _checkIdxValid(idx: number) {
-        return idx >= 0 && idx < this.m_players.length && idx < this.m_cards.length;
+        return idx >= 0 && idx < this.m_players.length;
     }
 };

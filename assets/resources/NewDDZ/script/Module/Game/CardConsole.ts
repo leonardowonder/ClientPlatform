@@ -250,7 +250,6 @@ export default class CardConsole extends cc.Component {
                 n.setPosition(cc.p(startPos.x + n.width / 3.5 * i, startPos.y));
             }
             this.m_handCardNodeMap[localChairID] = curHandCardNodeVec;
-            cc.log('wd debug showHandCard curHandCardNodeVec =', curHandCardNodeVec, 'handCardData =', handCardData);
         } else {
             //need move act
             //same card checkPos
@@ -474,7 +473,7 @@ export default class CardConsole extends cc.Component {
         // console.log("selectedCard0: " + this._selectedCardVec.length);
         if (this.m_tableMainView && this.m_consoleActive) {
             let selectedCardDataVec = this.getSelectedCardsVec();
-            let needCompare = this.m_helper._curIdx != 0;
+            let needCompare = this.m_helper._curLocalIdx != 0;
             this.m_tableMainView.checkSelectedCardCanOffer(selectedCardDataVec, needCompare);
         }
 
@@ -681,7 +680,6 @@ export default class CardConsole extends cc.Component {
             curCardNodeVec.push(nodeCardMap[handCardData[i]]);
         }
         this.m_handCardNodeMap[localChairID] = curCardNodeVec;
-        cc.log('wd debug showHandCardNeedAdd handCardData.length =', handCardData.length, 'curCardNodeVec =', curCardNodeVec, 'localChairID =', localChairID);
         this.sortZOrder(localChairID);
         this.addMoveCards(localChairID, handCardData, addCardDataVec, addCardNodeVec);
     }
@@ -694,7 +692,7 @@ export default class CardConsole extends cc.Component {
         let outCardPosNode = this.m_outCardPosNode[localChairID];
         //parse to type cardDataVec
         let parseCardVec = GameLogicIns.parseToCardType(outCardVec, localCardType);
-        let node = this.showMoveOutCardEffect(localChairID != 1, localChairID != 0, parseCardVec, localCardType);
+        let node = this.showMoveOutCardEffect(localChairID != 2, localChairID != 0, parseCardVec, localCardType);
         let nodeWidth = node.width;
         let nodeHeight = node.height;
         outCardPosNode.addChild(node);
@@ -703,10 +701,10 @@ export default class CardConsole extends cc.Component {
                 node.setPosition(cc.Vec2.ZERO);
                 break;
             case 1:
-                node.setPosition(cc.p(-nodeWidth / 2.0, 0.0));
+                node.setPosition(cc.p(nodeWidth / 2.0, 0.0));
                 break;
             case 2:
-                node.setPosition(cc.p(nodeWidth / 2.0, 0.0));
+                node.setPosition(cc.p(-nodeWidth / 2.0, 0.0));
                 break;
             default:
                 break;

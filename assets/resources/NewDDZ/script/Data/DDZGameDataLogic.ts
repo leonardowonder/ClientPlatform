@@ -20,6 +20,16 @@ export class DDZLastDiscardInfo {
     }
 }
 
+export class DDZRobInfo {
+    idx: number = 0;
+    times: number = 0;
+
+    reset() {
+        this.idx = 0;
+        this.times = 0;
+    }
+}
+
 export class DDZRoomOptsInfo {
     deskFee: number = 0;
     gameType: number = 0;
@@ -44,6 +54,7 @@ export class DDZRoomStateInfo {
     curActIdx: number = 0;
     curMaxTimes: number = 0;
     lastChu: DDZLastDiscardInfo[] = [];
+    readyPlayers: DDZRobInfo[] = [];
 
     // updateInfo(stateInfo) {
     //     if (stateInfo) {
@@ -63,6 +74,8 @@ export class DDZRoomStateInfo {
     reset() {
         this.curActIdx = 0;
         this.curMaxTimes = 0;
+        this.lastChu.length = 0;
+        this.readyPlayers.length = 0;
     }
 }
 

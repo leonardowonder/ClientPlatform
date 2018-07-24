@@ -38,13 +38,10 @@
     "_components": [
       {
         "__id__": 44
-      },
-      {
-        "__id__": 45
       }
     ],
     "_prefab": {
-      "__id__": 46
+      "__id__": 45
     },
     "_id": "",
     "_opacity": 255,
@@ -1422,17 +1419,6 @@
     "m_resultLabel": {
       "__id__": 38
     },
-    "m_localChairID": -1,
-    "m_serverChairID": -1
-  },
-  {
-    "__type__": "492cftHCOpDZLaqpzyAg4Gw",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 1
-    },
-    "_enabled": true,
     "m_localChairID": -1,
     "m_serverChairID": -1
   },

@@ -1,5 +1,7 @@
 const { ccclass, property } = cc._decorator;
 
+import * as _ from 'lodash';
+
 import NetSink from '../Module/Game/TableSink';
 
 import TableMainUI from '../UI/TableMainUI';
@@ -13,7 +15,13 @@ export default class DDZButtonGroupController extends cc.Component {
     m_discardButton: cc.Button = null;
 
     @property(cc.Button)
+    m_tipButton: cc.Button = null;
+
+    @property(cc.Button)
     m_donotOfferButton: cc.Button = null;
+
+    @property(cc.Button)
+    m_callButtons: cc.Button[] = [];
 
     @property(cc.Node)
     m_myTurnNode: cc.Node = null;
@@ -66,5 +74,15 @@ export default class DDZButtonGroupController extends cc.Component {
 
     updateDiscardButton(canDiscard: boolean) {
         this.m_discardButton.interactable = canDiscard;
+    }
+
+    updateTipButton(canTip: boolean) {
+        this.m_tipButton.interactable = canTip;
+    }
+
+    updateRobEnable(times: number) {
+        _.forEach(this.m_callButtons, (button: cc.Button, idx: number) => {
+            button.interactable = idx + 1 > times;
+        });
     }
 }

@@ -15,7 +15,7 @@ export default class CardHelper extends cc.Component {
     _sendCardType: DDZCardType = 0;//myType
     _serverCardType: DDZ_Type = -1;//server type
     _sendCardVec: number[] = [];
-    _curIdx: number = -1;
+    _curLocalIdx: number = -1;
 
     init(delegate: TableMainUI) {
         this._delegate = delegate;
@@ -32,19 +32,18 @@ export default class CardHelper extends cc.Component {
         this._serverCardType = -1;
         this._curTipID = 0;
         this._searchResult = null;
-        this._curIdx = -1;
+        this._curLocalIdx = -1;
     }
 
     setCurSendCard(cardDataVec: number[], serverCardType: DDZ_Type, clientIdx: number) {
         this._sendCardVec = [];
 
         this._sendCardVec = cardDataVec;
-        this._curIdx = clientIdx;
+        this._curLocalIdx = clientIdx;
 
         this._sendCardVec = GameLogicIns.sortCardList(this._sendCardVec, SortType.ST_NORMAL);
         this._sendCardType = GameLogicIns.switchServerTypeToCardType(serverCardType, this._sendCardVec);
         this._serverCardType = serverCardType;
-        console.log('CurServerType:' + this._serverCardType + 'CurLocalType:' + this._sendCardType);
     }
 
     analyseSelectedCard(selectedCardVec) {
@@ -56,9 +55,10 @@ export default class CardHelper extends cc.Component {
     }
 
     searchOutCard(handCardVec) {
-        if (this._sendCardVec.length == 0 || this._curIdx == 0) {
+        if (this._sendCardVec.length == 0 || this._curLocalIdx == 0) {
             return null;
         }
+        
         let searchResult = GameLogicIns.searchOutCard(handCardVec, this._sendCardVec, this._sendCardType);
         return searchResult;
     }
@@ -90,6 +90,7 @@ export default class CardHelper extends cc.Component {
         if (this._sendCardType == DDZCardType.Type_None) {
             return true;
         }
+        
         return GameLogicIns.compareCard(this._sendCardVec, selectedCardVec, this._sendCardType);
     }
 };
