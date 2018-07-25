@@ -6,7 +6,7 @@ import { eRoomState, eRoomPeerState } from '../Define/DDZDefine';
 import UserData from '../../../../Script/Data/UserData';
 var PlayerCount = 3;
 
-let userData = UserData.getInstance();
+let userData = UserData.getInstance().getUserData();
 
 
 export class DDZPlayerData {

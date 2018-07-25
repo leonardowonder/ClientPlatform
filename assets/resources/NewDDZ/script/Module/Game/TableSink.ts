@@ -17,7 +17,7 @@ import PlayerDataManager from '../../../../../Script/Manager/DataManager/PlayerD
 
 import { EmDDZPlayerState } from '../DDZGameDefine';
 
-let userData = UserData.getInstance();
+let userData = UserData.getInstance().getUserData();
 let GameLogicIns = GameLogic.getInstance();
 
 //net module
@@ -250,7 +250,7 @@ class TableSink extends Singleton {
     }
 
     onMsgPlayerBaseDataRsp(jsonMessage) {
-        userData.setPlayerBaseData(jsonMessage);
+        UserData.getInstance().setPlayerBaseData(jsonMessage);
         if (DDZPlayerDataManager.getInstance().getPlayerDataByUID(userData.uid) && DDZPlayerDataManager.getInstance().getPlayerDataByUID(userData.uid).uid > 0) {
             var enterRoomMessage = {
                 msgID: eMsgType.MSG_REQUEST_ROOM_INFO,
@@ -347,13 +347,13 @@ class TableSink extends Singleton {
 
     onMsgRoomStandUpRsp(jsonMessage) {
         if (jsonMessage.uid == userData.uid) {
-            DDZPlayerDataManager.getInstance().clearAllPlayerData();
-            this.m_curView && this.m_curView.clearTable();
+            // DDZPlayerDataManager.getInstance().clearAllPlayerData();
+            // this.m_curView && this.m_curView.clearTable();
         }
         else {
             DDZPlayerDataManager.getInstance().onPlayerStandUp(jsonMessage);
 
-            this.m_curView && this.m_curView.standUp(jsonMessage.idx);
+            // this.m_curView && this.m_curView.standUp(jsonMessage.idx);
         }
     }
 

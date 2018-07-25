@@ -1,52 +1,63 @@
 import Singleton from '../Utils/Singleton';
 
-class UserData extends Singleton {
+import * as _ from 'lodash';
+
+export class UserInfo {
     name: string = '';
     headIcon: string = '';
 
     uid: number = 0;
     sex: number = 0;
     coin: number = 0;
-    diamoned: number = 0;
-    IP: string = '';
+    diamond: number = 0;
+    ip: string = '';
     clubs = [];
 
     isLogin: boolean = false;
 
     roomID: number = 0;
 
-    login(data) {
-        console.log(JSON.stringify(data));
-        this.logOut();
-        this.coin = data.coin;
-        this.diamoned = data.diamond;
-        this.headIcon = data.headIcon;
-        this.name = data.name;
-        this.sex = data.sex;
-        this.uid = data.uid;
-    }
-    
-    setPlayerBaseData (jsonObj) {
-        this.name = jsonObj.name;
-        this.uid = jsonObj.uid;
-        this.sex = jsonObj.sex;
-        this.coin = jsonObj.coin;
-        this.diamoned = jsonObj.diamond;
-        this.headIcon = jsonObj.headIcon;
-        this.IP = jsonObj.IP;
-        this.isLogin = true;
-        this.clubs = jsonObj.clubs;
+    updateUserData(data) {
+        _.merge(this, data);
     }
 
-    logOut() {
+    reset() {
         this.name = '';
         this.uid = 0;
         this.sex = 0;
         this.headIcon = '';
         this.coin = 0;
-        this.diamoned = 0;
+        this.diamond = 0;
         this.roomID = 0;
-        this.IP = '';
+        this.ip = '';
+    }
+}
+
+class UserData extends Singleton {
+    private _data: UserInfo = null;
+
+    init() {
+        super.init();
+        this._data = new UserInfo();
+    }
+
+    login(data) {
+        console.log(JSON.stringify(data));
+        this.logOut();
+
+        this._data.updateUserData(data);
+    }
+
+    setPlayerBaseData(jsonObj) {
+        this._data.updateUserData(jsonObj);
+    }
+
+    logOut() {
+        this._data.reset();
+    }
+
+    getUserData(): UserInfo {
+        return this._data;
     }
 }
 

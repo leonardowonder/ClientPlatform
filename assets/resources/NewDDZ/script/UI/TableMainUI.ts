@@ -19,10 +19,11 @@ import DDZPlayerItem from './DDZPlayerItem';
 import { eRoomState } from '../Define/DDZDefine';
 import DDZCountDownRootLayer from './DDZCountDownRootLayer';
 import DDZBottomCardRootLayer from './DDZBottomCardRootLayer';
+import DDZCurrencyRootLayer from './DDZCurrencyRootLayer'
 
 import ClientEventDefine from '../../../../Script/Define/ClientEventDefine';
 
-let userData = UserData.getInstance();
+let userData = UserData.getInstance().getUserData();
 let ResMgrIns = ResManager.getInstance();
 let GameLogicIns = GameLogic.getInstance();
 
@@ -47,7 +48,10 @@ export default class TableMainUI extends cc.Component {
 
     @property(DDZBottomCardRootLayer)
     m_bottomCardRootLayer: DDZBottomCardRootLayer = null;
-
+    
+    @property(DDZCurrencyRootLayer)
+    m_currencyRootLayer: DDZCurrencyRootLayer = null;
+    
     @property(cc.Node)
     m_tuoGuanNode: cc.Node = null;
 
@@ -109,6 +113,7 @@ export default class TableMainUI extends cc.Component {
         this.m_btnGroupController.hideAll();
         this.m_countDownRootLayer.hideCountDown();
         this.m_bottomCardRootLayer.reset();
+        this._updateSelfPlayer();
     }
 
     showLayer() {
@@ -143,7 +148,8 @@ export default class TableMainUI extends cc.Component {
 
         let state = this._getStateByTimes(times);
 
-        this.m_btnGroupController.updateRobEnable(times);
+        let maxTimes: number = this.m_bottomCardRootLayer.getTimes();
+        this.m_btnGroupController.updateRobEnable(maxTimes);
         this.setStateTag(serverIdx, state);
         // let player: DDZPlayerItem = this.m_playerRootLayer.getPlayerByClientIdx(clientIdx);
 
@@ -209,9 +215,10 @@ export default class TableMainUI extends cc.Component {
         }
     }
 
-    updateBottomRootLayer(cards: number[], baseScore: number) {
+    updateBottomRootLayer(cards: number[], baseScore: number, times: number = 1) {
         this.m_bottomCardRootLayer.setBottomCards(cards);
         this.m_bottomCardRootLayer.setBaseScroe(baseScore);
+        this.m_bottomCardRootLayer.setTimesLabel(times);
     }
 
     onPlayerDiscard() {
@@ -228,6 +235,14 @@ export default class TableMainUI extends cc.Component {
         }
         else {
             let serverCardType: DDZ_Type = GameLogicIns.switchCardTypeToServerType(type);
+
+            if (serverCardType == DDZ_Type.DDZ_Bomb || serverCardType == DDZ_Type.DDZ_Rokect) {
+                let times: number = this.m_bottomCardRootLayer.getTimes();
+
+                times = times * 2;
+
+                this.m_bottomCardRootLayer.setTimesLabel(times);
+            }
 
             this.setCurOutCard(cards, serverCardType, clientIdx);
 
@@ -252,6 +267,8 @@ export default class TableMainUI extends cc.Component {
     updateAllPlayerDatas() {
         let playerDatas = DDZPlayerDataManager.getInstance()._players;
 
+        this._updateSelfPlayer();
+
         _.forEach(playerDatas, (playerData: DDZPlayerData) => {
             let serverIdx = playerData.idx;
 
@@ -271,6 +288,9 @@ export default class TableMainUI extends cc.Component {
 
     onRoomResult(jsonMessage) {
         let players = jsonMessage.players;
+
+        this.m_btnGroupController.hideAll();
+
         _.forEach(players, (player) => {
             let clientIdx = this.getLocalIDByChairID(player.idx);
 
@@ -314,7 +334,6 @@ export default class TableMainUI extends cc.Component {
             let iIdex = (chairID - meServerID + MAXPLAYER) % MAXPLAYER;
             return iIdex;
         } else {
-            console.log('Error chairID');
             return -1;
         }
     }
@@ -503,9 +522,8 @@ export default class TableMainUI extends cc.Component {
             let state: eRoomState = roomInfo.state;
             let stateInfo: DDZRoomStateInfo = roomInfo.stateInfo;
             if (state > eRoomState.eRoomState_DecideBanker && roomInfo.diPai && roomInfo.diPai.length > 0) {
-                this.m_bottomCardRootLayer.setBottomCards(roomInfo.diPai);
-                this.m_bottomCardRootLayer.setBaseScroe(roomInfo.bottom);
-                this.m_bottomCardRootLayer.setTimesLabel(roomInfo.bombCnt);
+                let times: number = Math.pow(2, roomInfo.bombCnt);
+                this.updateBottomRootLayer(roomInfo.diPai, roomInfo.bottom, times);
             }
             else {
                 this.m_bottomCardRootLayer.resetBottomCards();
@@ -514,22 +532,23 @@ export default class TableMainUI extends cc.Component {
             if (stateInfo) {
                 this.setCurLocalChairID(stateInfo.curActIdx);
 
-                this.m_countDownRootLayer.showCountDown(roomInfo.stateTime, this.getLocalIDByChairID(this.m_curServerActIdx));
-
                 if (state == eRoomState.eRoomSate_WaitReady || state == eRoomState.eRoomState_GameEnd) {
                     this.m_btnGroupController.hideAll();
                 }
-                else if (state == eRoomState.eRoomState_DecideBanker) {
-                    this.updateOptions(false);
-                    let robInfos: DDZRobInfo[] = stateInfo.readyPlayers;
-                    this._updateRobState(stateInfo.curActIdx, robInfos);
-                }
                 else {
-                    this.updateOptions(true);
+                    this.m_countDownRootLayer.showCountDown(roomInfo.stateTime, this.getLocalIDByChairID(this.m_curServerActIdx));
+
+                    if (state == eRoomState.eRoomState_DecideBanker) {
+                        this.updateOptions(false);
+                        let robInfos: DDZRobInfo[] = stateInfo.readyPlayers;
+                        this._updateRobState(stateInfo.curActIdx, robInfos);
+                    }
+                    else {
+                        this.updateOptions(true);
+                    }
                 }
             }
         }
-
     }
 
     updatePlayerData(serverChairID) {
@@ -695,5 +714,12 @@ export default class TableMainUI extends cc.Component {
                 }
             });
         }
+    }
+
+    private _updateSelfPlayer() {
+        let playerItem: DDZPlayerItem = this.m_playerRootLayer.getPlayerByClientIdx(0);
+
+        playerItem.refreshViewBySelfData();
+        this.m_currencyRootLayer.refreshInfo();
     }
 };

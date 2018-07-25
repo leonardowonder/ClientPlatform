@@ -30,6 +30,11 @@ export default class PokerCardNode extends cc.Component {
     _cardData: number = -1;
     _selectedState: boolean = false;
     _isGray: boolean = false;
+    _orgPosY: number = 0;
+
+    onLoad() {
+        this._orgPosY = this.node.y;
+    }
 
     initWithCardData (cardData) {
         this.setCardFace();
@@ -139,8 +144,8 @@ export default class PokerCardNode extends cc.Component {
         if (this._selectedState) {
             return;
         }
-        var pos = this.node.getPosition();
-        this.node.setPosition(cc.p(pos.x, pos.y + StandOffset));
+
+        this.node.setPositionY(this._orgPosY + StandOffset);
         this._selectedState = true;
     }
 
@@ -148,8 +153,8 @@ export default class PokerCardNode extends cc.Component {
         if (!this._selectedState) {
             return;
         }
-        var pos = this.node.getPosition();
-        this.node.setPosition(cc.p(pos.x, pos.y - StandOffset));
+        
+        this.node.setPositionY(this._orgPosY - StandOffset);
         this._selectedState = false;
     }
 };

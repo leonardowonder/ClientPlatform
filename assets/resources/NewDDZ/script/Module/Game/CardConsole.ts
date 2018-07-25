@@ -884,9 +884,7 @@ export default class CardConsole extends cc.Component {
             let tempNode = this._selectedCardVec[i];
             let comp = tempNode.getComponent('PokerCardNode');
             comp.setCardGray(false);
-            if (comp._selectedState) {
-                comp.sitCard();
-            }
+            comp.sitCard();
         }
         this._selectedCardVec = [];
     }
@@ -951,7 +949,7 @@ export default class CardConsole extends cc.Component {
             this.m_handCardNodeMap[i] = [];
         }
     }
-    
+
 
     private _clearOutCard(localChairID) {
         let outCardPosNode = this.m_outCardPosNode[localChairID];

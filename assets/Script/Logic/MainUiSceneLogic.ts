@@ -14,7 +14,7 @@ import MainUiScene from '../View/Scene/MainUiScene';
 
 import NetSink from '../../resources/NewDDZ/script/Module/Game/TableSink';
 
-let userData = UserData.getInstance();
+let userData = UserData.getInstance().getUserData();
 
 class MainUiSceneLogic extends Singleton {
 

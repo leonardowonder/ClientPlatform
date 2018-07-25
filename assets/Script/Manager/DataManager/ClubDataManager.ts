@@ -104,7 +104,7 @@
 //                     Network.getInstance().sendMsg(
 //                         {
 //                             msgID: eMsgType.MSG_CLUB_APPLY_CLUB_INFO,
-//                             uid: UserData.getInstance().getPlaterData().uid
+//                             uid: UserData.getInstance().getUserData().getPlaterData().uid
 //                         },
 //                         eMsgType.MSG_CLUB_APPLY_CLUB_INFO,
 //                         eMsgPort.ID_MSG_PORT_DATA,

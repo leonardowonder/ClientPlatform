@@ -7,7 +7,7 @@ import PlayerData from '../../../Data/GamePlay/PlayerData';
 import UserData from '../../../Data/UserData';
 
 let gameRoomData = GameRoomData.getInstance();
-let userData = UserData.getInstance();
+let userData = UserData.getInstance().getUserData();
 
 class PlayerDataManger extends Singleton {
 

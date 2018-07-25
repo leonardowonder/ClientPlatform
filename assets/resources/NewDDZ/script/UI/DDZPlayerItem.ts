@@ -1,7 +1,5 @@
 const { ccclass, property } = cc._decorator;
 
-import * as _ from 'lodash';
-
 import DDZGameDataLogic from '../Data/DDZGameDataLogic';
 import { eRoomPeerState, eRoomState } from '../Define/DDZDefine';
 import { EmDDZPlayerState } from '../Module/DDZGameDefine';
@@ -10,6 +8,7 @@ import DDZPlayerDataManager from '../Data/DDZPlayerDataManager';
 import PlayerDataManager from '../../../../Script/Manager/DataManager/PlayerDataManager';
 
 import { DDZPlayerData } from '../Data/DDZPlayerDataManager';
+import UserData from '../../../../Script/Data/UserData';
 
 @ccclass
 export default class DDZPlayerItem extends cc.Component {
@@ -96,10 +95,21 @@ export default class DDZPlayerItem extends cc.Component {
 
             this.setCoin(ddzPlayerData.chips);
 
-            if (ddzPlayerData.haveState(eRoomPeerState.eRoomPeer_Ready) && DDZGameDataLogic.getInstance().getRoomInfo().state == eRoomState.eRoomSate_WaitReady) {
-                this.setState(EmDDZPlayerState.State_None);
-            }
+            this.setState(EmDDZPlayerState.State_None);
         }
+    }
+
+    refreshViewBySelfData() {
+        let player = UserData.getInstance().getUserData();
+        
+        if (player) {
+            this.node.active = player.uid != 0;
+
+            this.setName(player.name);
+            this.setHead(player.headIcon);
+        }
+
+        this.setState(EmDDZPlayerState.State_None);
     }
 
     clearCards() {

@@ -78,7 +78,7 @@ class PlayerDataManager {
                     },
                     eMsgType.MSG_REQUEST_PLAYER_DATA,
                     eMsgPort.ID_MSG_PORT_DATA,
-                    UserData.getInstance().uid,
+                    UserData.getInstance().getUserData().uid,
                     function (jsMsg) {
                         this._onGetPlayerData(jsMsg);
 

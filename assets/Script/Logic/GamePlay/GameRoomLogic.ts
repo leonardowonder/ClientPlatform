@@ -23,14 +23,14 @@ class GameRoomLogic extends Singleton {
 
     //net work
     requestUpdateSearchLimit() {
-        Network.getInstance().sendMsg(
-            {
-                msgID: eMsgType.MSG_CLUB_INFO_UPDATE_SEARCH_LIMIT,
-                uid: UserData.getInstance().uid,
-            },
-            eMsgType.MSG_CLUB_INFO_UPDATE_SEARCH_LIMIT,
-            eMsgPort.ID_MSG_PORT_DATA,
-            null);
+        // Network.getInstance().sendMsg(
+        //     {
+        //         msgID: eMsgType.MSG_CLUB_INFO_UPDATE_SEARCH_LIMIT,
+        //         uid: UserData.getInstance().getUserData().uid,
+        //     },
+        //     eMsgType.MSG_CLUB_INFO_UPDATE_SEARCH_LIMIT,
+        //     eMsgPort.ID_MSG_PORT_DATA,
+        //     null);
     }
 
     onNetClose() {
@@ -45,9 +45,6 @@ class GameRoomLogic extends Singleton {
         let msg: NetMsg = praseMsg(event);
 
         switch (msg.nMsgID) {
-            case eMsgType.MSG_CLUB_QUIT_CLUB: {
-                break;
-            }
             case 1: {
                 this._onMsgPlayerDataRsp(msg.jsMsg);
             }
