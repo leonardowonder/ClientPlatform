@@ -6,6 +6,7 @@ import GameLogic from './GameLogic';
 import { DDZCardType, SortType, DDZ_Type } from '../DDZGameDefine';
 import TableMainUI from '../../UI/TableMainUI';
 import CardHelper from '../../Control/CardHelper';
+import PokerCardNode from '../../UI/PokerCardNode';
 
 let GameLogicIns = GameLogic.getInstance();
 
@@ -89,6 +90,7 @@ export default class CardConsole extends cc.Component {
             curHandCardNodeVec.push(n);
             this.m_handCardNodeMap[localChairID] = curHandCardNodeVec;
             n.setPosition(cc.p(startPos.x, startPos.y));
+            n.getComponent('PokerCardNode').updateOrgY(startPos.y);
         }
         this.sortZOrder(localChairID);
         this.moveDispatchCards(localChairID, handCardData);
@@ -248,6 +250,7 @@ export default class CardConsole extends cc.Component {
                 this.node.addChild(n);
                 curHandCardNodeVec.push(n);
                 n.setPosition(cc.p(startPos.x + n.width / 3.5 * i, startPos.y));
+                n.getComponent('PokerCardNode').updateOrgY(startPos.y);
             }
             this.m_handCardNodeMap[localChairID] = curHandCardNodeVec;
         } else {
@@ -670,6 +673,7 @@ export default class CardConsole extends cc.Component {
             this.node.addChild(n);
             curCardNodeVec.push(n);
             let dstPosID = cardDataPosMap[addCardDataVec[i]];
+            n.getComponent('PokerCardNode').updateOrgY(startPos.y);
             n.setPosition(cc.p(startPos.x + n.width / 3.5 * dstPosID, startPos.y + AddCardNodeOffset));
             addCardNodeVec.push(n);
             nodeCardMap[addCardDataVec[i]] = n;

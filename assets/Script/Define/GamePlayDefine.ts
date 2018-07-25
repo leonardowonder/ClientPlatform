@@ -75,3 +75,23 @@ export enum EmChipType {
     Type_TenTh,
     Type_Max
 }
+
+//server
+
+export enum eBetPool {
+    eBet_Red,
+    eBet_Black,
+    eBet_Other,
+    eBet_Max,
+};
+
+export enum GoldenType {
+    Golden_None,
+    Golden_Single,//单张
+    Golden_Double,//对子
+    Golden_Straight,//顺子
+    Golden_Flush,//同花
+    Golden_StraightFlush,//同花顺
+    Golden_ThreeCards,//豹子
+    Golden_Max,
+};

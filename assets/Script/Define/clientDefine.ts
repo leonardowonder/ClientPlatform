@@ -12,8 +12,15 @@ let ClientDefine = {
 
 export default ClientDefine;
 
-export enum eClubMemberLevel {
-    eClubMemberLevel_None = 1, //普通玩家
-    eClubMemberLevel_Admin = 50, //管理员
-    eClubMemberLevel_Creator = 100, //创建者
+export enum eGameType
+{
+	eGame_None,
+	eGame_NiuNiu,
+	eGame_BiJi,
+	eGame_CYDouDiZhu,
+	eGame_JJDouDiZhu,
+	eGame_TestMJ,
+	eGame_Golden,
+	eGame_SCMJ,
+	eGame_Max,
 };

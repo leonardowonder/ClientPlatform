@@ -59,6 +59,10 @@ export default class PokerCardNode extends cc.Component {
         }
     }
 
+    updateOrgY(y: number) {
+        this._orgPosY = y;
+    }
+
     setCardFace() {
         this.m_cardBackNode.active = false;
         this.m_cardBgNode.active = true;
@@ -145,6 +149,7 @@ export default class PokerCardNode extends cc.Component {
             return;
         }
 
+        cc.log('wd debug standCard PokerCardNode y =', this._orgPosY + StandOffset);
         this.node.setPositionY(this._orgPosY + StandOffset);
         this._selectedState = true;
     }
@@ -154,7 +159,8 @@ export default class PokerCardNode extends cc.Component {
             return;
         }
         
-        this.node.setPositionY(this._orgPosY - StandOffset);
+        cc.log('wd debug sitCard PokerCardNode y =', this._orgPosY + StandOffset);
+        this.node.setPositionY(this._orgPosY);
         this._selectedState = false;
     }
 };

@@ -15,10 +15,11 @@ export default class MainUIScene extends cc.Component {
 
     onDDZClick() {
         // SceneManager.getInstance().changeScene(EmSceneID.SceneID_DDZScene);
-        MainUiSceneLogic.getInstance().requestEnterNewRoom();
+        MainUiSceneLogic.getInstance().requestEnterDDZRoom();
     }
 
     onRedBlackClick() {
-        SceneManager.getInstance().changeScene(EmSceneID.SceneID_GameRoomScene);
+        // SceneManager.getInstance().changeScene(EmSceneID.SceneID_GameRoomScene);
+        MainUiSceneLogic.getInstance().requestEnterRBRoom();
     }
 }

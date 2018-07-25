@@ -14,6 +14,7 @@ class LoginScenLogic extends Singleton {
 
     init() {
         super.init();
+
         this._registEvent();
     }
 
@@ -94,7 +95,7 @@ class LoginScenLogic extends Singleton {
         UserData.getInstance().setPlayerBaseData(jsMsg);
         
         if (jsMsg.stayRoomID && jsMsg.stayRoomID > 0) {
-            MainUiSceneLogic.getInstance().requestRoomInfo(jsMsg.stayRoomID);
+            MainUiSceneLogic.getInstance().requestRoomInfo(jsMsg.stayRoomID, jsMsg.stayRoomPort);
         }
         else {
             SceneManager.getInstance().changeScene(EmSceneID.SceneID_MainScene);

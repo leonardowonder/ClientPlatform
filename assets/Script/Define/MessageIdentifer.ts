@@ -486,11 +486,11 @@ export enum eMsgType
 
 	MSG_ENTER_COIN_GAME,
 	// client : { level : 1 , uid : 235  }
-	// ret : { ret : 2 , level : 1 }
+	// ret : { ret : 2 , level : 1, gamePort : 2 }
 	// ret : 0 success , 1 `coin limit , 2 already in other room , 3 already queuing other level, 4 invalid level argument;
 
 
-	MSG_RB_START_BET, 
+	MSG_RB_START_GAME, 
 	// svr inform client start to bet ;
 
 	MSG_RB_PLAYER_BET,
@@ -502,11 +502,8 @@ export enum eMsgType
 	MSG_RB_ROOM_BET,
 	// svr : { idx : 0 , coin : 23 , poolType : 23 }
 
-	MSG_RB_ROOM_DISTRIBUTE,
-	// svr : { red : { type: 23 , cards : [ 23,12,34] } , black : { type: 23 , cards : [ 23,12,34] }  }
-
 	MSG_RB_ROOM_RESULT,
-	// svr : { result : [ { idx : 23,offset : 23 }, .... ], isRedWin : 0 }
+	// svr : { result : [ { idx : 23,offset : 23 }, .... ], isRedWin : 0, red : { type: 23 , cards : [ 23,12,34] } , black : { type: 23 , cards : [ 23,12,34] }  }
 
 	MSG_RB_APPLY_BANKER,
 	// client : null
@@ -522,7 +519,7 @@ export enum eMsgType
 
 	MSG_RB_REQUEST_ROOM_PLAYER_LIST,
 	// client : null ;
-	// svr : { list : [ { uid : 23 , offset : 23 } ] }
+	// svr : { list : [ { uid : 23 , coin : 23 , winCnt : 23 , bet : 23 } ], bestPlayerUID : 23  }
 
 
 
@@ -883,6 +880,7 @@ export enum eMsgType
 
 	MSG_GOLDEN_ROOM_RESULT,
 };
+
 
 
 let keyMap =  Object.keys(eMsgType);

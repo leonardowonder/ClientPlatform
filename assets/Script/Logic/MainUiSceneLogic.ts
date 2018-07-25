@@ -1,7 +1,7 @@
 import Singleton from '../Utils/Singleton';
 
 import { eMsgPort, eMsgType } from '../Define/MessageIdentifer';
-import ClientDefine from '../Define/ClientDefine';
+import ClientDefine, { eGameType } from '../Define/ClientDefine';
 
 import Network from '../Utils/Network';
 import { NetMsg, praseMsg } from './LogicBasic';
@@ -36,30 +36,17 @@ class MainUiSceneLogic extends Singleton {
     }
 
     //net work
-    requestRoomInfo(roomID: number) {
+    requestRoomInfo(roomID: number, port: number) {
         Network.getInstance().sendMsg(
             {
                 msgID: eMsgType.MSG_REQUEST_ROOM_INFO,
             },
             eMsgType.MSG_REQUEST_ROOM_INFO,
-            eMsgPort.ID_MSG_PORT_DOU_DI_ZHU,
+            port,
             roomID);
     }
 
-    requestEnterRoom(roomID: number) {
-        Network.getInstance().sendMsg(
-            {
-                msgID: eMsgType.MSG_ENTER_ROOM,
-                roomID: roomID,
-                uid: userData.uid
-            },
-            eMsgType.MSG_ENTER_ROOM,
-            eMsgPort.ID_MSG_PORT_DOU_DI_ZHU,
-            // MyUtils.getInstance().parePortTypte(roomID),
-            roomID);
-    }
-
-    requestEnterNewRoom() {
+    requestEnterDDZRoom() {
         Network.getInstance().sendMsg(
             {
                 msgID: eMsgType.MSG_ENTER_COIN_GAME,
@@ -68,6 +55,18 @@ class MainUiSceneLogic extends Singleton {
             },
             eMsgType.MSG_ENTER_COIN_GAME,
             eMsgPort.ID_MSG_PORT_DOU_DI_ZHU,
+            userData.uid);
+    }
+
+    requestEnterRBRoom() {
+        Network.getInstance().sendMsg(
+            {
+                msgID: eMsgType.MSG_ENTER_COIN_GAME,
+                level: 0,
+                uid: userData.uid
+            },
+            eMsgType.MSG_ENTER_COIN_GAME,
+            eMsgPort.ID_MSG_PORT_GOLDEN,
             userData.uid);
     }
 
@@ -83,10 +82,6 @@ class MainUiSceneLogic extends Singleton {
         let msg: NetMsg = praseMsg(event);
 
         switch (msg.nMsgID) {
-            case eMsgType.MSG_CREATE_ROOM: {
-                this._onMsgCreateRoomRsp(msg.jsMsg);
-                break;
-            }
             case eMsgType.MSG_ROOM_INFO: {
                 this._onMsgRoomInfoRsp(msg.jsMsg);
                 break;
@@ -102,21 +97,47 @@ class MainUiSceneLogic extends Singleton {
     }
 
     //net msg rsp
-    private _onMsgCreateRoomRsp(jsMsg) {
-        if (jsMsg.ret == 0) {
-            let roomID: number = jsMsg.roomID;
-
-            this.requestEnterRoom(roomID);
-        }
-    }
-
     private _onMsgRoomInfoRsp(jsMsg) {
-        SceneManager.changeScene(EmSceneID.SceneID_DDZScene);
+        if (jsMsg) {
+            if (jsMsg.opts) {
+                let gameType: eGameType = jsMsg.opts.gameType
+                switch(gameType) {
+                    case eGameType.eGame_CYDouDiZhu: {
+                        SceneManager.changeScene(EmSceneID.SceneID_DDZScene);
+                        break;
+                    }
+                    case eGameType.eGame_Golden: {
+                        SceneManager.changeScene(EmSceneID.SceneID_GameRoomScene);
+                        break;
+                    }
+                    default: {
+                        cc.warn(`MainUiSceneLogic _onMsgRoomInfoRsp invalid gameType = ${gameType}`);
+                    }
+                }
+            }
+            else {
+                cc.warn(`MainUiSceneLogic _onMsgRoomInfoRsp no opts info`);
+            }
+        }
     }
 
     private _onMsgEnterCoinGameRsp(jsMsg) {
         if (jsMsg.ret == 0) {
-            SceneManager.changeScene(EmSceneID.SceneID_DDZScene);
+            let gamePort = jsMsg.gamePort;
+            switch(gamePort) {
+                case eMsgPort.ID_MSG_PORT_GOLDEN: {
+                    SceneManager.changeScene(EmSceneID.SceneID_GameRoomScene);
+                    break;
+                }
+                case eMsgPort.ID_MSG_PORT_DOU_DI_ZHU: {
+                    SceneManager.changeScene(EmSceneID.SceneID_DDZScene);
+                    break;
+                }
+                default: {
+                    cc.warn(`MainUiSceneLogic _onMsgEnterCoinGameRsp invalid gamePort = ${gamePort}`);
+                    break;
+                }
+            }
         }
     }
 

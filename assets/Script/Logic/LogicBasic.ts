@@ -47,7 +47,7 @@ export default class LogicBasic {
 
     }
 
-    _registEvent() {
+    private _registEvent() {
         cc.systemEvent.on(ClientDefine.netEventClose, this.onNetClose, this);
         cc.systemEvent.on(ClientDefine.netEventReconnectd, this.onNetClose, this);
         cc.systemEvent.on(ClientDefine.netEventMsg, this.onMsg, this);

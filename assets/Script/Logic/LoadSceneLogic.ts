@@ -59,7 +59,7 @@ class LoadSceneLogic extends Singleton {
     }
 
     //net msg rsp
-    _onMsgPlayeLoginRsp(jsMsg) {
+    private _onMsgPlayeLoginRsp(jsMsg) {
         if (jsMsg.ret == 0) {
             this.m_curView && this.m_curView.onLoginSuccess();
         }
@@ -69,7 +69,7 @@ class LoadSceneLogic extends Singleton {
     }
 
     //private
-    _registEvent() {
+    private _registEvent() {
         cc.systemEvent.on(ClientDefine.netEventClose, this.onNetClose, this);
         cc.systemEvent.on(ClientDefine.netEventReconnectd, this.onNetReconnected, this);
         cc.systemEvent.on(ClientDefine.netEventMsg, this.onMsg, this);

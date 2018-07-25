@@ -21,8 +21,8 @@ export default class SelectCardTypeCell extends cc.Component {
     _cardType: number = 0;
     _cardArray = [];
     _resp = null;
-    
-    init (cardDataVec, localCardType, selectedResp) {
+
+    init(cardDataVec, localCardType, selectedResp) {
         this.m_cardLabel.node.setLocalZOrder(10);
         this._cardType = localCardType;
         this._cardArray = [];
@@ -35,7 +35,7 @@ export default class SelectCardTypeCell extends cc.Component {
         this._resp = selectedResp;
     }
 
-    showCardArray (cardDataVec) {
+    showCardArray(cardDataVec) {
         this.m_cardLabel.string = GameLogicIns.debugShowCardType(this._cardType);
         var cardPrefab = ResMgrIns.getRes('PokerCardNode');
         let demoNode = cc.instantiate(cardPrefab);
@@ -51,10 +51,11 @@ export default class SelectCardTypeCell extends cc.Component {
             this.node.addChild(n);
             n.setScale(CardNodeScale);
             n.setPosition(cc.p(startPos.x + n.width / 3.5 * CardNodeScale * i, startPos.y));
+            n.getComponent('PokerCardNode').updateOrgY();
         }
     }
 
-    onSelected (event, customData) {
+    onSelected(event, customData) {
         let btn = event.target.getComponent(cc.Button);
         if (btn == this.m_btn) {
             this._resp(this._cardType);
