@@ -16521,7 +16521,7 @@ declare module dragonBones {
 		@param listener listener
 		@param target target 
 		*/
-		addEventListener(eventType: dragonBones.EventObject, listener: Function, target: any): void;		
+		addEventListener(eventType: string, listener: Function, target: any): void;		
 		/**
 		!#en
 		Remove the event listener for the DragonBones Event.
@@ -16531,7 +16531,7 @@ declare module dragonBones {
 		@param listener listener
 		@param target target 
 		*/
-		removeEventListener(eventType: dragonBones.EventObject, listener: Function, target: any): void;		
+		removeEventListener(eventType: string, listener: Function, target: any): void;		
 		/**
 		!#en
 		Build the armature for specified name.

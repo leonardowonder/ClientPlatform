@@ -1,0 +1,7 @@
+{
+  "ver": "1.0.0",
+  "uuid": "bce83c23-a924-4ca0-ab57-659dc9f1429f",
+  "atlasJson": "{\"width\":256,\"height\":256,\"name\":\"连对\",\"imagePath\":\"连对_tex.png\",\"SubTexture\":[{\"width\":197,\"y\":131,\"height\":52,\"name\":\"lianduiguang\",\"x\":1},{\"width\":158,\"y\":185,\"height\":60,\"name\":\"diguang\",\"x\":1},{\"width\":42,\"y\":68,\"height\":27,\"name\":\"guangdian\",\"x\":200},{\"y\":1,\"frameX\":-2,\"frameHeight\":69,\"frameY\":-1,\"width\":117,\"frameWidth\":122,\"height\":65,\"name\":\"liandui\",\"x\":131},{\"width\":128,\"y\":1,\"height\":128,\"name\":\"guanghu\",\"x\":1},{\"y\":185,\"frameX\":-1,\"frameHeight\":50,\"frameY\":-1,\"width\":50,\"frameWidth\":51,\"height\":49,\"name\":\"xingxing\",\"x\":161}]}",
+  "texture": "e03c22e9-f46d-4baa-8465-15704fb265da",
+  "subMetas": {}
+}

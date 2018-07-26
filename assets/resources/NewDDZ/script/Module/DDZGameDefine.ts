@@ -13,7 +13,18 @@ export enum DDZ_Type {
     DDZ_Bomb,
     DDZ_Rokect,
     DDZ_Max,
-}
+};
+
+export enum DDZAnimType {
+    Type_None = 0,
+    Type_Spring,
+    Type_SingleSequence,
+    Type_PairSequence,
+    Type_Aircraft,
+    Type_Bomb,
+    Type_Rokect,
+    Type_Max
+};
 
 export enum DDZCardType {
     Type_None = 0,
@@ -32,7 +43,7 @@ export enum DDZCardType {
     Type_ZhaDan_0,//炸弹
     Type_JokerZhaDan,//炸弹
     Type_Max = 100,
-}
+};
 
 export let EPokerType = {
     ePoker_None: 0,
@@ -43,7 +54,7 @@ export let EPokerType = {
     ePoker_NoJoker: 4,
     ePoker_Joker: 4,
     ePoker_Max: 5,
-}
+};
 
 export let SortType = cc.Enum({
     ST_NORMAL: 0,
@@ -75,7 +86,7 @@ export enum EmDDZPlayerState {
     State_NoDiscard,
     State_Add,
     State_Max
-}
+};
 
 export let DDZ_WaitRobBankerTime = 15;
 export let DDZ_WaitPlayerActTime = 15;

@@ -63,11 +63,11 @@ export default class DDZPlayerItem extends cc.Component {
         this.m_landlordTag.active = false;
         this.m_stateSprite.spriteFrame = null;
         this.m_restCardNumLabel.string = '';
-        this.m_resultLabel.string = '';
 
         this.setName('');
         this.setHead('');
         this.setCoin(0);
+        this.clearResult();
     }
 
     refreshView() {
@@ -109,6 +109,8 @@ export default class DDZPlayerItem extends cc.Component {
             this.setHead(player.headIcon);
         }
 
+        this.setIsBanker(false);
+        this.clearResult();
         this.setState(EmDDZPlayerState.State_None);
     }
 
@@ -185,6 +187,10 @@ export default class DDZPlayerItem extends cc.Component {
         }
 
         this.m_resultLabel.string += offset.toString();
+    }
+
+    clearResult() {
+        this.m_resultLabel.string = '';
     }
 
     getHandCard(): HandCardLogic {

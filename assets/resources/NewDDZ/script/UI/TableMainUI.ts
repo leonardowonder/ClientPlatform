@@ -5,7 +5,7 @@ import UserData from '../../../../Script/Data/UserData';
 import GameLogic from '../Module/Game/GameLogic';
 import ResManager from '../Module/Custom/ResManager';
 import DDZGameDataLogic, { DDZRoomInfo, DDZRoomOptsInfo, DDZLastDiscardInfo, DDZRoomStateInfo, DDZRobInfo } from '../Data/DDZGameDataLogic';
-import { DDZCardType, SortType, EmDDZPlayerState, DDZ_Type, DDZ_WaitPlayerActTime, DDZ_WaitRobBankerTime } from '../Module/DDZGameDefine';
+import { DDZCardType, SortType, EmDDZPlayerState, DDZ_Type, DDZ_WaitPlayerActTime, DDZ_WaitRobBankerTime, DDZAnimType } from '../Module/DDZGameDefine';
 import NetSink from '../Module/Game/TableSink';
 import DDZPlayerDataManager, { DDZPlayerData } from '../Data/DDZPlayerDataManager';
 import CardConsole from '../Module/Game/CardConsole';
@@ -19,7 +19,8 @@ import DDZPlayerItem from './DDZPlayerItem';
 import { eRoomState } from '../Define/DDZDefine';
 import DDZCountDownRootLayer from './DDZCountDownRootLayer';
 import DDZBottomCardRootLayer from './DDZBottomCardRootLayer';
-import DDZCurrencyRootLayer from './DDZCurrencyRootLayer'
+import DDZCurrencyRootLayer from './DDZCurrencyRootLayer';
+import DDZAnimationRootLayer from './DDZAnimationRootLayer';
 
 import ClientEventDefine from '../../../../Script/Define/ClientEventDefine';
 
@@ -51,6 +52,9 @@ export default class TableMainUI extends cc.Component {
     
     @property(DDZCurrencyRootLayer)
     m_currencyRootLayer: DDZCurrencyRootLayer = null;
+
+    @property(DDZAnimationRootLayer)
+    m_animationRootLayer: DDZAnimationRootLayer = null;
     
     @property(cc.Node)
     m_tuoGuanNode: cc.Node = null;
@@ -236,6 +240,8 @@ export default class TableMainUI extends cc.Component {
         else {
             let serverCardType: DDZ_Type = GameLogicIns.switchCardTypeToServerType(type);
 
+            this.playSpecialCardEffect(serverCardType, clientIdx);
+
             if (serverCardType == DDZ_Type.DDZ_Bomb || serverCardType == DDZ_Type.DDZ_Rokect) {
                 let times: number = this.m_bottomCardRootLayer.getTimes();
 
@@ -290,6 +296,7 @@ export default class TableMainUI extends cc.Component {
         let players = jsonMessage.players;
 
         this.m_btnGroupController.hideAll();
+        this.m_countDownRootLayer.hideCountDown();
 
         _.forEach(players, (player) => {
             let clientIdx = this.getLocalIDByChairID(player.idx);
@@ -305,7 +312,7 @@ export default class TableMainUI extends cc.Component {
 
         this.scheduleOnce(() => {
             this.clearTable();
-        }, 3);
+        }, 2);
     }
 
     refreshView() {
@@ -391,6 +398,18 @@ export default class TableMainUI extends cc.Component {
         }
         // this.m_testLabel.string = str;
         return cardType;
+    }
+
+    playSpecialCardEffect(type: DDZ_Type, clientIdx: number) {
+        let effectType: DDZAnimType = this._getEffectType(type);
+
+        if (effectType != DDZAnimType.Type_None) {
+            this._doPlaySpecialEffect(effectType, clientIdx);
+        }
+    }
+
+    playSpringEffect() {
+        this._doPlaySpecialEffect(DDZAnimType.Type_Spring, 0);
     }
 
     analyeMyCard() {
@@ -721,5 +740,41 @@ export default class TableMainUI extends cc.Component {
 
         playerItem.refreshViewBySelfData();
         this.m_currencyRootLayer.refreshInfo();
+    }
+
+    private _getEffectType(type: DDZ_Type): DDZAnimType {
+        let ret: DDZAnimType = DDZAnimType.Type_None;
+        switch(type) {
+            case DDZ_Type.DDZ_SingleSequence: {
+                ret = DDZAnimType.Type_SingleSequence;
+                break;
+            }
+            case DDZ_Type.DDZ_PairSequence: {
+                ret = DDZAnimType.Type_PairSequence;
+                break;
+            }
+            case DDZ_Type.DDZ_3PicesSeqence:
+            case DDZ_Type.DDZ_AircraftWithWings: {
+                ret = DDZAnimType.Type_Aircraft;
+                break;
+            }
+            case DDZ_Type.DDZ_Bomb: {
+                ret = DDZAnimType.Type_Bomb;
+                break;
+            }
+            case DDZ_Type.DDZ_Rokect: {
+                ret = DDZAnimType.Type_Rokect;
+                break;
+            }
+            default: {
+                break;
+            }
+        }
+
+        return ret;
+    }
+
+    private _doPlaySpecialEffect(effectType: DDZAnimType, clientIdx: number) {
+        this.m_animationRootLayer.playSpecialEffect(effectType, clientIdx);
     }
 };

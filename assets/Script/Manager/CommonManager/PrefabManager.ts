@@ -8,6 +8,12 @@ export enum EmPrefabEnum {
     Prefab_MessageBox,
     Prefab_PromptDialogLayer,
     Prefab_DDZCountDown,
+    Prefab_DDZEffectSpring,
+    Prefab_DDZEffectSingleSequence,
+    Prefab_DDZEffectPairSequence,
+    Prefab_DDZEffectAircraft,
+    Prefab_DDZEffectBomb,
+    Prefab_DDZEffectRocket,
     Prefab_Max
 }
 
@@ -28,6 +34,12 @@ class PrefabManager extends Singleton {
         { path: 'prefab/common/MessageBoxLayer', componentName: 'MessageBoxLayer' },
         { path: 'prefab/common/PromptDialogLayer', componentName: 'PromptDialogLayer' },
         { path: 'NewDDZ/prefab/DDZCountDown', componentName: 'DDZCountDown' },
+        { path: 'NewDDZ/prefab/effect/DDZEffectSpring', componentName: 'DDZEffectSpring' },
+        { path: 'NewDDZ/prefab/effect/DDZEffectSingleSequence', componentName: 'DDZEffectSingleSequence' },
+        { path: 'NewDDZ/prefab/effect/DDZEffectPairSequence', componentName: 'DDZEffectPairSequence' },
+        { path: 'NewDDZ/prefab/effect/DDZEffectAircraft', componentName: 'DDZEffectAircraft' },
+        { path: 'NewDDZ/prefab/effect/DDZEffectBomb', componentName: 'DDZEffectBomb' },
+        { path: 'NewDDZ/prefab/effect/DDZEffectRocket', componentName: 'DDZEffectRocket' },
     ];
 
     private _loadingList: EmPrefabEnum[] = [];

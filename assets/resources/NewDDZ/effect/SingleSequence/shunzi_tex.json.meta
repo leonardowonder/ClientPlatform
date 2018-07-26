@@ -1,0 +1,7 @@
+{
+  "ver": "1.0.0",
+  "uuid": "f4bc5bb2-e3a7-4846-9e79-11bcd0205e2f",
+  "atlasJson": "{\"width\":256,\"height\":256,\"name\":\"shunzi\",\"imagePath\":\"shunzi_tex.png\",\"SubTexture\":[{\"y\":79,\"frameX\":0,\"frameHeight\":10,\"frameY\":-2,\"width\":52,\"frameWidth\":52,\"height\":6,\"name\":\"shunzidi\",\"x\":127},{\"y\":1,\"frameX\":-38,\"frameHeight\":200,\"frameY\":-36,\"width\":124,\"frameWidth\":200,\"height\":124,\"name\":\"guangmang\",\"x\":1},{\"width\":1,\"y\":4,\"height\":1,\"name\":\"Raiden30458\",\"x\":254},{\"width\":73,\"y\":1,\"height\":76,\"name\":\"shunzidi2\",\"x\":127},{\"y\":127,\"frameX\":0,\"frameHeight\":73,\"frameY\":0,\"width\":141,\"frameWidth\":144,\"height\":73,\"name\":\"shunzi\",\"x\":1},{\"width\":1,\"y\":1,\"height\":1,\"name\":\"Raidengold\",\"x\":254},{\"y\":1,\"frameX\":-1,\"frameHeight\":50,\"frameY\":-1,\"width\":50,\"frameWidth\":51,\"height\":49,\"name\":\"xingxing\",\"x\":202}]}",
+  "texture": "1db4fa94-78ec-4bee-8ed5-87a4106dbda9",
+  "subMetas": {}
+}

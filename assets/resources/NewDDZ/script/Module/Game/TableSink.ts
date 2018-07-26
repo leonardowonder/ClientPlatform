@@ -420,6 +420,10 @@ class TableSink extends Singleton {
     onMsgDDZRoomResutRsp(jsonMessage) {
         DDZPlayerDataManager.getInstance().clearAllPlayerData();
         this.m_curView && this.m_curView.onRoomResult(jsonMessage);
+
+        if (jsonMessage.isChunTian) {
+            this.m_curView && this.m_curView.playSpringEffect();
+        }
     }
 
     onMsgDDZPlayerUpdateTuoGuanRsp() {
