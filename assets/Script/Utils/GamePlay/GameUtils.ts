@@ -1,4 +1,4 @@
-import { EmBetAreaType, eBetPool } from '../../Define/GamePlayDefine';
+import { EmBetAreaType, eBetPool, EmChipType } from '../../Define/GamePlayDefine';
 
 export function betAreaTypeToBetPool(type: EmBetAreaType): eBetPool {
     let ret: eBetPool = eBetPool.eBet_Max;
@@ -44,4 +44,62 @@ export function betPoolToBetAreaType(type: eBetPool): EmBetAreaType {
     }
 
     return ret;
+}
+
+export function chipTypeToCoin(type: EmChipType): number {
+    let coin: number = 0;
+
+    switch(type) {
+        case EmChipType.Type_Ten: {
+            coin = 10;
+            break;
+        }
+        case EmChipType.Type_Hundred: {
+            coin = 100;
+            break;
+        }
+        case EmChipType.Type_Thousand: {
+            coin = 1000;
+            break;
+        }
+        case EmChipType.Type_TenTh: {
+            coin = 10000;
+            break;
+        }
+        default: {
+            cc.warn(`GameUtils chipTypeToCoin invalid type = ${type}`);
+            break;
+        }
+    }
+
+    return coin;
+}
+
+export function coinToChipType(coin: number): EmChipType {
+    let type: EmChipType = EmChipType.Type_None;
+
+    switch(coin) {
+        case 10: {
+            type = EmChipType.Type_Ten;
+            break;
+        }
+        case 100: {
+            type = EmChipType.Type_Hundred;
+            break;
+        }
+        case 1000: {
+            type = EmChipType.Type_Thousand;
+            break;
+        }
+        case 10000: {
+            type = EmChipType.Type_TenTh;
+            break;
+        }
+        default: {
+            cc.warn(`GameUtils coinToChipType invalid coin = ${coin}`);
+            break;
+        }
+    }
+
+    return type;
 }
