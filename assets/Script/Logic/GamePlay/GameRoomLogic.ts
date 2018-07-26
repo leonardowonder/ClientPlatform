@@ -58,11 +58,28 @@ class GameRoomLogic extends Singleton {
         let msg: NetMsg = praseMsg(event);
 
         switch (msg.nMsgID) {
-            case 1: {
-                this._onMsgPlayerDataRsp(msg.jsMsg);
-            }
             case eMsgType.MSG_ROOM_INFO: {
                 this._onMsgRoomInfoRsp(msg.jsMsg);
+                break;
+            }
+            case eMsgType.MSG_ROOM_PLAYER_INFO: {
+                this._onMsgRoomPlayerInfoRsp(msg.jsMsg);
+                break;
+            }
+            case eMsgType.MSG_PLAYER_SIT_DOWN: {
+                this._onMsgPlayerSitDownRsp(msg.jsMsg);
+                break;
+            }
+            case eMsgType.MSG_ROOM_SIT_DOWN: {
+                this._onMsgRoomSitDownRsp(msg.jsMsg);
+                break;
+            }
+            case eMsgType.MSG_ROOM_STAND_UP: {
+                this._onMsgRoomStandUpRsp(msg.jsMsg);
+                break;
+            }
+            case eMsgType.MSG_PLAYER_LEAVE_ROOM: {
+                this._onMsgPlayerLeaveRoomRsp(msg.jsMsg);
                 break;
             }
             case eMsgType.MSG_RB_START_GAME: {
@@ -87,17 +104,76 @@ class GameRoomLogic extends Singleton {
         }
     }
 
-    //net msg rsp
-    private _onMsgPlayerDataRsp(jsMsg) {
-        if (jsMsg.ret == 0) {
-            playerDataManger.setSitPlayerDatas(jsMsg);
-        }
-    }
-    
+    //net msg rsp    
     private _onMsgRoomInfoRsp(jsMsg) {
         RoomDataManger.getInstance().setRoomData(jsMsg);
 
         // this.m_curView && this.m_curView.onGetRoomInfo();
+    }
+
+    private _onMsgRoomPlayerInfoRsp(jsMsg) {
+        // DDZPlayerDataManager.getInstance().updatePlayerInfo(jsonMessage);
+        // let players = jsonMessage.players;
+        // if (players && players.length > 0) {
+        //     let uidList: number[] = [];
+        //     _.forEach(players, (player) => {
+        //         uidList.push(player.uid);
+        //     });
+
+        //     PlayerDataManager.getInstance().reqPlayerData(uidList);
+        // }
+        
+        // this.m_curView && this.m_curView.updateAllPlayerDatas();
+    }
+
+    private _onMsgPlayerSitDownRsp(jsMsg) {
+        // var text = null;
+        // if (jsonMessage.ret == 0) {
+
+        // } else if (jsonMessage.ret == 1) {
+        //     text = "该位置已经有人";
+        // } else if (jsonMessage.ret == 2) {
+        //     text = "您已经加入过其他房间";
+        // } else if (jsonMessage.ret == 3) {
+        //     text = "您没有在该房间";
+        // } else {
+        //     text = "坐下失败,code = " + jsonMessage.ret;
+        // }
+        // if (text) {
+        //     PrefabManager.getInstance().showPrefab(EmPrefabEnum.Prefab_PromptDialogLayer, [text]);
+        // }
+    }
+
+    private _onMsgRoomSitDownRsp(jsMsg) {
+        // DDZPlayerDataManager.getInstance().onPlayerSitDown(jsonMessage);
+
+        // let player = DDZPlayerDataManager.getInstance()._players[jsonMessage.idx];
+        // if (userData.uid == player.uid) {
+        //     if (jsonMessage.state == eRoomPeerState.eRoomPeer_WaitNextGame) {
+        //         //auto sendReady
+        //         this.requestReady();
+        //     }
+        // }
+
+        // this.m_curView && this.m_curView.updatePlayerData(jsonMessage.idx);
+
+        // PlayerDataManager.getInstance().reqPlayerData([player.uid]);
+    }
+
+    private _onMsgRoomStandUpRsp(jsMsg) {
+        // if (jsonMessage.uid == userData.uid) {
+        //     // DDZPlayerDataManager.getInstance().clearAllPlayerData();
+        //     // this.m_curView && this.m_curView.clearTable();
+        // }
+        // else {
+        //     DDZPlayerDataManager.getInstance().onPlayerStandUp(jsonMessage);
+
+        //     // this.m_curView && this.m_curView.standUp(jsonMessage.idx);
+        // }
+    }
+
+    private _onMsgPlayerLeaveRoomRsp(jsMsg) {
+        // this.m_curView && this.m_curView.exitGame();
     }
 
     private _onMsgRBStartGameRsp(jsMsg) {

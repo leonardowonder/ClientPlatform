@@ -12,7 +12,7 @@ let userData = UserData.getInstance().getUserData();
 class PlayerDataManger extends Singleton {
 
     getSelfPlayer(): PlayerData {
-        let players: PlayerData[] = gameRoomData.getSitPlayerDatas();
+        let players: PlayerData[] = gameRoomData.getPlayerDatas();
 
         let selfPlayer: PlayerData = _.find(players, (player: PlayerData) => {
             return player.uid == userData.uid;
@@ -21,12 +21,12 @@ class PlayerDataManger extends Singleton {
         return selfPlayer;
     }
 
-    getSitPlayerDatas(): PlayerData[] {
-        return gameRoomData.getSitPlayerDatas();
+    getPlayerDatas(): PlayerData[] {
+        return gameRoomData.getPlayerDatas();
     }
 
-    setSitPlayerDatas(players: PlayerData[]) {
-        let sitPlayers: PlayerData[] = gameRoomData.getSitPlayerDatas();
+    setPlayerDatas(players: PlayerData[]) {
+        let sitPlayers: PlayerData[] = gameRoomData.getPlayerDatas();
 
         sitPlayers = players;
     }

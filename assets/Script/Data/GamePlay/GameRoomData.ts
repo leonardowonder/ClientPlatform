@@ -11,8 +11,7 @@ class GameRoomData extends Singleton {
     private recordData: GameRecordData = null;
     private tableData: TableData = null;
     private roomData: RoomData = null;
-    private sitPlayerDatas: PlayerData[] = [];
-    private standPlayerDatas: PlayerData[] = [];
+    private playerDatas: PlayerData[] = [];
 
     init() {
         super.init();
@@ -41,12 +40,8 @@ class GameRoomData extends Singleton {
         return this.roomData;
     }
 
-    getSitPlayerDatas(): PlayerData[] {
-        return this.sitPlayerDatas;
-    }
-
-    getStandPlayerDatas(): PlayerData[] {
-        return this.standPlayerDatas;
+    getPlayerDatas(): PlayerData[] {
+        return this.playerDatas;
     }
 
     reset() {
@@ -55,8 +50,7 @@ class GameRoomData extends Singleton {
         this.tableData.reset();
         this.roomData.reset();
 
-        this.sitPlayerDatas.length = 0;
-        this.standPlayerDatas.length = 0;
+        this.playerDatas.length = 0;
     }
 };
 

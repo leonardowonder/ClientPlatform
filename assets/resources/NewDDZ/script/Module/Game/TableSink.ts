@@ -145,14 +145,14 @@ class TableSink extends Singleton {
                 this.onMsgVIPRoomDoClosedRsp();
                 break;
             }
-            case eMsgType.MSG_PLAYER_BASE_DATA: {
-                this.onMsgPlayerBaseDataRsp(jsonMessage);
-                break;
-            }
-            case eMsgType.MSG_ENTER_ROOM: {
-                this.onMsgEnterRoomRsp(jsonMessage);
-                break;
-            }
+            // case eMsgType.MSG_PLAYER_BASE_DATA: {
+            //     this.onMsgPlayerBaseDataRsp(jsonMessage);
+            //     break;
+            // }
+            // case eMsgType.MSG_ENTER_ROOM: {
+            //     this.onMsgEnterRoomRsp(jsonMessage);
+            //     break;
+            // }
             case eMsgType.MSG_REQUEST_ROOM_INFO: {
                 this.onMsgRequestRoomInfoRsp(jsonMessage);
                 break;
@@ -249,32 +249,32 @@ class TableSink extends Singleton {
         this.m_curView && this.m_curView.exitGame(DDZLanguage.alreadyDismissRoom);
     }
 
-    onMsgPlayerBaseDataRsp(jsonMessage) {
-        UserData.getInstance().setPlayerBaseData(jsonMessage);
-        if (DDZPlayerDataManager.getInstance().getPlayerDataByUID(userData.uid) && DDZPlayerDataManager.getInstance().getPlayerDataByUID(userData.uid).uid > 0) {
-            var enterRoomMessage = {
-                msgID: eMsgType.MSG_REQUEST_ROOM_INFO,
-            };
-            if (Network.getInstance().sendMsg(enterRoomMessage, eMsgType.MSG_REQUEST_ROOM_INFO, eMsgPort.ID_MSG_PORT_DOU_DI_ZHU, DDZGameDataLogic.getInstance().getRoomInfo().roomID)) {
-                // MyUtils.cloneWaitMsgLayer(DDZLanguage.reEnterRoom, false);
-            }
-        } else {
-            if (Network.getInstance().sendMsg(
-                {
-                    msgID: eMsgType.MSG_ENTER_ROOM,
-                    roomID: DDZGameDataLogic.getInstance().getRoomInfo().roomID,
-                    uid: userData.uid,
-                }, eMsgType.MSG_ENTER_ROOM, eMsgPort.ID_MSG_PORT_DOU_DI_ZHU, DDZGameDataLogic.getInstance().getRoomInfo().roomID)) {
-                // MyUtils.cloneWaitMsgLayer(DDZLanguage.reEnterRoom, false);
-            }
-        }
-    }
+    // onMsgPlayerBaseDataRsp(jsonMessage) {
+    //     UserData.getInstance().setPlayerBaseData(jsonMessage);
+    //     if (DDZPlayerDataManager.getInstance().getPlayerDataByUID(userData.uid) && DDZPlayerDataManager.getInstance().getPlayerDataByUID(userData.uid).uid > 0) {
+    //         var enterRoomMessage = {
+    //             msgID: eMsgType.MSG_REQUEST_ROOM_INFO,
+    //         };
+    //         if (Network.getInstance().sendMsg(enterRoomMessage, eMsgType.MSG_REQUEST_ROOM_INFO, eMsgPort.ID_MSG_PORT_DOU_DI_ZHU, DDZGameDataLogic.getInstance().getRoomInfo().roomID)) {
+    //             // MyUtils.cloneWaitMsgLayer(DDZLanguage.reEnterRoom, false);
+    //         }
+    //     } else {
+    //         if (Network.getInstance().sendMsg(
+    //             {
+    //                 msgID: eMsgType.MSG_ENTER_ROOM,
+    //                 roomID: DDZGameDataLogic.getInstance().getRoomInfo().roomID,
+    //                 uid: userData.uid,
+    //             }, eMsgType.MSG_ENTER_ROOM, eMsgPort.ID_MSG_PORT_DOU_DI_ZHU, DDZGameDataLogic.getInstance().getRoomInfo().roomID)) {
+    //             // MyUtils.cloneWaitMsgLayer(DDZLanguage.reEnterRoom, false);
+    //         }
+    //     }
+    // }
 
-    onMsgEnterRoomRsp(jsonMessage) {
-        if (jsonMessage.ret != 0) {
-            this.m_curView && this.m_curView.exitGame(DDZLanguage.donotFindRoom);
-        }
-    }
+    // onMsgEnterRoomRsp(jsonMessage) {
+    //     if (jsonMessage.ret != 0) {
+    //         this.m_curView && this.m_curView.exitGame(DDZLanguage.donotFindRoom);
+    //     }
+    // }
 
     onMsgRequestRoomInfoRsp(jsonMessage) {
         if (jsonMessage.ret != 0) {
