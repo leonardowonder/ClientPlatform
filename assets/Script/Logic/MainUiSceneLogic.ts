@@ -13,6 +13,7 @@ import MyUtils from '../Utils/MyUtils';
 import MainUiScene from '../View/Scene/MainUiScene';
 
 import NetSink from '../../resources/NewDDZ/script/Module/Game/TableSink';
+import GameRoomLogic from '../Logic/GamePlay/GameRoomLogic';
 
 let userData = UserData.getInstance().getUserData();
 
@@ -32,6 +33,7 @@ class MainUiSceneLogic extends Singleton {
         this._registEvent();
 
         NetSink.getInstance();
+        GameRoomLogic.getInstance();
         super.init();
     }
 

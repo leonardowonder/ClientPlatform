@@ -16,6 +16,7 @@ import PlayerDataManger from '../../Manager/DataManager/GamePlayDataManger/Playe
 import CardDataManager from '../../Manager/DataManager/GamePlayDataManger/CardDataManager';
 import GameRecordDataManager from '../../Manager/DataManager/GamePlayDataManger/GameRecordDataManager';
 import RoomDataManger from '../../Manager/DataManager/GamePlayDataManger/RoomDataManger';
+import PrefabManager, { EmPrefabEnum } from '../../Manager/CommonManager/PrefabManager';
 
 let gameController = GameController.getInstance();
 
@@ -42,6 +43,16 @@ class GameRoomLogic extends Singleton {
     }
 
     //net work
+    requestLeaveRoom() {
+        Network.getInstance().sendMsg(
+            {
+                msgID: eMsgType.MSG_PLAYER_LEAVE_ROOM,
+            },
+            eMsgType.MSG_PLAYER_LEAVE_ROOM,
+            eMsgPort.ID_MSG_PORT_GOLDEN,
+            RoomDataManger.getInstance().getRoomID());
+    }
+
     requestBet(coin: number, type: EmBetAreaType) {
         Network.getInstance().sendMsg(
             {
@@ -116,7 +127,7 @@ class GameRoomLogic extends Singleton {
     private _onMsgRoomInfoRsp(jsMsg) {
         RoomDataManger.getInstance().setRoomData(jsMsg);
 
-        // this.m_curView && this.m_curView.onGetRoomInfo();
+        this.m_curView && this.m_curView.onGetRoomInfo();
     }
 
     private _onMsgRoomPlayerInfoRsp(jsMsg) {
@@ -181,7 +192,21 @@ class GameRoomLogic extends Singleton {
     }
 
     private _onMsgPlayerLeaveRoomRsp(jsMsg) {
-        // this.m_curView && this.m_curView.exitGame();
+        var errorText = null;
+        if (jsMsg.ret == 0) {
+            this.m_curView && this.m_curView.exitGame();
+        } else if (jsMsg.ret == 1) {
+            errorText = "您没有在该房间";
+        } else if (jsMsg.ret == 200) {
+            errorText = "没有找到该房间";
+        } else if (jsMsg.ret == 201) {
+            errorText = "操作超时";
+        } else if (jsMsg.ret != 0) {
+            errorText = "退出失败,code = " + jsMsg.ret;
+        }
+        if (errorText) {
+            PrefabManager.getInstance().showPrefab(EmPrefabEnum.Prefab_PromptDialogLayer, [errorText]);
+        }
     }
 
     private _onMsgRBStartGameRsp(jsMsg) {

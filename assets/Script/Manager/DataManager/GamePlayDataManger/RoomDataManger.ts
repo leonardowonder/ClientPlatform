@@ -11,9 +11,11 @@ class RoomDataManger extends Singleton {
     }
 
     setRoomData(data: any) {
+        cc.log('wd debug setRoomData data =', data);
         let roomData: RoomData = this.getRoomData();
 
         roomData.setRoomData(data);
+        cc.log('wd debug setRoomData roomdata =', roomData);
     }
 
     getRoomID(): number {

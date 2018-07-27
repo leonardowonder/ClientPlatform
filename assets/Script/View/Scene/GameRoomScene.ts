@@ -62,10 +62,19 @@ export default class GameRoomScene extends cc.Component {
     }
 
     onBackClick() {
-        SceneManager.getInstance().changeScene(EmSceneID.SceneID_MainScene); 
+        cc.log('wd debug onBackClick roomdata =', RoomDataManger.getInstance().getRoomData());
+        GameRoomLogic.getInstance().requestLeaveRoom();
     }
 
     //interface
+    exitGame() {
+        SceneManager.getInstance().changeScene(EmSceneID.SceneID_MainScene); 
+    }
+
+    onGetRoomInfo() {
+        cc.log('wd debug onGetRoomInfo roomdata =', RoomDataManger.getInstance().getRoomData());
+    }
+
     distributeCards() {
         _.forEach(this.m_containers, (container: CardsContainer) => {
             container && container.distributeCards();
