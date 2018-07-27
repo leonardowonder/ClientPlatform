@@ -33,6 +33,14 @@ class GameRoomLogic extends Singleton {
         this._registEvent();
     }
 
+    setCurView(view: GameRoomScene) {
+        this.m_curView = view;
+    }
+
+    unsetCurView() {
+        this.m_curView = null;
+    }
+
     //net work
     requestBet(coin: number, type: EmBetAreaType) {
         Network.getInstance().sendMsg(
@@ -122,7 +130,7 @@ class GameRoomLogic extends Singleton {
 
         //     PlayerDataManager.getInstance().reqPlayerData(uidList);
         // }
-        
+
         // this.m_curView && this.m_curView.updateAllPlayerDatas();
     }
 

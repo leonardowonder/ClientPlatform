@@ -6,8 +6,13 @@ import { EmChipType } from '../../Define/GamePlayDefine';
 
 import GameController from '../../Controller/GamePlay/GameController';
 
+import GameRoomLogic from '../../Logic/GamePlay/GameRoomLogic';
+
+import RoomData from '../../Data/GamePlay/RoomData';
+
 import SceneManager, { EmSceneID } from '../../Manager/CommonManager/SceneManager';
 import PrefabManager, { EmPrefabEnum } from '../../Manager/CommonManager/PrefabManager';
+import RoomDataManger from '../../Manager/DataManager/GamePlayDataManger/RoomDataManger';
 
 import CardsContainer from '../Layer/GamePlay/CardsContainer';
 import ChipSelectLayer from '../Layer/GamePlay/ChipSelectLayer';
@@ -15,7 +20,7 @@ import ChipsLayer from '../Layer/GamePlay/ChipsLayer';
 import PlayerRootLayer from '../Layer/GamePlay/PlayerRootLayer';
 
 @ccclass
-export default class MainUIScene extends cc.Component {
+export default class GameRoomScene extends cc.Component {
 
     @property(CardsContainer)
     m_containers: CardsContainer[] = [];
@@ -30,10 +35,25 @@ export default class MainUIScene extends cc.Component {
     m_playerRootLayer: PlayerRootLayer = null;
 
     onDestroy() {
+        GameRoomLogic.getInstance().unsetCurView();
+        GameController.getInstance().unsetCurView();
     }
 
     onLoad() {
-        GameController.getInstance().setScene(this);
+        GameRoomLogic.getInstance().setCurView(this);
+        GameController.getInstance().setCurView(this);
+    }
+
+    start() {
+        this.refresh();
+    }
+
+    refresh() {
+        this.updateRoomView();
+    }
+
+    updateRoomView() {
+        let roomInfo: RoomData = RoomDataManger.getInstance().getRoomData();
     }
 
     //callback

@@ -15,11 +15,12 @@ class GameController extends Singleton {
     }
 
     clearAll() {
+        this.m_gameRoomScene = null;
         this.m_Basefsm = null;
         this.m_gameRoomScene = null;
     }
 
-    setScene(scene: GameRoomScene) {
+    setCurView(scene: GameRoomScene) {
         this.clearAll();
         this.m_gameRoomScene = scene;
 
@@ -38,6 +39,10 @@ class GameController extends Singleton {
                 new Method('onRestartFromGameGameStateStart', function () { cc.log('onRestartFromGameGameStateStart'); })
             ]
         );
+    }
+
+    unsetCurView() {
+        this.clearAll();
     }
 
     //state machine
