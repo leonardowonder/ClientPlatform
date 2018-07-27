@@ -448,17 +448,6 @@ export default class CardConsole extends cc.Component {
             }
         }
 
-        let cards = this._selectedCardVec.map((node) => {
-            if (node) {
-                let comp = node.getComponent('PokerCardNode');
-                if (comp) {
-                    return comp.getCardData();
-                }
-            }
-        });
-        cc.log('wd debug checkStandCardContainAutoStand cards =', cards);
-        showCards(cards);
-
         this._grayCardVec = [];
         this.standCardByLineCardData(dstStandCards);
 
@@ -485,17 +474,6 @@ export default class CardConsole extends cc.Component {
                 this._selectedCardVec.push(tempNode);
             }
         }
-
-        let cards = this._selectedCardVec.map((node) => {
-            if (node) {
-                let comp = node.getComponent('PokerCardNode');
-                if (comp) {
-                    return comp.getCardData();
-                }
-            }
-        });
-        cc.log('wd debug normalStandCard cards =', cards);
-        showCards(cards);
 
         this._grayCardVec = [];
         // console.log("selectedCard0: " + this._selectedCardVec.length);
@@ -561,17 +539,6 @@ export default class CardConsole extends cc.Component {
                 }
             }
         }
-
-        let cards = this._selectedCardVec.map((node) => {
-            if (node) {
-                let comp = node.getComponent('PokerCardNode');
-                if (comp) {
-                    return comp.getCardData();
-                }
-            }
-        });
-        cc.log('wd debug standCardByLineCardData cards =', cards);
-        showCards(cards);
     }
 
     popSelectedCardNode(node) {
@@ -580,17 +547,6 @@ export default class CardConsole extends cc.Component {
                 this._selectedCardVec.splice(i, 1);
             }
         }
-
-        let cards = this._selectedCardVec.map((node) => {
-            if (node) {
-                let comp = node.getComponent('PokerCardNode');
-                if (comp) {
-                    return comp.getCardData();
-                }
-            }
-        });
-        cc.log('wd debug popSelectedCardNode cards =', cards);
-        showCards(cards);
     }
 
     onDestroy() {
@@ -933,7 +889,6 @@ export default class CardConsole extends cc.Component {
     }
 
     sitAllCards() {
-        cc.log('wd debug sitAllCards');
         for (let i = 0; i < this._selectedCardVec.length; i++) {
             let tempNode = this._selectedCardVec[i];
             let comp = tempNode.getComponent('PokerCardNode');
@@ -959,30 +914,9 @@ export default class CardConsole extends cc.Component {
                 }
             }
         }
-
-        let cards = this._selectedCardVec.map((node) => {
-            if (node) {
-                let comp = node.getComponent('PokerCardNode');
-                if (comp) {
-                    return comp.getCardData();
-                }
-            }
-        });
-        cc.log('wd debug setSelectedCard cards =', cards);
-        showCards(cards);
     }
 
     getSelectedCardsVec() {
-        let cards = this._selectedCardVec.map((node) => {
-            if (node) {
-                let comp = node.getComponent('PokerCardNode');
-                if (comp) {
-                    return comp.getCardData();
-                }
-            }
-        });
-        cc.log('wd debug getSelectedCardsVec cards =', cards);
-        showCards(cards);
         let selectedCardVec = [];
         for (let i = 0; i < this._selectedCardVec.length; i++) {
             let tempNode = this._selectedCardVec[i];
@@ -991,8 +925,6 @@ export default class CardConsole extends cc.Component {
         }
 
         selectedCardVec = GameLogicIns.sortCardList(selectedCardVec, SortType.ST_NORMAL);
-        cc.log('wd debug getSelectedCardsVec selectedCardVec =', selectedCardVec);
-        showCards(selectedCardVec);
         return selectedCardVec;
     }
 
@@ -1021,7 +953,6 @@ export default class CardConsole extends cc.Component {
             }
         }
 
-        cc.log('wd debug clear');
         this._selectedCardVec = [];
         this._grayCardVec = [];
         for (let i = 0; i < PlayerCount; i++) {
@@ -1039,7 +970,6 @@ export default class CardConsole extends cc.Component {
     }
 
     private _clearSelectedCards() {
-        cc.log('wd debug _clearSelectedCards');
         this._selectedCardVec.length = 0;
     }
 };

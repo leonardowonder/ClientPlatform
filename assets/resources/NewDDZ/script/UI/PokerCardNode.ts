@@ -171,6 +171,5 @@ export function showCards(cards: number[]) {
     cards.forEach((num: number) => {
         let cardValue = GameLogicIns.getCardValue(num);
         let cardColor = GameLogicIns.getCardColor(num);
-        cc.log('wd debug card cardValue =', cardValue, 'cardColor =', cardColor);
     })
 }

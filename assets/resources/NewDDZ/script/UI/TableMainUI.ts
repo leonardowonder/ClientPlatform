@@ -63,6 +63,9 @@ export default class TableMainUI extends cc.Component {
     @property
     m_curServerActIdx: number = -1;
 
+    @property(cc.Label)
+    m_testLabel: cc.Label = null;
+
     @property(cc.Node)
     m_topNode: cc.Node = null;
 
@@ -418,7 +421,8 @@ export default class TableMainUI extends cc.Component {
         for (let i = 0; i < cardType.length; i++) {
             str += GameLogicIns.debugShowCardType(cardType[i]);
         }
-        // this.m_testLabel.string = str;
+        
+        this.m_testLabel.string = str;
         return cardType;
     }
 

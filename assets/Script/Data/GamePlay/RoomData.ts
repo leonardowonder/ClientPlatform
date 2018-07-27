@@ -3,6 +3,16 @@ import * as _ from 'lodash';
 import { eGameType } from '../../Define/ClientDefine';
 import { eRoomState, GoldenType, eBetPool } from '../../Define/GamePlayDefine';
 
+export class TypeRecordInfo {
+    T: GoldenType = GoldenType.Golden_None;
+    V: number = 0;
+    
+    reset() {
+        this.T = GoldenType.Golden_None;
+        this.V = 0;
+    }
+}
+
 export class RoomOptsInfo {
     // deskFee: number = 0;
     // enterLimitLow: number = 0;
@@ -13,6 +23,9 @@ export class RoomOptsInfo {
     seatCnt: number = 0;
 
     reset() {
+        this.level = 0;
+        this.maxBet = 0;
+        this.seatCnt = 0;
         this.gameType = eGameType.eGame_Max;
     }
 }
@@ -25,7 +38,7 @@ export default class RoomData {
 
     stateTime: number = 0;
     vBetPool: number[] = [];
-    vTypeRecord: GoldenType[] = [];
+    vTypeRecord: TypeRecordInfo[] = [];
     vWinRecord: eBetPool[] = [];
 
     constructor() {
@@ -39,5 +52,9 @@ export default class RoomData {
     reset() {
         this.roomID = 0;
         this.opts && this.opts.reset();
+
+        if (this.vTypeRecord) {
+            this.vTypeRecord.length = 0;
+        }
     }
 }
