@@ -36,6 +36,10 @@ export default class PokerCardNode extends cc.Component {
         this._orgPosY = this.node.y;
     }
 
+    getCardData() {
+        return this._cardData;
+    }
+
     initWithCardData (cardData) {
         this.setCardFace();
         this.setCardGray(false);
@@ -149,7 +153,6 @@ export default class PokerCardNode extends cc.Component {
             return;
         }
 
-        cc.log('wd debug standCard PokerCardNode y =', this._orgPosY + StandOffset);
         this.node.setPositionY(this._orgPosY + StandOffset);
         this._selectedState = true;
     }
@@ -159,8 +162,15 @@ export default class PokerCardNode extends cc.Component {
             return;
         }
         
-        cc.log('wd debug sitCard PokerCardNode y =', this._orgPosY + StandOffset);
         this.node.setPositionY(this._orgPosY);
         this._selectedState = false;
     }
 };
+
+export function showCards(cards: number[]) {
+    cards.forEach((num: number) => {
+        let cardValue = GameLogicIns.getCardValue(num);
+        let cardColor = GameLogicIns.getCardColor(num);
+        cc.log('wd debug card cardValue =', cardValue, 'cardColor =', cardColor);
+    })
+}

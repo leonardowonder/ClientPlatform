@@ -187,6 +187,8 @@ export default class DDZPlayerItem extends cc.Component {
         }
 
         this.m_resultLabel.string += offset.toString();
+
+        this._updateCoin(offset);
     }
 
     clearResult() {
@@ -241,4 +243,11 @@ export default class DDZPlayerItem extends cc.Component {
         return idx;
     }
 
+    private _updateCoin(offset: number) {
+        let ddzPlayerData: DDZPlayerData = DDZPlayerDataManager.getInstance().getPlayerDataByServerIdx(this.m_serverChairID);
+
+        if (ddzPlayerData) {
+            this.setCoin(ddzPlayerData.chips + offset);
+        }
+    }
 };

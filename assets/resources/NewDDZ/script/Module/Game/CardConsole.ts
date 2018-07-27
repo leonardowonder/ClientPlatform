@@ -6,7 +6,7 @@ import GameLogic from './GameLogic';
 import { DDZCardType, SortType, DDZ_Type } from '../DDZGameDefine';
 import TableMainUI from '../../UI/TableMainUI';
 import CardHelper from '../../Control/CardHelper';
-import PokerCardNode from '../../UI/PokerCardNode';
+import { showCards } from '../../UI/PokerCardNode';
 
 let GameLogicIns = GameLogic.getInstance();
 
@@ -447,12 +447,25 @@ export default class CardConsole extends cc.Component {
                 this._selectedCardVec.push(tempNode);
             }
         }
+
+        let cards = this._selectedCardVec.map((node) => {
+            if (node) {
+                let comp = node.getComponent('PokerCardNode');
+                if (comp) {
+                    return comp.getCardData();
+                }
+            }
+        });
+        cc.log('wd debug checkStandCardContainAutoStand cards =', cards);
+        showCards(cards);
+
         this._grayCardVec = [];
         this.standCardByLineCardData(dstStandCards);
 
         if (this.m_tableMainView && this.m_consoleActive) {
             let selectedCardDataVec = this.getSelectedCardsVec();
-            this.m_tableMainView.checkSelectedCardCanOffer(selectedCardDataVec, true);
+            let mustOffer: boolean = this.m_tableMainView.getLocalIDByChairID(this.m_tableMainView.m_curServerActIdx) == this.m_helper._curLocalIdx || this.m_helper._curLocalIdx == -1;
+            this.m_tableMainView.checkSelectedCardCanOffer(selectedCardDataVec, !mustOffer);
         }
     }
 
@@ -472,12 +485,24 @@ export default class CardConsole extends cc.Component {
                 this._selectedCardVec.push(tempNode);
             }
         }
+
+        let cards = this._selectedCardVec.map((node) => {
+            if (node) {
+                let comp = node.getComponent('PokerCardNode');
+                if (comp) {
+                    return comp.getCardData();
+                }
+            }
+        });
+        cc.log('wd debug normalStandCard cards =', cards);
+        showCards(cards);
+
         this._grayCardVec = [];
         // console.log("selectedCard0: " + this._selectedCardVec.length);
         if (this.m_tableMainView && this.m_consoleActive) {
             let selectedCardDataVec = this.getSelectedCardsVec();
-            let needCompare = this.m_helper._curLocalIdx != 0;
-            this.m_tableMainView.checkSelectedCardCanOffer(selectedCardDataVec, needCompare);
+            let mustOffer: boolean = this.m_tableMainView.getLocalIDByChairID(this.m_tableMainView.m_curServerActIdx) == this.m_helper._curLocalIdx || this.m_helper._curLocalIdx == -1;
+            this.m_tableMainView.checkSelectedCardCanOffer(selectedCardDataVec, !mustOffer);
         }
 
     }
@@ -536,6 +561,17 @@ export default class CardConsole extends cc.Component {
                 }
             }
         }
+
+        let cards = this._selectedCardVec.map((node) => {
+            if (node) {
+                let comp = node.getComponent('PokerCardNode');
+                if (comp) {
+                    return comp.getCardData();
+                }
+            }
+        });
+        cc.log('wd debug standCardByLineCardData cards =', cards);
+        showCards(cards);
     }
 
     popSelectedCardNode(node) {
@@ -544,6 +580,17 @@ export default class CardConsole extends cc.Component {
                 this._selectedCardVec.splice(i, 1);
             }
         }
+
+        let cards = this._selectedCardVec.map((node) => {
+            if (node) {
+                let comp = node.getComponent('PokerCardNode');
+                if (comp) {
+                    return comp.getCardData();
+                }
+            }
+        });
+        cc.log('wd debug popSelectedCardNode cards =', cards);
+        showCards(cards);
     }
 
     onDestroy() {
@@ -690,13 +737,15 @@ export default class CardConsole extends cc.Component {
 
     showOutCard(localChairID: number, outCardVec: number[], serverCardType: DDZ_Type) {
         this._clearOutCard(localChairID);
-        this._clearSelectedCards();
+        if (localChairID == 0) {
+            this._clearSelectedCards();
+        }
         outCardVec = GameLogicIns.sortCardList(outCardVec, SortType.ST_NORMAL);
         let localCardType = GameLogicIns.switchServerTypeToCardType(serverCardType, outCardVec);
         let outCardPosNode = this.m_outCardPosNode[localChairID];
         //parse to type cardDataVec
         let parseCardVec = GameLogicIns.parseToCardType(outCardVec, localCardType);
-        let node = this.showMoveOutCardEffect(localChairID != 2, localChairID != 0, parseCardVec, localCardType);
+        let node = this.showMoveOutCardEffect(localChairID != 1, localChairID != 0, parseCardVec, localCardType);
         let nodeWidth = node.width;
         let nodeHeight = node.height;
         outCardPosNode.addChild(node);
@@ -705,10 +754,10 @@ export default class CardConsole extends cc.Component {
                 node.setPosition(cc.Vec2.ZERO);
                 break;
             case 1:
-                node.setPosition(cc.p(nodeWidth / 2.0, 0.0));
+                node.setPosition(cc.p(-nodeWidth / 2.0, 0.0));
                 break;
             case 2:
-                node.setPosition(cc.p(-nodeWidth / 2.0, 0.0));
+                node.setPosition(cc.p(nodeWidth / 2.0, 0.0));
                 break;
             default:
                 break;
@@ -884,6 +933,7 @@ export default class CardConsole extends cc.Component {
     }
 
     sitAllCards() {
+        cc.log('wd debug sitAllCards');
         for (let i = 0; i < this._selectedCardVec.length; i++) {
             let tempNode = this._selectedCardVec[i];
             let comp = tempNode.getComponent('PokerCardNode');
@@ -909,16 +959,40 @@ export default class CardConsole extends cc.Component {
                 }
             }
         }
+
+        let cards = this._selectedCardVec.map((node) => {
+            if (node) {
+                let comp = node.getComponent('PokerCardNode');
+                if (comp) {
+                    return comp.getCardData();
+                }
+            }
+        });
+        cc.log('wd debug setSelectedCard cards =', cards);
+        showCards(cards);
     }
 
     getSelectedCardsVec() {
+        let cards = this._selectedCardVec.map((node) => {
+            if (node) {
+                let comp = node.getComponent('PokerCardNode');
+                if (comp) {
+                    return comp.getCardData();
+                }
+            }
+        });
+        cc.log('wd debug getSelectedCardsVec cards =', cards);
+        showCards(cards);
         let selectedCardVec = [];
         for (let i = 0; i < this._selectedCardVec.length; i++) {
             let tempNode = this._selectedCardVec[i];
             let comp = tempNode.getComponent('PokerCardNode');
             selectedCardVec.push(comp._cardData);
         }
+
         selectedCardVec = GameLogicIns.sortCardList(selectedCardVec, SortType.ST_NORMAL);
+        cc.log('wd debug getSelectedCardsVec selectedCardVec =', selectedCardVec);
+        showCards(selectedCardVec);
         return selectedCardVec;
     }
 
@@ -947,6 +1021,7 @@ export default class CardConsole extends cc.Component {
             }
         }
 
+        cc.log('wd debug clear');
         this._selectedCardVec = [];
         this._grayCardVec = [];
         for (let i = 0; i < PlayerCount; i++) {
@@ -964,6 +1039,7 @@ export default class CardConsole extends cc.Component {
     }
 
     private _clearSelectedCards() {
+        cc.log('wd debug _clearSelectedCards');
         this._selectedCardVec.length = 0;
     }
 };

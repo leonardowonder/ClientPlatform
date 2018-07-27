@@ -95,3 +95,8 @@ export enum GoldenType {
     Golden_ThreeCards,//豹子
     Golden_Max,
 };
+export enum eRoomState {
+    // new state 
+    eRoomState_StartGame = 1,
+    eRoomState_GameEnd = 26,
+};

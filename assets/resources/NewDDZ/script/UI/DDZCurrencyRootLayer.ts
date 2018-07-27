@@ -1,6 +1,7 @@
 const { ccclass, property } = cc._decorator;
 
 import UserData, { UserInfo } from '../../../../Script/Data/UserData';
+import DDZPlayerDataManager, { DDZPlayerData } from '../Data/DDZPlayerDataManager';
 
 @ccclass
 export default class DDZCurrencyRootLayer extends cc.Component {
@@ -17,13 +18,25 @@ export default class DDZCurrencyRootLayer extends cc.Component {
 
     }
 
-    refreshInfo() {
+    refreshInfo(offset: number = 0) {
         let user: UserInfo = UserData.getInstance().getUserData();
 
         if (user) {
-            this.m_coinLabel.string = user.coin.toString();
-
-            this.m_diamondLabel.string = user.diamond.toString();
+            let player: DDZPlayerData = DDZPlayerDataManager.getInstance().getPlayerDataByUID(user.uid);
+            if (player) {
+                if (offset != 0) {
+                    player.chips += offset;
+                }
+    
+                this.m_coinLabel.string = player.chips.toString();
+    
+                this.m_diamondLabel.string = user.diamond.toString();
+            }
+            else {
+                this.m_coinLabel.string = user.coin.toString();
+    
+                this.m_diamondLabel.string = user.diamond.toString();
+            }
         }
     }
 

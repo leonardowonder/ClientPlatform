@@ -24,6 +24,9 @@ export default class DDZButtonGroupController extends cc.Component {
     m_callButtons: cc.Button[] = [];
 
     @property(cc.Node)
+    m_continueNode: cc.Node = null;
+
+    @property(cc.Node)
     m_myTurnNode: cc.Node = null;
     @property(cc.Node)
     m_callBankerNode: cc.Node = null;
@@ -40,6 +43,11 @@ export default class DDZButtonGroupController extends cc.Component {
         NetSink.getInstance().requestNotDiscard();
     }
 
+    onContinueClick() {
+        this.m_tableMainUI.continuePlay();
+        this.hideAll();
+    }
+
     onTipClick() {
         this.m_tableMainUI.showTip();
     }
@@ -52,37 +60,54 @@ export default class DDZButtonGroupController extends cc.Component {
         NetSink.getInstance().requestCallBanker(parseInt(coustEvent));
     }
 
+    reset() {
+        this.updateRobEnable(0);
+        this.hideAll();
+    }
+
     hideAll() {
         this.m_myTurnNode.active = false;
         this.m_callBankerNode.active = false;
+        this.m_continueNode.active = false;
     }
 
     showRobNode() {
         this.m_myTurnNode.active = false;
         this.m_callBankerNode.active = true;
+        this.m_continueNode.active = false;
+    }
+
+    showContinueNode() {
+        this.m_myTurnNode.active = false;
+        this.m_callBankerNode.active = false;
+        this.m_continueNode.active = true;
     }
 
     updateMyTurnNode(canDiscard: boolean, mustOffer: boolean) {
         this.m_myTurnNode.active = true;
         this.m_callBankerNode.active = false;
+        this.m_continueNode.active = false;
 
         this.m_canDiscardNode.active = canDiscard;
         this.m_cannotDiscardNode.active = !canDiscard;
 
-        this.m_donotOfferButton.interactable = !mustOffer;
+        // this.m_donotOfferButton.interactable = !mustOffer;
+        this.m_donotOfferButton.node.active = !mustOffer;
     }
 
     updateDiscardButton(canDiscard: boolean) {
+        // this.m_discardButton.node.active = canDiscard;
         this.m_discardButton.interactable = canDiscard;
     }
 
     updateTipButton(canTip: boolean) {
-        this.m_tipButton.interactable = canTip;
+        this.m_tipButton.node.active = canTip;
+        // this.m_tipButton.interactable = canTip;
     }
 
-    updateRobEnable(times: number) {
+    updateRobEnable(baseScore: number) {
         _.forEach(this.m_callButtons, (button: cc.Button, idx: number) => {
-            button.interactable = idx + 1 > times;
+            button.interactable = idx + 1 > baseScore;
         });
     }
 }

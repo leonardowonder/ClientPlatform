@@ -21,6 +21,7 @@ import DDZCountDownRootLayer from './DDZCountDownRootLayer';
 import DDZBottomCardRootLayer from './DDZBottomCardRootLayer';
 import DDZCurrencyRootLayer from './DDZCurrencyRootLayer';
 import DDZAnimationRootLayer from './DDZAnimationRootLayer';
+import MainUiSceneLogic from '../../../../Script/Logic/MainUiSceneLogic';
 
 import ClientEventDefine from '../../../../Script/Define/ClientEventDefine';
 
@@ -49,13 +50,13 @@ export default class TableMainUI extends cc.Component {
 
     @property(DDZBottomCardRootLayer)
     m_bottomCardRootLayer: DDZBottomCardRootLayer = null;
-    
+
     @property(DDZCurrencyRootLayer)
     m_currencyRootLayer: DDZCurrencyRootLayer = null;
 
     @property(DDZAnimationRootLayer)
     m_animationRootLayer: DDZAnimationRootLayer = null;
-    
+
     @property(cc.Node)
     m_tuoGuanNode: cc.Node = null;
 
@@ -99,7 +100,14 @@ export default class TableMainUI extends cc.Component {
     }
 
     onQuitClick() {
-        NetSink.getInstance().sendLeaveRoom();
+        let roomInfo: DDZRoomInfo = DDZGameDataLogic.getInstance().getRoomInfo();
+
+        if (roomInfo.state == eRoomState.eRoomSate_WaitReady || roomInfo.state == eRoomState.eRoomState_GameEnd) {
+            SceneManager.getInstance().changeScene(EmSceneID.SceneID_MainScene);
+        }
+        else {
+            NetSink.getInstance().sendLeaveRoom();
+        }
     }
 
     onTuoGuanClick() {
@@ -114,7 +122,7 @@ export default class TableMainUI extends cc.Component {
         this._clearPlayers();
         this._clearCards();
         this._clearAllProcess();
-        this.m_btnGroupController.hideAll();
+        this.m_btnGroupController.reset();
         this.m_countDownRootLayer.hideCountDown();
         this.m_bottomCardRootLayer.reset();
         this._updateSelfPlayer();
@@ -152,8 +160,12 @@ export default class TableMainUI extends cc.Component {
 
         let state = this._getStateByTimes(times);
 
-        let maxTimes: number = this.m_bottomCardRootLayer.getTimes();
-        this.m_btnGroupController.updateRobEnable(maxTimes);
+        if (times > 0) {
+            this.m_bottomCardRootLayer.setBaseScroe(times);
+        }
+
+        let maxBaseScroe: number = this.m_bottomCardRootLayer.getBaseScore();
+        this.m_btnGroupController.updateRobEnable(maxBaseScroe);
         this.setStateTag(serverIdx, state);
         // let player: DDZPlayerItem = this.m_playerRootLayer.getPlayerByClientIdx(clientIdx);
 
@@ -301,6 +313,10 @@ export default class TableMainUI extends cc.Component {
         _.forEach(players, (player) => {
             let clientIdx = this.getLocalIDByChairID(player.idx);
 
+            if (clientIdx == 0) {
+                this.m_currencyRootLayer.refreshInfo(player.offset);
+            }
+
             let playerItem: DDZPlayerItem = this.m_playerRootLayer.getPlayerByClientIdx(clientIdx);
 
             playerItem.setResult(player.offset);
@@ -312,7 +328,9 @@ export default class TableMainUI extends cc.Component {
 
         this.scheduleOnce(() => {
             this.clearTable();
-        }, 2);
+
+            this.m_btnGroupController.showContinueNode();
+        }, 1.5);
     }
 
     refreshView() {
@@ -335,6 +353,10 @@ export default class TableMainUI extends cc.Component {
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Game process
+    continuePlay() {
+        MainUiSceneLogic.getInstance().requestEnterDDZRoom();
+    }
+
     getLocalIDByChairID(chairID) {
         let meServerID = DDZPlayerDataManager.getInstance()._meServerID;
         if (meServerID >= 0) {
@@ -432,7 +454,7 @@ export default class TableMainUI extends cc.Component {
 
         if (result && result.cbSearchCount != 0) {
             this.m_cardHelper.setCurTipResult(result);
-            this.checkSelectedCardCanOffer(this.m_consoleNode.getSelectedCardsVec(), true);
+            this.checkSelectedCardCanOffer(this.m_consoleNode.getSelectedCardsVec(), !mustOffer);
         }
 
         this.m_btnGroupController.updateTipButton(-1 != this.m_cardHelper.getTip());
@@ -744,7 +766,7 @@ export default class TableMainUI extends cc.Component {
 
     private _getEffectType(type: DDZ_Type): DDZAnimType {
         let ret: DDZAnimType = DDZAnimType.Type_None;
-        switch(type) {
+        switch (type) {
             case DDZ_Type.DDZ_SingleSequence: {
                 ret = DDZAnimType.Type_SingleSequence;
                 break;

@@ -15,6 +15,7 @@ export default class DDZBottomCardRootLayer extends cc.Component {
     @property(cc.Label)
     m_timesLabel: cc.Label = null;
 
+    _baseScore: number = 0;
     _times: number = 1;
 
     setBottomCards(cards: number[]) {
@@ -29,7 +30,12 @@ export default class DDZBottomCardRootLayer extends cc.Component {
     }
 
     setBaseScroe(baseScore: number) {
+        this._baseScore = baseScore;
         this.m_basescoreLabel.string = baseScore.toString();
+    }
+
+    getBaseScore(): number {
+        return this._baseScore;
     }
 
     getTimes(): number {
@@ -44,6 +50,7 @@ export default class DDZBottomCardRootLayer extends cc.Component {
     reset() {
         this.resetBottomCards();
         this._times = 1;
+        this._baseScore = 0;
         this.m_basescoreLabel.string = '';
         this.m_timesLabel.string = '';
     }

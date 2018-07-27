@@ -327,22 +327,21 @@ class TableSink extends Singleton {
     }
 
     onMsgPlayerLeaveRoomRsp(jsonMessage) {
-        // var errorText = null;
-        // if (jsonMessage.ret == 0) {
-        //     this.m_curView.exitGame("退出成功");
-        // } else if (jsonMessage.ret == 1) {
-        //     errorText = "您没有在该房间";
-        // } else if (jsonMessage.ret == 200) {
-        //     errorText = "没有找到该房间";
-        // } else if (jsonMessage.ret == 201) {
-        //     errorText = "操作超时";
-        // } else if (jsonMessage.ret != 0) {
-        //     errorText = "退出失败,code = " + jsonMessage.ret;
-        // }
-        // if (errorText) {
-        //     PrefabManager.getInstance().showPrefab(EmPrefabEnum.Prefab_PromptDialogLayer, [errorText]);
-        // }
-        this.m_curView && this.m_curView.exitGame();
+        var errorText = null;
+        if (jsonMessage.ret == 0) {
+            this.m_curView && this.m_curView.exitGame();
+        } else if (jsonMessage.ret == 1) {
+            errorText = "您没有在该房间";
+        } else if (jsonMessage.ret == 200) {
+            errorText = "没有找到该房间";
+        } else if (jsonMessage.ret == 201) {
+            errorText = "操作超时";
+        } else if (jsonMessage.ret != 0) {
+            errorText = "退出失败,code = " + jsonMessage.ret;
+        }
+        if (errorText) {
+            PrefabManager.getInstance().showPrefab(EmPrefabEnum.Prefab_PromptDialogLayer, [errorText]);
+        }
     }
 
     onMsgRoomStandUpRsp(jsonMessage) {

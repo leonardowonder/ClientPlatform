@@ -74,8 +74,12 @@ export class DDZRoomStateInfo {
     reset() {
         this.curActIdx = 0;
         this.curMaxTimes = 0;
-        this.lastChu.length = 0;
-        this.readyPlayers.length = 0;
+        if (this.lastChu) {
+            this.lastChu.length = 0;
+        }
+        if (this.readyPlayers) {
+            this.readyPlayers.length = 0;
+        }
     }
 }
 
@@ -100,7 +104,9 @@ export class DDZRoomInfo {
         this.bombCnt = 0;
         this.bottom = 0;
         this.dzIdx = 0;
-        this.diPai = [];
+        if (this.diPai) {
+            this.diPai.length = 0;
+        }
         this.opts && this.opts.reset();
         this.leftWaitTime = 0;
         this.roomID = 0;

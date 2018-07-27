@@ -36,6 +36,7 @@ export default class DDZPlayerRootLayer extends cc.Component {
     clearAllPlayers() {
         _.forEach(this.m_players, (player: DDZPlayerItem) => {
             player.clearCards();
+            player.reset();
             player.hide();
         });
     }
