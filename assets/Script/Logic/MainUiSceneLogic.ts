@@ -13,7 +13,7 @@ import MyUtils from '../Utils/MyUtils';
 import MainUiScene from '../View/Scene/MainUiScene';
 
 import NetSink from '../../resources/NewDDZ/script/Module/Game/TableSink';
-import GameRoomLogic from '../Logic/GamePlay/GameRoomLogic';
+import GameRoomLogic from './GamePlay/GameRoomLogic';
 
 let userData = UserData.getInstance().getUserData();
 

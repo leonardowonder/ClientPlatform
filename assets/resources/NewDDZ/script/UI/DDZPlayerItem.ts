@@ -60,6 +60,8 @@ export default class DDZPlayerItem extends cc.Component {
 
     reset() {
         this._ddzCardData.clear();
+        this.m_localChairID = -1;
+        this.m_serverChairID = -1;
         this.m_landlordTag.active = false;
         this.m_stateSprite.spriteFrame = null;
         this.m_restCardNumLabel.string = '';

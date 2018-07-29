@@ -21,6 +21,9 @@ import ChipSelectLayer from '../Layer/GamePlay/ChipSelectLayer';
 import ChipsLayer from '../Layer/GamePlay/ChipsLayer';
 import PlayerRootLayer from '../Layer/GamePlay/PlayerRootLayer';
 import TableDataManager from '../../Manager/DataManager/GamePlayDataManger/TableDataManager';
+import PlayerDataManager from '../../Manager/DataManager/PlayerDataManager';
+import GamePlayerDataManager from '../../Manager/DataManager/GamePlayDataManger/GamePlayerDataManager';
+import GamePlayerData from '../../Data/GamePlay/GamePlayerData';
 
 @ccclass
 export default class GameRoomScene extends cc.Component {
@@ -57,6 +60,8 @@ export default class GameRoomScene extends cc.Component {
 
     updateRoomView() {
         let roomInfo: RoomData = RoomDataManger.getInstance().getRoomData();
+
+        this.updatePlayersView();
     }
 
     //callback
@@ -105,5 +110,21 @@ export default class GameRoomScene extends cc.Component {
 
     getPlayerHeadWorldPos(clientIdx: number): cc.Vec2 {
         return this.m_playerRootLayer.getPlayerHeadWorldPos(clientIdx);
+    }
+
+    updatePlayersView() {
+        this.m_playerRootLayer.updateAllPlayerDatas();
+    }
+
+    updatePlayerData(serverIdx: number) {
+        let clientIdx: number = TableDataManager.getInstance().svrIdxToClientIdx(serverIdx);
+
+        this.m_playerRootLayer.refreshPlayerItem(clientIdx, serverIdx);
+    }
+
+    onPlayerStandUp(serverIdx: number) {
+        let clientIdx: number = TableDataManager.getInstance().svrIdxToClientIdx(serverIdx);
+        
+        this.m_playerRootLayer.refreshPlayerItem(clientIdx, serverIdx);
     }
 }

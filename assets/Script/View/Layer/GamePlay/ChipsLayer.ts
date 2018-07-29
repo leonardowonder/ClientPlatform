@@ -2,7 +2,7 @@ const { ccclass, property } = cc._decorator;
 
 import * as _ from 'lodash';
 
-import { EmChipType, EmBetAreaType, Game_Room_Seat_Max_Count, eRoomState } from '../../../Define/GamePlayDefine';
+import { EmChipType, EmBetAreaType, Game_Room_Players_Max_Count, eRoomState } from '../../../Define/GamePlayDefine';
 
 import { addNewNodeFunc } from '../../../Utils/NodePoolUtils';
 import MathUtils from '../../../Utils/MathUtils';

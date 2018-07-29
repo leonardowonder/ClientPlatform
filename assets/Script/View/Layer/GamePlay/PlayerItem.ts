@@ -1,6 +1,11 @@
 const { ccclass, property } = cc._decorator;
 
 import StringUtils from '../../../Utils/StringUtils';
+import GamePlayerData from '../../../Data/GamePlay/GamePlayerData';
+import GamePlayerDataManager from '../../../Manager/DataManager/GamePlayDataManger/GamePlayerDataManager';
+import PlayerDataManager from '../../../Manager/DataManager/PlayerDataManager';
+
+import UserData from '../../../Data/UserData';
 
 @ccclass
 export default class PlayerItem extends cc.Component {
@@ -45,8 +50,23 @@ export default class PlayerItem extends cc.Component {
     @property 
     m_initCptLayoutPstX: number = -10;
 
+    m_localChairID: number = -1;
+    m_serverChairID: number = -1;
+
     onLoad() {
 
+    }
+
+    hide() {
+        this.node.active = false;
+    }
+
+    setLocalChairID(localID: number) {
+        this.m_localChairID = localID;
+    }
+
+    setServerChairID(serverID: number) {
+        this.m_serverChairID = serverID;
     }
 
     updateLeftRight(isLeft: boolean) {
@@ -84,6 +104,74 @@ export default class PlayerItem extends cc.Component {
 
     hideResult() {
         this.m_resultRootNode.active = false;
+    }
+
+    refreshView() {
+        this.resetView();
+        
+        if (this.m_serverChairID == -1) {
+            return;
+        }
+
+        let playerData: GamePlayerData = GamePlayerDataManager.getInstance().getPlayerDataByServerIdx(this.m_serverChairID);
+
+        if (playerData == null) {
+            cc.warn('PlayerItem refreshView playerData = null');
+            this.node.active = false;
+            return;
+        }
+
+        this.node.active = playerData.uid != 0;
+
+        if (playerData.uid != 0) {
+            let player = PlayerDataManager.getInstance().getPlayerData(playerData.uid);
+            if (player) {
+                this.setHead(player.headIcon);
+            }
+
+            this.setCoin(playerData.chips);
+        }
+    }
+
+    refreshViewBySelfData() {
+        let player = UserData.getInstance().getUserData();
+        
+        if (player) {
+            this.node.active = player.uid != 0;
+
+            this.setHead(player.headIcon);
+        }
+    }
+
+    setHead(headUrl) {
+        if (headUrl && headUrl.length && headUrl != 'undefine') {
+            if (cc.sys.isNative) {
+                // NativeWXHeadDonload.donloadHead(headUrl, this._ddzPlayerData.uid.toString() + ".png", (event) => {
+                //     cc.loader.load(event, function (err, texture) {
+                //         if (!err) {
+                //             this.m_pHeadSprite.spriteFrame = new cc.SpriteFrame(texture);
+                //             this.m_pHeadSprite.node.setContentSize(cc.size(96,96));
+                //         } else {
+                //             this.m_pHeadSprite.spriteFrame = null;
+                //         }
+                //     }.bind(this));
+                // });
+            } else {
+                cc.loader.load({ url: headUrl, type: 'png' }, (err, texture) => {
+                    if (!err) {
+                        this.m_headIcon.spriteFrame = new cc.SpriteFrame(texture);
+                        this.m_headIcon.node.setContentSize(cc.size(96, 96));
+                    } else {
+                        this.m_headIcon.spriteFrame = null;
+                    }
+                });
+            }
+        } else {
+            // var realUrl = cc.url.raw("resources/NewDDZ/image/room_default_none.png");
+            // var texture = cc.textureCache.addImage(realUrl, null, null);
+            // this.m_headSprite.spriteFrame = new cc.SpriteFrame(texture);
+            // this.m_headSprite.node.setContentSize(cc.size(96, 96));
+        }
     }
 
     resetView() {

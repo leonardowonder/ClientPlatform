@@ -1,5 +1,7 @@
 import Singleton from '../../Utils/Singleton';
 
+import * as _ from 'lodash';
+
 import { eMsgPort, eMsgType } from '../../Define/MessageIdentifer';
 import ClientDefine from '../../Define/ClientDefine';
 import { EmBetAreaType, eBetPool } from '../../Define/GamePlayDefine';
@@ -8,19 +10,18 @@ import { betAreaTypeToBetPool } from '../../Utils/GamePlay/GameUtils';
 import Network from '../../Utils/Network';
 import { NetMsg, praseMsg } from '../LogicBasic';
 
-import UserData from '../../Data/UserData';
 import GameRoomScene from '../../View/Scene/GameRoomScene';
 
 import GameController from '../../Controller/GamePlay/GameController';
-import PlayerDataManger from '../../Manager/DataManager/GamePlayDataManger/PlayerDataManger';
+import GamePlayerDataManager from '../../Manager/DataManager/GamePlayDataManger/GamePlayerDataManager';
 import CardDataManager from '../../Manager/DataManager/GamePlayDataManger/CardDataManager';
 import GameRecordDataManager from '../../Manager/DataManager/GamePlayDataManger/GameRecordDataManager';
 import RoomDataManger from '../../Manager/DataManager/GamePlayDataManger/RoomDataManger';
 import PrefabManager, { EmPrefabEnum } from '../../Manager/CommonManager/PrefabManager';
+import PlayerDataManager from '../../Manager/DataManager/PlayerDataManager';
 
 let gameController = GameController.getInstance();
 
-let playerDataManger = PlayerDataManger.getInstance();
 let cardDataManager = CardDataManager.getInstance();
 let recordManager = GameRecordDataManager.getInstance();
 
@@ -135,18 +136,18 @@ class GameRoomLogic extends Singleton {
     }
 
     private _onMsgRoomPlayerInfoRsp(jsMsg) {
-        // DDZPlayerDataManager.getInstance().updatePlayerInfo(jsonMessage);
-        // let players = jsonMessage.players;
-        // if (players && players.length > 0) {
-        //     let uidList: number[] = [];
-        //     _.forEach(players, (player) => {
-        //         uidList.push(player.uid);
-        //     });
+        GamePlayerDataManager.getInstance().updatePlayerInfo(jsMsg);
+        let players = jsMsg.players;
+        if (players && players.length > 0) {
+            let uidList: number[] = [];
+            _.forEach(players, (player) => {
+                uidList.push(player.uid);
+            });
 
-        //     PlayerDataManager.getInstance().reqPlayerData(uidList);
-        // }
+            PlayerDataManager.getInstance().reqPlayerData(uidList);
+        }
 
-        // this.m_curView && this.m_curView.updateAllPlayerDatas();
+        this.m_curView && this.m_curView.updatePlayersView();
     }
 
     private _onMsgPlayerSitDownRsp(jsMsg) {
@@ -168,31 +169,17 @@ class GameRoomLogic extends Singleton {
     }
 
     private _onMsgRoomSitDownRsp(jsMsg) {
-        // DDZPlayerDataManager.getInstance().onPlayerSitDown(jsonMessage);
+        GamePlayerDataManager.getInstance().onPlayerSitDown(jsMsg);
 
-        // let player = DDZPlayerDataManager.getInstance()._players[jsonMessage.idx];
-        // if (userData.uid == player.uid) {
-        //     if (jsonMessage.state == eRoomPeerState.eRoomPeer_WaitNextGame) {
-        //         //auto sendReady
-        //         this.requestReady();
-        //     }
-        // }
+        this.m_curView && this.m_curView.updatePlayerData(jsMsg.idx);
 
-        // this.m_curView && this.m_curView.updatePlayerData(jsonMessage.idx);
-
-        // PlayerDataManager.getInstance().reqPlayerData([player.uid]);
+        PlayerDataManager.getInstance().reqPlayerData([jsMsg.uid]);
     }
 
     private _onMsgRoomStandUpRsp(jsMsg) {
-        // if (jsonMessage.uid == userData.uid) {
-        //     // DDZPlayerDataManager.getInstance().clearAllPlayerData();
-        //     // this.m_curView && this.m_curView.clearTable();
-        // }
-        // else {
-        //     DDZPlayerDataManager.getInstance().onPlayerStandUp(jsonMessage);
+        GamePlayerDataManager.getInstance().onPlayerStandUp(jsMsg);
 
-        //     // this.m_curView && this.m_curView.standUp(jsonMessage.idx);
-        // }
+        this.m_curView && this.m_curView.onPlayerStandUp(jsMsg.idx);
     }
 
     private _onMsgPlayerLeaveRoomRsp(jsMsg) {

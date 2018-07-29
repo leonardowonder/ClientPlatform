@@ -1,8 +1,12 @@
 import Singleton from '../../Utils/Singleton';
 
+import * as _ from 'lodash';
+
+import { Game_Room_Seat_Max_Count } from '../../Define/GamePlayDefine';
+
 import CardData from './CardData';
 import GameRecordData from './GameRecordData';
-import PlayerData from './PlayerData';
+import GamePlayerData from './GamePlayerData';
 import TableData from './TableData';
 import RoomData from './RoomData';
 
@@ -11,7 +15,7 @@ class GameRoomData extends Singleton {
     private recordData: GameRecordData = null;
     private tableData: TableData = null;
     private roomData: RoomData = null;
-    private playerDatas: PlayerData[] = [];
+    private gamePlayerDatas: GamePlayerData[] = [];
 
     init() {
         super.init();
@@ -20,6 +24,11 @@ class GameRoomData extends Singleton {
         this.cardData = new CardData();
         this.recordData = new GameRecordData();
         this.tableData = new TableData();
+
+        for (let idx = 0; idx < Game_Room_Seat_Max_Count; idx++) {
+            let player: GamePlayerData = new GamePlayerData();
+            this.gamePlayerDatas.push(player);
+        }
 
         this.reset();
     }
@@ -40,8 +49,12 @@ class GameRoomData extends Singleton {
         return this.roomData;
     }
 
-    getPlayerDatas(): PlayerData[] {
-        return this.playerDatas;
+    getGamePlayerDatas(): GamePlayerData[] {
+        return this.gamePlayerDatas;
+    }
+
+    setGamePlayerDatas(players: GamePlayerData[]) {
+        this.gamePlayerDatas = players;
     }
 
     reset() {
@@ -50,7 +63,11 @@ class GameRoomData extends Singleton {
         this.tableData.reset();
         this.roomData.reset();
 
-        this.playerDatas.length = 0;
+        if (this.gamePlayerDatas && this.gamePlayerDatas.length > 0) {
+            _.forEach(this.gamePlayerDatas, (playerData: GamePlayerData) => {
+                playerData && playerData.reset();
+            })
+        }
     }
 };
 
