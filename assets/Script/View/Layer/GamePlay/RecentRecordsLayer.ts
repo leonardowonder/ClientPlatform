@@ -2,6 +2,8 @@ const { ccclass, property } = cc._decorator;
 
 import * as _ from 'lodash';
 
+import { addNewNodeFunc } from '../../../Utils/NodePoolUtils';
+
 import { EmRecordType } from '../../../Define/GamePlayDefine';
 
 import RecordUnit from '../../../Component/GamePlay/TendencyChart/RecordUnit';
@@ -43,18 +45,11 @@ export default class RecentRecordsLayer extends cc.Component {
     }
 
     private _addNewNode() {
-        if (this._nodePool.size() < 1) {
-            var prefab = cc.instantiate(this.m_recordUnitPrefab);
-            this._nodePool.put(prefab);
-        }
-
-        let newRecordNode = this._nodePool.get();
-
-        let comp: RecordUnit = newRecordNode.getComponent(RecordUnit);
+        let node: cc.Node = addNewNodeFunc(this.node, this.m_recordUnitPrefab, this._nodePool);
+        
+        let comp: RecordUnit = node.getComponent(RecordUnit);
 
         this.m_recordUnitList.push(comp);
-
-        this.node.addChild(newRecordNode);
     }
 
     private _updateRecordUnitType(type: EmRecordType) {

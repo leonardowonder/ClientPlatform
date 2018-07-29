@@ -27,16 +27,12 @@ class GameController extends Singleton {
         this.m_Basefsm = new StateMachine(
             'GameStateStart',
             [
-                new Transition('Bet', ['GameStateStart'], 'GameStateBet'),
-                new Transition('Account', ['GameStateBet'], 'GameStateAccount'),
-                new Transition('Restart', ['GameStateStart', 'GameStateBet' ,'GameStateAccount'], 'GameStateStart')
+                new Transition('Account', ['GameStateStart'], 'GameStateAccount'),
+                new Transition('Restart', ['GameStateAccount'], 'GameStateStart')
             ],
             [
-                new Method('onBetFromGameStateStart', function () { cc.log('onBetFromGameStateStart'); }),
-                new Method('onAccountFromGameStateBet', function () { cc.log('onAccountFromGameStateBet'); }),
-                new Method('onRestartFromGameStateAccount', function () { cc.log('onRestartFromGameStateAccount'); }),
-                new Method('onRestartFromGameStateBet', function () { cc.log('onRestartFromGameStateBet'); }),
-                new Method('onRestartFromGameGameStateStart', function () { cc.log('onRestartFromGameGameStateStart'); })
+                new Method('onAccountFromGameStateStart', function () { cc.log('onAccountFromGameStateStart'); }),
+                new Method('onRestartFromGameStateAccount', function () { cc.log('onRestartFromGameStateAccount'); })
             ]
         );
     }
@@ -48,10 +44,6 @@ class GameController extends Singleton {
     //state machine
     onGameStart() {
         this.m_Basefsm.changeState('Restart');
-    }
-
-    onGameStartBet() {
-        this.m_Basefsm.changeState('Bet');
     }
 
     onGameStopBet() {

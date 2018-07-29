@@ -2,7 +2,7 @@ import Singleton from '../../Utils/Singleton';
 
 import { eMsgPort, eMsgType } from '../../Define/MessageIdentifer';
 import ClientDefine from '../../Define/ClientDefine';
-import { EmBetAreaType } from '../../Define/GamePlayDefine';
+import { EmBetAreaType, eBetPool } from '../../Define/GamePlayDefine';
 import { betAreaTypeToBetPool } from '../../Utils/GamePlay/GameUtils';
 
 import Network from '../../Utils/Network';
@@ -99,6 +99,10 @@ class GameRoomLogic extends Singleton {
             }
             case eMsgType.MSG_PLAYER_LEAVE_ROOM: {
                 this._onMsgPlayerLeaveRoomRsp(msg.jsMsg);
+                break;
+            }
+            case eMsgType.MSG_ROOM_CHANGE_STATE: {
+                this._onMsgRoomChangeState(msg.jsMsg);
                 break;
             }
             case eMsgType.MSG_RB_START_GAME: {
@@ -209,10 +213,13 @@ class GameRoomLogic extends Singleton {
         }
     }
 
+    private _onMsgRoomChangeState(jsMsg) {
+        RoomDataManger.getInstance().changeRoomState(jsMsg.newState);
+    }
+
     private _onMsgRBStartGameRsp(jsMsg) {
         if (jsMsg.ret == 0) {
             gameController.onGameStart();
-            gameController.onGameStartBet();
         }
     }
 
@@ -221,7 +228,11 @@ class GameRoomLogic extends Singleton {
     }
 
     private _onMsgRBRoomBetRsp(jsMsg) {
+        let serverIdx: number = jsMsg.idx;
+        let coin: number = jsMsg.coin;
+        let betPoolType: eBetPool = jsMsg.poolType;
 
+        this.m_curView && this.m_curView.onRoomBet(serverIdx, coin, betPoolType);
     }
 
     private _onMsgRBRoomResultRsp(jsMsg) {

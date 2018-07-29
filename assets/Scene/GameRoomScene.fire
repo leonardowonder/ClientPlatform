@@ -7683,7 +7683,8 @@
     },
     "m_parentNode": {
       "__id__": 223
-    }
+    },
+    "m_maxItemCount": 7
   },
   {
     "__type__": "cc.Layout",

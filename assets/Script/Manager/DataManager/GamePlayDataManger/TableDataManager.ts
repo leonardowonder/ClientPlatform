@@ -17,12 +17,22 @@ class TableDataManager extends Singleton {
         return 0;
     }
 
-    private _svrIdxToClientIdx(svrIdx: number): number {
-        return (svrIdx - tableData.clientIdxZeroPosSvrIdx + Game_Room_Seat_Max_Count) % Game_Room_Seat_Max_Count;
+    svrIdxToClientIdx(svrIdx: number): number {
+        let clientIdx: number = svrIdx;
+        if (clientIdx < Game_Room_Seat_Max_Count) {
+            clientIdx = (svrIdx - tableData.clientIdxZeroPosSvrIdx + Game_Room_Seat_Max_Count) % Game_Room_Seat_Max_Count;
+        }
+        
+        return clientIdx;
     }
 
-    private _clientIdxToSvrIdx(clientIdx: number): number {
-        return (clientIdx + tableData.clientIdxZeroPosSvrIdx) % Game_Room_Seat_Max_Count;
+    clientIdxToSvrIdx(clientIdx: number): number {
+        let svrIdx: number = -1;
+        if (clientIdx < Game_Room_Seat_Max_Count) {
+            svrIdx = (clientIdx + tableData.clientIdxZeroPosSvrIdx) % Game_Room_Seat_Max_Count;
+        }
+
+        return svrIdx;
     }
 };
 

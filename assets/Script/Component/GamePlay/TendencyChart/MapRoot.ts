@@ -2,6 +2,8 @@ const { ccclass, property } = cc._decorator;
 
 import MapItem from './MapItem';
 
+import { addNewNodeFunc } from '../../../Utils/NodePoolUtils';
+
 @ccclass
 export default class MapRoot extends cc.Component {
     @property(cc.Prefab)
@@ -21,19 +23,13 @@ export default class MapRoot extends cc.Component {
     }
 
     addNewItem() {
-        if (this._nodePool.size() < 1) {
-            var prefab: cc.Node = cc.instantiate(this.m_mapItemPrefab);
+        let node: cc.Node = addNewNodeFunc(this.node, this.m_mapItemPrefab, this._nodePool);
 
-            this._nodePool.put(prefab);
-        }
-
-        let newMapItem: cc.Node = this._nodePool.get();
-
-        let comp: MapItem = newMapItem.getComponent(MapItem);
+        let comp: MapItem = node.getComponent(MapItem);
 
         this.m_mapItemGroup.push(comp);
 
-        this.node.addChild(newMapItem);
+        this._updateParentNodeSize();
     }
 
     removeLastItem() {
@@ -43,6 +39,21 @@ export default class MapRoot extends cc.Component {
             let targetNode: cc.Node = targetItem.node;
 
             this._nodePool.put(targetNode);
+            
+            this._updateParentNodeSize();
+        }
+    }
+
+    private _updateParentNodeSize() {
+        this.scheduleOnce(() => {
+            this._resizeParentNodeContent();
+        })
+    }
+
+    private _resizeParentNodeContent() {
+        let parentNode: cc.Node = this.node.parent;
+        if (parentNode) {
+            parentNode.setContentSize(this.node.getContentSize());
         }
     }
 }

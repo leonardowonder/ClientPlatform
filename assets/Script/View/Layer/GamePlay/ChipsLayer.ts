@@ -2,13 +2,19 @@ const { ccclass, property } = cc._decorator;
 
 import * as _ from 'lodash';
 
-import { EmChipType, EmBetAreaType, Game_Room_Seat_Max_Count } from '../../../Define/GamePlayDefine';
+import { EmChipType, EmBetAreaType, Game_Room_Seat_Max_Count, eRoomState } from '../../../Define/GamePlayDefine';
 
 import { addNewNodeFunc } from '../../../Utils/NodePoolUtils';
 import MathUtils from '../../../Utils/MathUtils';
+import { chipTypeToCoin } from '../../../Utils/GamePlay/GameUtils';
+
+import RoomData, { RoomOptsInfo } from '../../../Data/GamePlay/RoomData';
 
 import GameController from '../../../Controller/GamePlay/GameController';
 import TableDataManager from '../../../Manager/DataManager/GamePlayDataManger/TableDataManager';
+import RoomDataManger from '../../../Manager/DataManager/GamePlayDataManger/RoomDataManger';
+
+import GameRoomLogic from '../../../Logic/GamePlay/GameRoomLogic';
 
 import Chip from '../../../Component/GamePlay/Common/Chip';
 
@@ -32,14 +38,26 @@ export default class ChipsLayer extends cc.Component {
     }
 
     onAreaTouch(event: cc.Event.EventCustom) {
-        let node = event.target;
+        if (this._canBetNow()) {
+            let curChipType: EmChipType = gameController.getCurChipType();
+            let coin: number = chipTypeToCoin(curChipType);
 
-        let newChip: cc.Node = this._getChip(node);
-        let fromPos: cc.Vec2 = this._getPlayerHeadPosByClientIdx(tableDataManager.getSelfClientIdx(), node);
-        let toPos: cc.Vec2 = this._getRandomTargetPos(newChip, node);
+            let node: cc.Node = event.target;
+            let areaType: EmBetAreaType = node.tag;
+            
+            GameRoomLogic.getInstance().requestBet(coin, areaType);
+        }
+        else {
+            cc.warn(`ChipsLayer onAreaTouch cannot bet now`);
+        }
+        // let node = event.target;
 
-        this._updateChip(newChip, this._getSelfChipType());
-        this._playChipMoveForwardAction(newChip, fromPos, toPos);
+        // let newChip: cc.Node = this._getChip(node);
+        // let fromPos: cc.Vec2 = this._getPlayerHeadPosByClientIdx(tableDataManager.getSelfClientIdx(), node);
+        // let toPos: cc.Vec2 = this._getRandomTargetPos(newChip, node);
+
+        // this._updateChip(newChip, this._getSelfChipType());
+        // this._playChipMoveForwardAction(newChip, fromPos, toPos);
     }
 
     playChipMoveFromHeadToPoolAction(clientIdx: number, chipType: EmChipType, areaType: EmBetAreaType) {
@@ -90,15 +108,48 @@ export default class ChipsLayer extends cc.Component {
     }
 
     private _registEvents() {
-        _.forEach(this.m_betAreas, (node: cc.Node) => {
+        _.forEach(this.m_betAreas, (node: cc.Node, idx: number) => {
+            node.tag = this._getAreaType(idx);
             node.on(cc.Node.EventType.TOUCH_START, this.onAreaTouch, this);
         });
+    }
+
+    private _getAreaType(idx: number) {
+        let areaType: EmBetAreaType = EmBetAreaType.Type_None;
+        switch(idx) {
+            case 0: {
+                areaType = EmBetAreaType.Type_Red;
+                break;
+            }
+            case 1: {
+                areaType = EmBetAreaType.Type_Black;
+                break;
+            }
+            case 2: {
+                areaType = EmBetAreaType.Type_Special;
+                break;
+            }
+            default: {
+                cc.warn(`ChipsLayer _getAreaType invalid idx = ${idx}`);
+                break;
+            }
+        }
+
+        return areaType;
     }
 
     private _initNodePool() {
         this._nodePool = new cc.NodePool(Chip);
 
         this._putChips(50);
+    }
+
+    private _canBetNow() {
+        let roomInfo: RoomData = RoomDataManger.getInstance().getRoomData();
+
+        let curState: eRoomState = roomInfo.state;
+
+        return curState == eRoomState.eRoomState_StartGame;
     }
 
     private _getAreaNodeByType(type: EmBetAreaType): cc.Node {

@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 
 import Singleton from '../Singleton';
 
-import { EmCardTpye, EmGroupType } from '../../Define/GamePlayDefine';
+import { EmCardTpye, EmGroupType, GroupTypeInfo } from '../../Define/GamePlayDefine';
 
 import { Card } from './Cards';
 import StringUtils from '../StringUtils';
@@ -19,19 +19,19 @@ const cardWeightDigitCount: number = 4;
 const cardTypeWeightCoefficient: number = Math.floor(Math.pow(10, cardWeightDigitCount));
 const cardGroupWeightCoefficient: number = Math.floor(Math.pow(10, cardWeightDigitCount * 2));
 
-export function getGroupTypeStrFunc(groupType: EmGroupType): string {
+export function getGroupTypeStrFunc(typeInfo: GroupTypeInfo): string {
     const baseKey: string = 'group_type_';
 
     let ret: string = '';
     let key: string = '';
 
-    switch(groupType) {
+    switch(typeInfo.type) {
         case EmGroupType.GroupType_None: {
             key = baseKey + 'none';
             break;
         }
         case EmGroupType.GroupType_Pair: {
-            key = baseKey + 'pair';
+            key = baseKey + 'pair_' + typeInfo.value;
             break;
         }
         case EmGroupType.GroupType_Straight: {
@@ -51,7 +51,7 @@ export function getGroupTypeStrFunc(groupType: EmGroupType): string {
             break;
         }
         default: {
-            cc.warn(`CardUtils getGroupTypeStr invalid group type =${groupType}`);
+            cc.warn(`CardUtils getGroupTypeStr invalid group type =${typeInfo.type}`);
             break;
         }
     }

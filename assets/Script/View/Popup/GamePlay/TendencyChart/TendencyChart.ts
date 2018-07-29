@@ -5,8 +5,12 @@ import * as _ from 'lodash';
 import StringUtils from '../../../../Utils/StringUtils';
 
 import GameRecordData from '../../../../Data/GamePlay/GameRecordData';
+import RoomData from '../../../../Data/GamePlay/RoomData';
 
-import { EmRecordType } from '../../../../Define/GamePlayDefine';
+import { EmRecordType, eBetPool } from '../../../../Define/GamePlayDefine';
+
+import GameRecordDataManager from '../../../../Manager/DataManager/GamePlayDataManger/GameRecordDataManager';
+import RoomDataManger from '../../../../Manager/DataManager/GamePlayDataManger/RoomDataManger';
 
 import RecordMapController from '../../../../Component/GamePlay/TendencyChart/RecordMapController';
 import NextGameMarkerRoot from '../../../../Component/GamePlay/TendencyChart/NextGameMarkerRoot';
@@ -41,6 +45,42 @@ export default class TendencyChart extends cc.Component {
     @property(cc.Label)
     m_totalGamesLabel: cc.Label = null;
 
+    _recordLoaded: boolean = false;
+
+    onLoad() {
+        this.scheduleOnce(() => {
+            this.updateRecords();
+        })
+    }
+
+    updateRecords() {
+        if (this._recordLoaded) {
+            return;
+        }
+
+        let roomData: RoomData = RoomDataManger.getInstance().getRoomData();
+
+        let records: eBetPool[] = roomData.vWinRecord;
+        let types: EmRecordType[] = [];
+        _.forEach(records, (record: eBetPool) => {
+            if (record == eBetPool.eBet_Red ) {
+                types.push(EmRecordType.Type_Red);
+            }
+            else if (record == eBetPool.eBet_Black) {
+                types.push(EmRecordType.Type_Black);
+            }
+            else {
+                cc.warn(`TendencyChart updateRecords invalid record = ${record}`);
+            }
+        });
+
+        _.forEach(types, (type: EmRecordType) => {
+            this.addRecord(type);
+        });
+
+        this._recordLoaded = true;
+    }
+
     addRecord(type: EmRecordType) {
         this._addRecordToChartData(type);
 
@@ -62,7 +102,8 @@ export default class TendencyChart extends cc.Component {
         this.m_mainRoad2Controller.addRecord(type);
         this.m_recentRecordsLayer.addRecord(type);
 
-        let types: EmRecordType[] = GameRecordData.getInstance().getRecords();
+        let recordData: GameRecordData = GameRecordDataManager.getInstance().getGameRecordData();
+        let types: EmRecordType[] = recordData.getRecords();
 
         this.m_markerRoot.updateNextGameMarker(types);
 
@@ -74,7 +115,8 @@ export default class TendencyChart extends cc.Component {
     }
 
     private _addRecordToChartData(type: EmRecordType) {
-        GameRecordData.getInstance().addRecord(type);
+        let recordData: GameRecordData = GameRecordDataManager.getInstance().getGameRecordData();
+        recordData.addRecord(type);
     }
 
     private _updateLabels(types: EmRecordType[]) {

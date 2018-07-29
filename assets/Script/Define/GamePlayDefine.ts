@@ -22,8 +22,6 @@ export enum EmDeciderType {
     Type_Max
 };
 
-export const Tendency_Chart_Card_Type_Max_Count = 20;
-
 export enum EmCardTpye {
     CardType_None = 0,
     CardType_Diamond,
@@ -32,6 +30,8 @@ export enum EmCardTpye {
     CardType_Spade,
     CardType_Max
 };
+
+export let Normal_Type_Max_Value: number = 7;
 
 export enum EmGroupType {
     GroupType_None = 0,
@@ -42,6 +42,16 @@ export enum EmGroupType {
     GroupType_AllSame,
     GroupType_Max
 };
+
+export class GroupTypeInfo {
+    type: EmGroupType = EmGroupType.GroupType_None;
+    value: number = 0;
+
+    constructor(type: EmGroupType, value: number) {
+        this.type = type;
+        this.value = value;
+    }
+}
 
 export enum EmCaptainType {
     Type_None = 0,

@@ -1,5 +1,7 @@
 import Singleton from '../../../Utils/Singleton';
 
+import { eRoomState } from '../../../Define/GamePlayDefine';
+
 import GameRoomData from '../../../Data/GamePlay/GameRoomData';
 
 import RoomData from '../../../Data/GamePlay/RoomData';
@@ -11,11 +13,9 @@ class RoomDataManger extends Singleton {
     }
 
     setRoomData(data: any) {
-        cc.log('wd debug setRoomData data =', data);
         let roomData: RoomData = this.getRoomData();
 
         roomData.setRoomData(data);
-        cc.log('wd debug setRoomData roomdata =', roomData);
     }
 
     getRoomID(): number {
@@ -27,6 +27,13 @@ class RoomDataManger extends Singleton {
         }
         
         return roomID;
+    }
+
+    changeRoomState(state: eRoomState) {
+        let roomData: RoomData = this.getRoomData();
+
+        roomData.state = state;
+        cc.log('wd debug changeRoomState roomData =', roomData, this.getRoomData());
     }
 };
 

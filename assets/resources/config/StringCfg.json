@@ -14,8 +14,44 @@
     "group_type_none": {
         "cn": "高牌"
     },
-    "group_type_pair": {
-        "cn": "对子"
+    "group_type_pair_2": {
+        "cn": "对2"
+    },
+    "group_type_pair_3": {
+        "cn": "对3"
+    },
+    "group_type_pair_4": {
+        "cn": "对4"
+    },
+    "group_type_pair_5": {
+        "cn": "对5"
+    },
+    "group_type_pair_6": {
+        "cn": "对6"
+    },
+    "group_type_pair_7": {
+        "cn": "对7"
+    },
+    "group_type_pair_8": {
+        "cn": "对8"
+    },
+    "group_type_pair_9": {
+        "cn": "对9"
+    },
+    "group_type_pair_10": {
+        "cn": "对10"
+    },
+    "group_type_pair_11": {
+        "cn": "对J"
+    },
+    "group_type_pair_12": {
+        "cn": "对Q"
+    },
+    "group_type_pair_13": {
+        "cn": "对K"
+    },
+    "group_type_pair_14": {
+        "cn": "对A"
     },
     "group_type_straight": {
         "cn": "顺子"
