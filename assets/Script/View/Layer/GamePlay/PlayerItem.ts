@@ -1,28 +1,30 @@
 const { ccclass, property } = cc._decorator;
 
-import StringUtils from '../../../Utils/StringUtils';
 import GamePlayerData from '../../../Data/GamePlay/GamePlayerData';
+
+import GameRoomLogic from '../../../Logic/GamePlay/GameRoomLogic';
+
 import GamePlayerDataManager from '../../../Manager/DataManager/GamePlayDataManger/GamePlayerDataManager';
 import PlayerDataManager from '../../../Manager/DataManager/PlayerDataManager';
+import RoomDataManger from '../../../Manager/DataManager/GamePlayDataManger/RoomDataManger';
 
 import UserData from '../../../Data/UserData';
+import RoomData from '../../../Data/GamePlay/RoomData';
 
 @ccclass
 export default class PlayerItem extends cc.Component {
 
     @property(cc.Layout)
     m_rootLayout: cc.Layout = null;
-    @property(cc.Layout)
-    m_captainRootLayout: cc.Layout = null;
-    @property(cc.Widget)
-    m_captainWidget: cc.Widget = null;
+
     @property(cc.Node)
     m_coinBgNode: cc.Node = null;
 
     @property(cc.Node)
-    m_captainRootNode: cc.Node = null;
-    @property(cc.Node)
     m_resultRootNode: cc.Node = null;
+
+    @property(cc.Node)
+    m_seatNode: cc.Node = null;
     @property(cc.Node)
     m_headRootNode: cc.Node = null;
 
@@ -31,24 +33,11 @@ export default class PlayerItem extends cc.Component {
     @property(cc.Label)
     m_coinLabel: cc.Label = null;
 
-    @property(cc.Sprite)
-    m_captainSp: cc.Sprite = null;
-    @property(cc.Label)
-    m_captainLabel: cc.Label = null;
-
     @property(cc.Label)
     m_resultLabel: cc.Label = null;
 
-    @property(cc.SpriteFrame)
-    m_captainSprFramms: cc.SpriteFrame[] = [];
-
     @property
     m_isLeft: boolean = true;
-
-    @property 
-    m_initCptWgtHrztCtr: number = 88;
-    @property 
-    m_initCptLayoutPstX: number = -10;
 
     m_localChairID: number = -1;
     m_serverChairID: number = -1;
@@ -57,12 +46,16 @@ export default class PlayerItem extends cc.Component {
 
     }
 
-    hide() {
-        this.node.active = false;
+    onSitClick() {
+        GameRoomLogic.getInstance().requestSitDown(this.m_serverChairID);
     }
 
-    setLocalChairID(localID: number) {
-        this.m_localChairID = localID;
+    showSeat() {
+        this.m_seatNode.active = true;
+    }
+
+    hideSeat() {
+        this.m_seatNode.active = false;
     }
 
     setServerChairID(serverID: number) {
@@ -83,20 +76,6 @@ export default class PlayerItem extends cc.Component {
         this.m_coinLabel.string = num.toString();
     }
 
-    setCaptain(isRed: boolean) {
-        this.m_captainRootNode.active = true;
-
-        let strKey: string = isRed ? 'game_play_red_cap' : 'game_play_black_cap';
-        this.m_captainLabel.string = StringUtils.getInstance().formatByKey(strKey);
-
-        let frameIdx: number = isRed ? 0 : 1;
-        this.m_captainSp.spriteFrame = this.m_captainSprFramms[frameIdx];
-    }
-
-    hideCaptain() {
-        this.m_captainRootNode.active = false;
-    }
-
     setResult(num: number) {
         this.m_resultRootNode.active = true;
         this.m_resultLabel.string = num.toString();
@@ -106,8 +85,8 @@ export default class PlayerItem extends cc.Component {
         this.m_resultRootNode.active = false;
     }
 
-    refreshView() {
-        this.resetView();
+    refreshViewByServerIdx() {
+        this._resetView();
         
         if (this.m_serverChairID == -1) {
             return;
@@ -115,9 +94,8 @@ export default class PlayerItem extends cc.Component {
 
         let playerData: GamePlayerData = GamePlayerDataManager.getInstance().getPlayerDataByServerIdx(this.m_serverChairID);
 
-        if (playerData == null) {
-            cc.warn('PlayerItem refreshView playerData = null');
-            this.node.active = false;
+        if (!playerData.isValid()) {
+            this.showSeat();
             return;
         }
 
@@ -142,6 +120,42 @@ export default class PlayerItem extends cc.Component {
             this.setHead(player.headIcon);
             this.setCoin(player.coin);
         }
+    }
+
+    refreshViewByMaxCoinInfo() {
+        this._resetView();
+
+        if (this.m_serverChairID != -1) {
+            cc.warn(`PlayerItem refreshViewByMaxCoinInfo invalid chairID = ${this.m_serverChairID}`);
+            return;
+        }
+
+        let roomInfo: RoomData = RoomDataManger.getInstance().getRoomData();
+
+        let playerData = PlayerDataManager.getInstance().getPlayerData(roomInfo.richestUID);
+        if (playerData) {
+            this.setHead(playerData.headIcon);
+        }
+
+        this.setCoin(roomInfo.richestCoin);
+    }
+
+    refreshViewByMaxWinRateInfo() {
+        this._resetView();
+
+        if (this.m_serverChairID != -1) {
+            cc.warn(`PlayerItem refreshViewByMaxWinRateInfo invalid chairID = ${this.m_serverChairID}`);
+            return;
+        }
+
+        let roomInfo: RoomData = RoomDataManger.getInstance().getRoomData();
+
+        let playerData = PlayerDataManager.getInstance().getPlayerData(roomInfo.bestBetUID);
+        if (playerData) {
+            this.setHead(playerData.headIcon);
+        }
+
+        this.setCoin(roomInfo.bestBetCoin);
     }
 
     setHead(headUrl) {
@@ -175,31 +189,32 @@ export default class PlayerItem extends cc.Component {
         }
     }
 
-    resetView() {
-        this.hideCaptain();
-        this.hideResult();
-        this._updateLeftRight(this.m_isLeft);
-    }
-
     getHeadWorldPos(): cc.Vec2 {
         let worldPos: cc.Vec2 = this.node.convertToWorldSpaceAR(this.m_headRootNode.getPosition());
 
         return worldPos;
     }
 
+    private _resetView() {
+        this.hideResult();
+
+        if (this.m_serverChairID == -1) {
+            this.hideSeat();
+        }
+        else {
+            this.showSeat();
+        }
+
+        this._updateLeftRight(this.m_isLeft);
+    }
+
     private _updateLeftRight(isLeft: boolean) {
         this.m_rootLayout.horizontalDirection = isLeft ? cc.Layout.HorizontalDirection.LEFT_TO_RIGHT : cc.Layout.HorizontalDirection.RIGHT_TO_LEFT;
-        this.m_captainRootLayout.horizontalDirection = isLeft ? cc.Layout.HorizontalDirection.LEFT_TO_RIGHT : cc.Layout.HorizontalDirection.RIGHT_TO_LEFT;
-
-        this.m_captainRootLayout.node.x = isLeft ? this.m_initCptLayoutPstX : -1 * this.m_initCptLayoutPstX;
 
         this.scheduleOnce(() => {
             this.m_rootLayout.updateLayout();
-            this.m_captainRootLayout.updateLayout();
         });
 
         this.m_coinBgNode.scaleX = isLeft ? 1 : -1;
-
-        this.m_captainWidget.horizontalCenter = isLeft ? this.m_initCptWgtHrztCtr : -1 * this.m_initCptWgtHrztCtr;
     }
 }

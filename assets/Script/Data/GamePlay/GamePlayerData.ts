@@ -20,6 +20,10 @@ export default class GamePlayerData {
         this.idx = -1;
     }
 
+    isValid() {
+        return this.uid != 0;
+    }
+
     setPlayerData(jsMsg) {
         _.merge(this, jsMsg);
     }

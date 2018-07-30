@@ -36,10 +36,15 @@ export class RoomOptsInfo {
 }
 
 export default class RoomData {
-    bankerID: number = 0;
     roomID: number = 0;
+
+    bankerID: number = 0;
     opts: RoomOptsInfo = null;
     state: eRoomState = eRoomState.eRoomState_StartGame;
+    bestBetUID: number = 0;
+    bestBetCoin: number = 0;
+    richestUID: number = 0;
+    richestCoin: number = 0;
 
     stateTime: number = 0;
     vBetPool: number[] = [];
@@ -55,19 +60,49 @@ export default class RoomData {
     }
 
     addTypeRecord(recordInfo: TypeRecordInfo) {
+        if (this.vTypeRecord == null) {
+            this.vTypeRecord = [];
+        }
         this.vTypeRecord.push(recordInfo);
     }
 
     addWinRecrod(record: eBetPool) {
+        if (this.vWinRecord == null) {
+            this.vWinRecord = [];
+        }
         this.vWinRecord.push(record);
+    }
+
+    updateSpecialInfo(richestUID: number, richestCoin: number, bestBetUID: number, bestBetCoin: number) {
+        this.richestUID = richestUID;
+        this.richestCoin = richestCoin;
+        
+        this.bestBetUID = bestBetUID;
+        this.bestBetCoin = bestBetCoin;
     }
 
     reset() {
         this.roomID = 0;
+
+        this.bankerID = 0;
+        this.state = eRoomState.eRoomState_StartGame;
+        this.bestBetUID = 0;
+        this.bestBetCoin = 0;
+        this.richestUID = 0;
+        this.richestCoin = 0;
+
         this.opts && this.opts.reset();
+
+        if (this.vBetPool) {
+            this.vBetPool.length = 0;
+        }
 
         if (this.vTypeRecord) {
             this.vTypeRecord.length = 0;
+        }
+
+        if (this.vWinRecord) {
+            this.vWinRecord.length = 0;
         }
     }
 }

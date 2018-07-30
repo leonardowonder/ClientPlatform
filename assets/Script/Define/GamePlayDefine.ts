@@ -82,6 +82,9 @@ export enum EmCampType {
 export const Game_Room_Players_Max_Count = 9;
 export const Game_Room_Seat_Max_Count = 8;
 
+export const Game_Room_Max_Coin_Idx = 3;
+export const Game_Room_Max_Win_Rate_Idx = 4;
+
 export enum EmBetAreaType {
     Type_None = 0,
     Type_Red,
@@ -118,6 +121,7 @@ export enum GoldenType {
     Golden_ThreeCards,//豹子
     Golden_Max,
 };
+
 export enum eRoomState {
     // new state 
     eRoomState_StartGame = 1,
@@ -128,4 +132,25 @@ export class CardsInfo {
     cards: number[] = [];
     T: GoldenType = GoldenType.Golden_None;
     V: number = 0;
+}
+
+export class WinInfo {
+    idx: number = 0;
+    offset: number = 0;
+
+    constructor(info) {
+        this.idx = info.idx;
+        this.offset = info.offset;
+    }
+}
+
+export class ResultInfo {
+    bankerLose: number = 0;
+    bestBetOffset: number = 0;
+    richestOffset: number = 0;
+
+    black: CardsInfo = null;
+    red: CardsInfo = null;
+    isRedWin: number = 0;
+    result: WinInfo[] = [];
 }

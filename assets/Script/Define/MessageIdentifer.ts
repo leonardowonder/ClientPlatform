@@ -485,8 +485,8 @@ export enum eMsgType
 	MSG_CLUB_MSG_END = 2900,
 
 	MSG_ENTER_COIN_GAME,
-	// client : { level : 1 , uid : 235  }
-	// ret : { ret : 2 , level : 1, gamePort : 2 }
+	// client : { level : 1 , uid : 235 }
+	// ret : { ret : 2 , level : 1 , gamePort : 2  }
 	// ret : 0 success , 1 `coin limit , 2 already in other room , 3 already queuing other level, 4 invalid level argument;
 
 
@@ -520,6 +520,15 @@ export enum eMsgType
 	MSG_RB_REQUEST_ROOM_PLAYER_LIST,
 	// client : null ;
 	// svr : { list : [ { uid : 23 , coin : 23 , winCnt : 23 , bet : 23 } ], bestPlayerUID : 23  }
+	
+	MSG_RB_UPDATE_RICH_AND_BEST,
+	// svr : { richestUID : 235 , bestBetUID : 234 }
+
+
+
+
+
+
 
 
 

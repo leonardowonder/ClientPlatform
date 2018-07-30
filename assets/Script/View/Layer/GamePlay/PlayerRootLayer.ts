@@ -2,13 +2,13 @@ const { ccclass, property } = cc._decorator;
 
 import * as _ from 'lodash';
 
-import { Game_Room_Seat_Max_Count } from '../../../Define/GamePlayDefine';
+import { Game_Room_Seat_Max_Count, Game_Room_Max_Coin_Idx, Game_Room_Max_Win_Rate_Idx } from '../../../Define/GamePlayDefine';
 
 import GamePlayerData from '../../../Data/GamePlay/GamePlayerData';
 
 import PlayerItem from './PlayerItem';
 import GamePlayerDataManager from '../../../Manager/DataManager/GamePlayDataManger/GamePlayerDataManager';
-import TableDataManager from '../../../Manager/DataManager/GamePlayDataManger/TableDataManager';
+// import TableDataManager from '../../../Manager/DataManager/GamePlayDataManger/TableDataManager';
 
 @ccclass
 export default class PlayerRootLayer extends cc.Component {
@@ -20,7 +20,7 @@ export default class PlayerRootLayer extends cc.Component {
 
     @property(cc.Node)
     m_othersNode: cc.Node = null;
-    
+
     @property(PlayerItem)
     m_myPlayerItem: PlayerItem = null;
 
@@ -35,28 +35,42 @@ export default class PlayerRootLayer extends cc.Component {
     }
 
     updateAllPlayerDatas() {
-        let playerDatas: GamePlayerData[] = GamePlayerDataManager.getInstance().getGamePlayerDatas();
-
         this.updateSelfPlayer();
 
-        _.forEach(playerDatas, (playerData: GamePlayerData) => {
-            let serverIdx = playerData.idx;
+        for (let i = 0; i < Game_Room_Seat_Max_Count; ++i) {
+            this.refreshPlayerItem(i);
+        }
 
-            let clientIdx = TableDataManager.getInstance().svrIdxToClientIdx(serverIdx);
-
-            this.refreshPlayerItem(clientIdx, serverIdx);
-        });
+        this.refreshMaxCoinPlayerItem();
+        this.refreshMaxWinRatePlayerItem();
     }
 
-    refreshPlayerItem(clientIdx: number, serverChairID: number) {
-        if (!this._checkIdxValid(clientIdx)) {
-            cc.warn(`PlayerRootLayer setPlayerData invalid clientIdx = ${clientIdx}`);
+    refreshPlayerItem(serverChairID: number) {
+        if (!this._checkIdxValid(serverChairID)) {
+            cc.warn(`PlayerRootLayer setPlayerData invalid serverChairID = ${serverChairID}`);
             return;
         }
 
-        if (clientIdx >= 0) {
-            this.m_playerItems[clientIdx].setServerChairID(serverChairID);
-            this.m_playerItems[clientIdx].refreshView();
+        if (serverChairID >= 0) {
+            if (serverChairID != Game_Room_Max_Coin_Idx && serverChairID != Game_Room_Max_Win_Rate_Idx) {
+                this.m_playerItems[serverChairID].refreshViewByServerIdx();
+            }
+        }
+    }
+
+    refreshMaxCoinPlayerItem() {
+        let targetPlayerItem = this.m_playerItems[Game_Room_Max_Coin_Idx];
+
+        if (targetPlayerItem) {
+            targetPlayerItem.refreshViewByMaxCoinInfo();
+        }
+    }
+
+    refreshMaxWinRatePlayerItem() {
+        let targetPlayerItem = this.m_playerItems[Game_Room_Max_Win_Rate_Idx];
+
+        if (targetPlayerItem) {
+            targetPlayerItem.refreshViewByMaxWinRateInfo();
         }
     }
 
@@ -83,7 +97,7 @@ export default class PlayerRootLayer extends cc.Component {
     }
 
     private _checkIdxValid(idx: number) {
-        return idx < Game_Room_Seat_Max_Count;
+        return idx >= 0 && idx < Game_Room_Seat_Max_Count;
     }
 
     private _initOtherPlayerItems() {
@@ -91,7 +105,7 @@ export default class PlayerRootLayer extends cc.Component {
             let newNode: cc.Node = cc.instantiate(this.m_itemPrefab);
             if (newNode) {
                 this.node.addChild(newNode);
-                
+
                 let comp: PlayerItem = newNode.getComponent(PlayerItem);
                 if (comp) {
                     this.m_playerItems.push(comp);
@@ -115,7 +129,9 @@ export default class PlayerRootLayer extends cc.Component {
                     item.node.setPosition(this.m_itemPositions[idx]);
                 }
 
-                item.hide();
+                if (idx != Game_Room_Max_Coin_Idx && idx != Game_Room_Max_Win_Rate_Idx) {
+                    item.setServerChairID(idx);
+                }
             }
         });
     }

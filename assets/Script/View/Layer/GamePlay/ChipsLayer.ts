@@ -170,7 +170,7 @@ export default class ChipsLayer extends cc.Component {
                 idx = 1;
                 break;
             }
-            case EmBetAreaType.Type_Red: {
+            case EmBetAreaType.Type_Special: {
                 idx = 2;
                 break;
             }

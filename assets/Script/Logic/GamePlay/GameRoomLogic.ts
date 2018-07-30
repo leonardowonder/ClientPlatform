@@ -19,6 +19,7 @@ import GameRecordDataManager from '../../Manager/DataManager/GamePlayDataManger/
 import RoomDataManger from '../../Manager/DataManager/GamePlayDataManger/RoomDataManger';
 import PrefabManager, { EmPrefabEnum } from '../../Manager/CommonManager/PrefabManager';
 import PlayerDataManager from '../../Manager/DataManager/PlayerDataManager';
+import RoomData from '../../Data/GamePlay/RoomData';
 
 let gameController = GameController.getInstance();
 
@@ -62,6 +63,17 @@ class GameRoomLogic extends Singleton {
                 poolType: betAreaTypeToBetPool(type)
             },
             eMsgType.MSG_RB_PLAYER_BET,
+            eMsgPort.ID_MSG_PORT_GOLDEN,
+            RoomDataManger.getInstance().getRoomID());
+    }
+
+    requestSitDown(idx: number) {
+        Network.getInstance().sendMsg(
+            {
+                msgID: eMsgType.MSG_PLAYER_SIT_DOWN,
+                idx: idx
+            },
+            eMsgType.MSG_PLAYER_SIT_DOWN,
             eMsgPort.ID_MSG_PORT_GOLDEN,
             RoomDataManger.getInstance().getRoomID());
     }
@@ -122,6 +134,10 @@ class GameRoomLogic extends Singleton {
                 this._onMsgRBRoomResultRsp(msg.jsMsg);
                 break;
             }
+            case eMsgType.MSG_RB_UPDATE_RICH_AND_BEST: {
+                this._onMsgRBUpdateRichiAndBestRsp(msg.jsMsg);
+                break;
+            }
             default: {
                 break;
             }
@@ -132,7 +148,9 @@ class GameRoomLogic extends Singleton {
     private _onMsgRoomInfoRsp(jsMsg) {
         RoomDataManger.getInstance().setRoomData(jsMsg);
 
-        gameController.onGetRoomInfo(jsMsg)
+        gameController.onGetRoomInfo(jsMsg);
+
+        this._updateSpecialPlayerInfo();
 
         this.m_curView && this.m_curView.onGetRoomInfo();
     }
@@ -153,21 +171,9 @@ class GameRoomLogic extends Singleton {
     }
 
     private _onMsgPlayerSitDownRsp(jsMsg) {
-        // var text = null;
-        // if (jsonMessage.ret == 0) {
-
-        // } else if (jsonMessage.ret == 1) {
-        //     text = "该位置已经有人";
-        // } else if (jsonMessage.ret == 2) {
-        //     text = "您已经加入过其他房间";
-        // } else if (jsonMessage.ret == 3) {
-        //     text = "您没有在该房间";
-        // } else {
-        //     text = "坐下失败,code = " + jsonMessage.ret;
-        // }
-        // if (text) {
-        //     PrefabManager.getInstance().showPrefab(EmPrefabEnum.Prefab_PromptDialogLayer, [text]);
-        // }
+        if (jsMsg.ret = 0) {
+            PrefabManager.getInstance().showPrefab(EmPrefabEnum.Prefab_PromptDialogLayer, ['无法坐下']);
+        }
     }
 
     private _onMsgRoomSitDownRsp(jsMsg) {
@@ -226,11 +232,38 @@ class GameRoomLogic extends Singleton {
         gameController.onGameResult(jsMsg);
     }
 
+    private _onMsgRBUpdateRichiAndBestRsp(jsMsg) {
+        let roomInfo: RoomData = RoomDataManger.getInstance().getRoomData();
+
+        roomInfo.updateSpecialInfo(jsMsg.richestUID, jsMsg.richestCoin, jsMsg.bestBetUID, jsMsg.bestBetCoin);
+
+        this._updateSpecialPlayerInfo();
+    }
+
     //private
     private _registEvent() {
         cc.systemEvent.on(ClientDefine.netEventClose, this.onNetClose, this);
         cc.systemEvent.on(ClientDefine.netEventReconnectd, this.onNetReconnected, this);
         cc.systemEvent.on(ClientDefine.netEventMsg, this.onMsg, this);
+    }
+
+    private _updateSpecialPlayerInfo() {
+        let roomInfo: RoomData = RoomDataManger.getInstance().getRoomData();
+
+        let uidList: number[] = [];
+        if (roomInfo.bankerID != -1) {
+            uidList.push(roomInfo.bankerID);
+        }
+        if (roomInfo.bestBetUID) {
+            uidList.push(roomInfo.bestBetUID);
+        }
+        if (roomInfo.richestUID) {
+            uidList.push(roomInfo.richestUID);
+        }
+
+        if (uidList.length > 0) {
+            PlayerDataManager.getInstance().reqPlayerData(uidList);
+        }
     }
 };
 

@@ -1,6 +1,6 @@
 import Singleton from '../../../Utils/Singleton';
 
-import { Game_Room_Players_Max_Count } from '../../../Define/GamePlayDefine';
+// import { Game_Room_Players_Max_Count } from '../../../Define/GamePlayDefine';
 
 import GameRoomData from '../../../Data/GamePlay/GameRoomData';
 import TableData from '../../../Data/GamePlay/TableData';
@@ -21,23 +21,23 @@ class TableDataManager extends Singleton {
         tableData.baseServerIdx = idx;
     }
 
-    svrIdxToClientIdx(svrIdx: number): number {
-        let clientIdx: number = svrIdx;
-        if (svrIdx >= 0 && svrIdx < Game_Room_Players_Max_Count) {
-            clientIdx = (svrIdx - tableData.baseServerIdx + Game_Room_Players_Max_Count) % Game_Room_Players_Max_Count;
-        }
+    // svrIdxToClientIdx(svrIdx: number): number {
+    //     let clientIdx: number = svrIdx;
+    //     if (svrIdx >= 0 && svrIdx < Game_Room_Players_Max_Count) {
+    //         clientIdx = (svrIdx - tableData.baseServerIdx + Game_Room_Players_Max_Count) % Game_Room_Players_Max_Count;
+    //     }
         
-        return clientIdx;
-    }
+    //     return clientIdx;
+    // }
 
-    clientIdxToSvrIdx(clientIdx: number): number {
-        let svrIdx: number = -1;
-        if (clientIdx >= 0 && clientIdx < Game_Room_Players_Max_Count) {
-            svrIdx = (clientIdx + tableData.baseServerIdx) % Game_Room_Players_Max_Count;
-        }
+    // clientIdxToSvrIdx(clientIdx: number): number {
+    //     let svrIdx: number = -1;
+    //     if (clientIdx >= 0 && clientIdx < Game_Room_Players_Max_Count) {
+    //         svrIdx = (clientIdx + tableData.baseServerIdx) % Game_Room_Players_Max_Count;
+    //     }
 
-        return svrIdx;
-    }
+    //     return svrIdx;
+    // }
 };
 
 export default new TableDataManager();

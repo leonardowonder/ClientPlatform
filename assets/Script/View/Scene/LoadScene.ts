@@ -90,8 +90,8 @@ export default class LoginScene extends cc.Component {
     }
 
     private _connectNetwork() {
-        // Network.getInstance().connect("ws://192.168.1.8:40008");//内网
-        Network.getInstance().connect("ws://139.196.183.107:40008");//内网
+        Network.getInstance().connect("ws://192.168.1.8:40008");//内网
+        // Network.getInstance().connect("ws://139.196.183.107:40008");//内网
         // Network.getInstance().connect("ws://139.196.56.147:40010");//外网
     }
 

@@ -2,7 +2,10 @@ const { ccclass, property } = cc._decorator;
 
 import * as _ from 'lodash';
 
-import { EmChipType, eBetPool, EmBetAreaType, CardsInfo, GroupTypeInfo, eRoomState } from '../../Define/GamePlayDefine';
+import {
+    EmChipType, eBetPool, EmBetAreaType, CardsInfo, GroupTypeInfo, eRoomState,
+    WinInfo, ResultInfo, Game_Room_Max_Coin_Idx, Game_Room_Max_Win_Rate_Idx, Game_Room_Players_Max_Count
+} from '../../Define/GamePlayDefine';
 
 import GameController from '../../Controller/GamePlay/GameController';
 
@@ -73,7 +76,7 @@ export default class GameRoomScene extends cc.Component {
 
     //interface
     exitGame() {
-        SceneManager.getInstance().changeScene(EmSceneID.SceneID_MainScene); 
+        SceneManager.getInstance().changeScene(EmSceneID.SceneID_MainScene);
     }
 
     onGetRoomInfo() {
@@ -81,7 +84,8 @@ export default class GameRoomScene extends cc.Component {
     }
 
     onRoomBet(serverIdx: number, coin: number, betPoolType: eBetPool) {
-        let clientIdx: number = TableDataManager.getInstance().svrIdxToClientIdx(serverIdx);
+        // let clientIdx: number = TableDataManager.getInstance().svrIdxToClientIdx(serverIdx);
+        let clientIdx: number = serverIdx;
         let chipType: EmChipType = coinToChipType(coin);
         let areaType: EmBetAreaType = betPoolToBetAreaType(betPoolType);
 
@@ -111,6 +115,12 @@ export default class GameRoomScene extends cc.Component {
         return this.m_chipSelectLayer.getCurChipType();
     }
 
+
+    playResultAnim(resultInfo: ResultInfo) {
+        this._playPoolHighLightAnim(resultInfo);
+        this._playChipMoveAnim(resultInfo);
+    }
+
     getPlayerHeadWorldPos(clientIdx: number): cc.Vec2 {
         return this.m_playerRootLayer.getPlayerHeadWorldPos(clientIdx);
     }
@@ -129,14 +139,40 @@ export default class GameRoomScene extends cc.Component {
     }
 
     updatePlayerData(serverIdx: number) {
-        let clientIdx: number = TableDataManager.getInstance().svrIdxToClientIdx(serverIdx);
+        // let clientIdx: number = TableDataManager.getInstance().svrIdxToClientIdx(serverIdx);
 
-        this.m_playerRootLayer.refreshPlayerItem(clientIdx, serverIdx);
+        this.m_playerRootLayer.refreshPlayerItem(serverIdx);
     }
 
     onPlayerStandUp(serverIdx: number) {
-        let clientIdx: number = TableDataManager.getInstance().svrIdxToClientIdx(serverIdx);
+        // let clientIdx: number = TableDataManager.getInstance().svrIdxToClientIdx(serverIdx);
+
+        this.m_playerRootLayer.refreshPlayerItem(serverIdx);
+    }
+
+    private _playPoolHighLightAnim(resultInfo: ResultInfo) {
+
+    }
+
+    private _playChipMoveAnim(resultInfo: ResultInfo) {
+        let idxList: number[] = [Game_Room_Players_Max_Count];
         
-        this.m_playerRootLayer.refreshPlayerItem(clientIdx, serverIdx);
+        if (resultInfo.bestBetOffset && resultInfo.bestBetOffset > 0) {
+            idxList.push(Game_Room_Max_Win_Rate_Idx);
+        }
+
+        if (resultInfo.richestOffset && resultInfo.richestOffset > 0) {
+            idxList.push(Game_Room_Max_Coin_Idx);
+        }
+
+        if (resultInfo.result && resultInfo.result.length > 0) {
+            _.forEach(resultInfo.result, (info: WinInfo) => {
+                idxList.push(info.idx);
+            });
+        }
+
+        this.m_chipsLayer.playChipMoveFromPoolToPlayerAction(EmBetAreaType.Type_Red, idxList);
+        this.m_chipsLayer.playChipMoveFromPoolToPlayerAction(EmBetAreaType.Type_Black, idxList);
+        this.m_chipsLayer.playChipMoveFromPoolToPlayerAction(EmBetAreaType.Type_Special, idxList);
     }
 }

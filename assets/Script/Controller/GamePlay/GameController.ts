@@ -2,7 +2,7 @@ import Singleton from '../../Utils/Singleton';
 
 import StateMachine, { Transition, Method } from '../../Utils/StateMachine';
 
-import { EmChipType, EmRecordType, CardsInfo, EmCampType, eRoomState, GroupTypeInfo, eBetPool } from '../../Define/GamePlayDefine';
+import { EmChipType, EmRecordType, CardsInfo, EmCampType, eRoomState, GroupTypeInfo, eBetPool, WinInfo, ResultInfo } from '../../Define/GamePlayDefine';
 import ClientEventDefine from '../../Define/ClientEventDefine';
 
 import { goldenTypeToGroupType } from '../../Utils/GamePlay/GameUtils';
@@ -77,14 +77,15 @@ class GameController extends Singleton {
         this.distributeCards();
     }
 
-    onGameResult(jsMsg) {
+    onGameResult(jsMsg: ResultInfo) {
         this.m_Basefsm.changeState('Account');
 
         let winCardsInfo: CardsInfo = jsMsg.isRedWin ? jsMsg.red : jsMsg.black;
 
         this._addRecord(jsMsg.isRedWin, winCardsInfo);
-
         this._addCards(jsMsg.red, jsMsg.black);
+
+        this.m_gameRoomScene && this.m_gameRoomScene.playResultAnim(jsMsg);
     }
 
     //scene
@@ -100,7 +101,7 @@ class GameController extends Singleton {
         return this.m_gameRoomScene.getPlayerHeadWorldPos(clientIdx);
     }
 
-    private _addRecord(isRedWin: boolean, winCardsInfo: CardsInfo) {
+    private _addRecord(isRedWin: number, winCardsInfo: CardsInfo) {
         let recordType: EmRecordType = isRedWin ? EmRecordType.Type_Red : EmRecordType.Type_Black;
 
         let roomData: RoomData = RoomDataManger.getInstance().getRoomData();
