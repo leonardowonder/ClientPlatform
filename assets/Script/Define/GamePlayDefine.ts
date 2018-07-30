@@ -25,10 +25,22 @@ export enum EmDeciderType {
 export enum EmCardTpye {
     CardType_None = 0,
     CardType_Diamond,
-    CardType_club,
+    CardType_Club,
     CardType_Heart,
     CardType_Spade,
     CardType_Max
+};
+
+export enum eCardType {
+    eCard_None,
+    eCard_Diamond = eCard_None, // fangkuai
+    eCard_Club, // cao hua
+    eCard_Heart, // hong tao
+    eCard_Sword, // hei tao 
+    eCard_NoJoker,
+    eCard_Joker = eCard_NoJoker, // xiao wang
+    eCard_BigJoker, // da wang
+    eCard_Max,
 };
 
 export let Normal_Type_Max_Value: number = 7;
@@ -111,3 +123,9 @@ export enum eRoomState {
     eRoomState_StartGame = 1,
     eRoomState_GameEnd = 26,
 };
+
+export class CardsInfo {
+    cards: number[] = [];
+    T: GoldenType = GoldenType.Golden_None;
+    V: number = 0;
+}

@@ -10,8 +10,6 @@ import PlayerItem from './PlayerItem';
 import GamePlayerDataManager from '../../../Manager/DataManager/GamePlayDataManger/GamePlayerDataManager';
 import TableDataManager from '../../../Manager/DataManager/GamePlayDataManger/TableDataManager';
 
-import UserData from '../../../Data/UserData';
-
 @ccclass
 export default class PlayerRootLayer extends cc.Component {
     @property(cc.Prefab)
@@ -22,13 +20,15 @@ export default class PlayerRootLayer extends cc.Component {
 
     @property(cc.Node)
     m_othersNode: cc.Node = null;
+    
+    @property(PlayerItem)
+    m_myPlayerItem: PlayerItem = null;
 
     @property
     m_itemCount: number = Game_Room_Seat_Max_Count;
 
     private _leftRightInfo: boolean[] = [true, true, true, true, false, false, false, false];
     private m_playerItems: PlayerItem[] = [];
-    private m_myPlayerItem: PlayerItem = null;
 
     onLoad() {
         this._initOtherPlayerItems();

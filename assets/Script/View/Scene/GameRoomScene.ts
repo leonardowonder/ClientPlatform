@@ -2,7 +2,7 @@ const { ccclass, property } = cc._decorator;
 
 import * as _ from 'lodash';
 
-import { EmChipType, eBetPool, EmBetAreaType } from '../../Define/GamePlayDefine';
+import { EmChipType, eBetPool, EmBetAreaType, CardsInfo, GroupTypeInfo, eRoomState } from '../../Define/GamePlayDefine';
 
 import GameController from '../../Controller/GamePlay/GameController';
 
@@ -10,20 +10,18 @@ import GameRoomLogic from '../../Logic/GamePlay/GameRoomLogic';
 
 import RoomData from '../../Data/GamePlay/RoomData';
 
-import { coinToChipType, betPoolToBetAreaType } from '../../Utils/GamePlay/GameUtils';
+import { coinToChipType, betPoolToBetAreaType, goldenTypeToGroupType } from '../../Utils/GamePlay/GameUtils';
 
 import SceneManager, { EmSceneID } from '../../Manager/CommonManager/SceneManager';
 import PrefabManager, { EmPrefabEnum } from '../../Manager/CommonManager/PrefabManager';
 import RoomDataManger from '../../Manager/DataManager/GamePlayDataManger/RoomDataManger';
+import TableDataManager from '../../Manager/DataManager/GamePlayDataManger/TableDataManager';
 
 import CardsContainer from '../Layer/GamePlay/CardsContainer';
 import ChipSelectLayer from '../Layer/GamePlay/ChipSelectLayer';
 import ChipsLayer from '../Layer/GamePlay/ChipsLayer';
 import PlayerRootLayer from '../Layer/GamePlay/PlayerRootLayer';
-import TableDataManager from '../../Manager/DataManager/GamePlayDataManger/TableDataManager';
-import PlayerDataManager from '../../Manager/DataManager/PlayerDataManager';
-import GamePlayerDataManager from '../../Manager/DataManager/GamePlayDataManger/GamePlayerDataManager';
-import GamePlayerData from '../../Data/GamePlay/GamePlayerData';
+import { eRoomPeerState } from '../../../resources/NewDDZ/script/Define/DDZDefine';
 
 @ccclass
 export default class GameRoomScene extends cc.Component {
@@ -59,7 +57,7 @@ export default class GameRoomScene extends cc.Component {
     }
 
     updateRoomView() {
-        let roomInfo: RoomData = RoomDataManger.getInstance().getRoomData();
+        this.updateContainer();
 
         this.updatePlayersView();
     }
@@ -93,15 +91,20 @@ export default class GameRoomScene extends cc.Component {
     distributeCards() {
         _.forEach(this.m_containers, (container: CardsContainer) => {
             container && container.distributeCards();
-
-            container && container.setCards([25, 40, 66]);
-        })
+        });
     }
 
-    flipCards() {
-        _.forEach(this.m_containers, (container: CardsContainer) => {
+    flipCards(redCardsInfo: CardsInfo, blackCardsInfo: CardsInfo) {
+        _.forEach(this.m_containers, (container: CardsContainer, idx: number) => {
+            let targetInfo: CardsInfo = idx == 0 ? redCardsInfo : blackCardsInfo;
+            let cards: number[] = targetInfo.cards;
+            let groupInfo: GroupTypeInfo = new GroupTypeInfo(goldenTypeToGroupType(targetInfo.T), targetInfo.V);
+
+            container && container.setCards(cards);
             container && container.flipCards();
-        })
+
+            container && container.setCardType(groupInfo);
+        });
     }
 
     getCurChipType(): EmChipType {
@@ -110,6 +113,15 @@ export default class GameRoomScene extends cc.Component {
 
     getPlayerHeadWorldPos(clientIdx: number): cc.Vec2 {
         return this.m_playerRootLayer.getPlayerHeadWorldPos(clientIdx);
+    }
+
+    updateContainer() {
+        let roomInfo: RoomData = RoomDataManger.getInstance().getRoomData();
+
+        let state: eRoomState = roomInfo.state;
+        if (state == eRoomState.eRoomState_StartGame) {
+            this.distributeCards();
+        }
     }
 
     updatePlayersView() {

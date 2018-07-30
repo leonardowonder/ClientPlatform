@@ -3,6 +3,10 @@ const { ccclass, property } = cc._decorator;
 import * as _ from 'lodash';
 import * as async from 'async';
 
+import { GroupTypeInfo } from '../../../Define/GamePlayDefine';
+
+import { getGroupTypeStrFunc } from '../../../Utils/GamePlay/CardUtils';
+
 import CardDisplay from '../../../Component/GamePlay/Common/CardDisplay';
 
 @ccclass
@@ -25,7 +29,8 @@ export default class CardsContainer extends cc.Component {
 
         this.m_cardTypeLabel.string = '';
         _.forEach(this.m_cards, (card: CardDisplay) => {
-            card.node.active = false;
+            // card.node.active = false;
+            card.displayCardBack();
         });
     }
 
@@ -41,6 +46,8 @@ export default class CardsContainer extends cc.Component {
     }
 
     distributeCards() {
+        this.m_cardTypeLabel.string = '';
+        
         async.waterfall(
             [
                 (next) => {
@@ -68,6 +75,12 @@ export default class CardsContainer extends cc.Component {
         _.forEach(this.m_cards, (card: CardDisplay) => {
             card.flip();
         });
+    }
+
+    setCardType(typeInfo: GroupTypeInfo) {
+        let str: string = getGroupTypeStrFunc(typeInfo);
+
+        this.m_cardTypeLabel.string = str;
     }
 
     private _playDistributeCardsAnim(callback: Function) {

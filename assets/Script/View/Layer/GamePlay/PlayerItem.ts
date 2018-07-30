@@ -140,6 +140,7 @@ export default class PlayerItem extends cc.Component {
             this.node.active = player.uid != 0;
 
             this.setHead(player.headIcon);
+            this.setCoin(player.coin);
         }
     }
 

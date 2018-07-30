@@ -23,7 +23,7 @@ class TableDataManager extends Singleton {
 
     svrIdxToClientIdx(svrIdx: number): number {
         let clientIdx: number = svrIdx;
-        if (clientIdx < Game_Room_Players_Max_Count) {
+        if (svrIdx >= 0 && svrIdx < Game_Room_Players_Max_Count) {
             clientIdx = (svrIdx - tableData.baseServerIdx + Game_Room_Players_Max_Count) % Game_Room_Players_Max_Count;
         }
         
@@ -32,7 +32,7 @@ class TableDataManager extends Singleton {
 
     clientIdxToSvrIdx(clientIdx: number): number {
         let svrIdx: number = -1;
-        if (clientIdx < Game_Room_Players_Max_Count) {
+        if (clientIdx >= 0 && clientIdx < Game_Room_Players_Max_Count) {
             svrIdx = (clientIdx + tableData.baseServerIdx) % Game_Room_Players_Max_Count;
         }
 

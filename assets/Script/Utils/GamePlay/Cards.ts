@@ -26,7 +26,7 @@ export class Card {
 
     reset() {
         this.orgNum = 0;
-        this.type = 0;
+        this.type = EmCardTpye.CardType_None;
         this.value = 0;
         this.weight = 0;
     }
@@ -40,12 +40,17 @@ export class Card {
         return CardTypeStrList[this.type] + CardValueStrList[this.value];
     }
 
-    private _parseCardType(cardNum: number): number {
-        return (cardNum & 0x07);
+    private _parseCardType(cardNum: number): EmCardTpye {
+        return Math.floor((cardNum - 1) / 13) + 1;
     }
 
     private _parseCardValue(cardNum: number): number {
-        return (cardNum >> 3);
+        let value = cardNum - (this._parseCardType(cardNum) - 1) * 13;
+        if (value == 1) {
+            value = 14;
+        }
+
+        return value;
     }
 
     private _parseCardWeight(cardNum: number): number {
@@ -55,7 +60,7 @@ export class Card {
 
 export class CardGroup {
     private _cards: Card[] = [];
-    
+
     groupType: EmGroupType = EmGroupType.GroupType_None;
     groupWeight: number = 0;
     groupPairValue: number = 0;
@@ -63,7 +68,7 @@ export class CardGroup {
     constructor() {
         let cnt: number = 0;
 
-        while(cnt++ < 3) {
+        while (cnt++ < 3) {
             let newCard: Card = new Card();
             this._cards.push(newCard);
         }

@@ -12487,12 +12487,16 @@
         "__id__": 402
       },
       {
-        "__id__": 1089
+        "__id__": 1088
       }
     ],
     "_tag": -1,
     "_active": true,
-    "_components": [],
+    "_components": [
+      {
+        "__id__": 1120
+      }
+    ],
     "_prefab": {
       "__id__": 1121
     },
@@ -12642,13 +12646,10 @@
       },
       {
         "__id__": 1086
-      },
-      {
-        "__id__": 1087
       }
     ],
     "_prefab": {
-      "__id__": 1088
+      "__id__": 1087
     },
     "_id": "",
     "_opacity": 255,
@@ -33688,32 +33689,6 @@
     "_N$horizontalDirection": 0
   },
   {
-    "__type__": "cc.Widget",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 402
-    },
-    "_enabled": true,
-    "isAlignOnce": false,
-    "_target": null,
-    "_alignFlags": 13,
-    "_left": 0,
-    "_right": 0,
-    "_top": 0,
-    "_bottom": 0,
-    "_verticalCenter": 0,
-    "_horizontalCenter": 0,
-    "_isAbsLeft": true,
-    "_isAbsRight": true,
-    "_isAbsTop": true,
-    "_isAbsBottom": true,
-    "_isAbsHorizontalCenter": true,
-    "_isAbsVerticalCenter": true,
-    "_originalWidth": 0,
-    "_originalHeight": 108
-  },
-  {
     "__type__": "cc.PrefabInfo",
     "root": {
       "__id__": 1
@@ -33733,21 +33708,21 @@
     },
     "_children": [
       {
-        "__id__": 1090
+        "__id__": 1089
       }
     ],
     "_tag": -1,
     "_active": true,
     "_components": [
       {
-        "__id__": 1118
+        "__id__": 1117
       },
       {
-        "__id__": 1119
+        "__id__": 1118
       }
     ],
     "_prefab": {
-      "__id__": 1120
+      "__id__": 1119
     },
     "_id": "",
     "_opacity": 255,
@@ -33790,40 +33765,40 @@
     "_name": "MainRoad2RecordItemGroup",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 1089
+      "__id__": 1088
     },
     "_children": [
       {
-        "__id__": 1091
+        "__id__": 1090
       },
       {
-        "__id__": 1095
+        "__id__": 1094
       },
       {
-        "__id__": 1099
+        "__id__": 1098
       },
       {
-        "__id__": 1103
+        "__id__": 1102
       },
       {
-        "__id__": 1107
+        "__id__": 1106
       },
       {
-        "__id__": 1111
+        "__id__": 1110
       }
     ],
     "_tag": -1,
     "_active": true,
     "_components": [
       {
-        "__id__": 1115
+        "__id__": 1114
       },
       {
-        "__id__": 1116
+        "__id__": 1115
       }
     ],
     "_prefab": {
-      "__id__": 1117
+      "__id__": 1116
     },
     "_id": "",
     "_opacity": 255,
@@ -33866,21 +33841,21 @@
     "_name": "MainRoad2RecordItem0",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 1090
+      "__id__": 1089
     },
     "_children": [],
     "_tag": -1,
     "_active": true,
     "_components": [
       {
-        "__id__": 1092
+        "__id__": 1091
       },
       {
-        "__id__": 1093
+        "__id__": 1092
       }
     ],
     "_prefab": {
-      "__id__": 1094
+      "__id__": 1093
     },
     "_id": "",
     "_opacity": 255,
@@ -33923,7 +33898,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1091
+      "__id__": 1090
     },
     "_enabled": true,
     "m_recordUnitPrefab": {
@@ -33935,7 +33910,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1091
+      "__id__": 1090
     },
     "_enabled": true,
     "_layoutSize": {
@@ -33977,21 +33952,21 @@
     "_name": "MainRoad2RecordItem1",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 1090
+      "__id__": 1089
     },
     "_children": [],
     "_tag": -1,
     "_active": true,
     "_components": [
       {
-        "__id__": 1096
+        "__id__": 1095
       },
       {
-        "__id__": 1097
+        "__id__": 1096
       }
     ],
     "_prefab": {
-      "__id__": 1098
+      "__id__": 1097
     },
     "_id": "",
     "_opacity": 255,
@@ -34034,7 +34009,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1095
+      "__id__": 1094
     },
     "_enabled": true,
     "m_recordUnitPrefab": {
@@ -34046,7 +34021,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1095
+      "__id__": 1094
     },
     "_enabled": true,
     "_layoutSize": {
@@ -34088,21 +34063,21 @@
     "_name": "MainRoad2RecordItem2",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 1090
+      "__id__": 1089
     },
     "_children": [],
     "_tag": -1,
     "_active": true,
     "_components": [
       {
-        "__id__": 1100
+        "__id__": 1099
       },
       {
-        "__id__": 1101
+        "__id__": 1100
       }
     ],
     "_prefab": {
-      "__id__": 1102
+      "__id__": 1101
     },
     "_id": "",
     "_opacity": 255,
@@ -34145,7 +34120,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1099
+      "__id__": 1098
     },
     "_enabled": true,
     "m_recordUnitPrefab": {
@@ -34157,7 +34132,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1099
+      "__id__": 1098
     },
     "_enabled": true,
     "_layoutSize": {
@@ -34199,21 +34174,21 @@
     "_name": "MainRoad2RecordItem3",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 1090
+      "__id__": 1089
     },
     "_children": [],
     "_tag": -1,
     "_active": true,
     "_components": [
       {
-        "__id__": 1104
+        "__id__": 1103
       },
       {
-        "__id__": 1105
+        "__id__": 1104
       }
     ],
     "_prefab": {
-      "__id__": 1106
+      "__id__": 1105
     },
     "_id": "",
     "_opacity": 255,
@@ -34256,7 +34231,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1103
+      "__id__": 1102
     },
     "_enabled": true,
     "m_recordUnitPrefab": {
@@ -34268,7 +34243,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1103
+      "__id__": 1102
     },
     "_enabled": true,
     "_layoutSize": {
@@ -34310,21 +34285,21 @@
     "_name": "MainRoad2RecordItem4",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 1090
+      "__id__": 1089
     },
     "_children": [],
     "_tag": -1,
     "_active": true,
     "_components": [
       {
-        "__id__": 1108
+        "__id__": 1107
       },
       {
-        "__id__": 1109
+        "__id__": 1108
       }
     ],
     "_prefab": {
-      "__id__": 1110
+      "__id__": 1109
     },
     "_id": "",
     "_opacity": 255,
@@ -34367,7 +34342,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1107
+      "__id__": 1106
     },
     "_enabled": true,
     "m_recordUnitPrefab": {
@@ -34379,7 +34354,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1107
+      "__id__": 1106
     },
     "_enabled": true,
     "_layoutSize": {
@@ -34421,21 +34396,21 @@
     "_name": "MainRoad2RecordItem5",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 1090
+      "__id__": 1089
     },
     "_children": [],
     "_tag": -1,
     "_active": true,
     "_components": [
       {
-        "__id__": 1112
+        "__id__": 1111
       },
       {
-        "__id__": 1113
+        "__id__": 1112
       }
     ],
     "_prefab": {
-      "__id__": 1114
+      "__id__": 1113
     },
     "_id": "",
     "_opacity": 255,
@@ -34478,7 +34453,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1111
+      "__id__": 1110
     },
     "_enabled": true,
     "m_recordUnitPrefab": {
@@ -34490,7 +34465,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1111
+      "__id__": 1110
     },
     "_enabled": true,
     "_layoutSize": {
@@ -34532,27 +34507,27 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1090
+      "__id__": 1089
     },
     "_enabled": true,
     "m_recordItemGroup": [
       {
-        "__id__": 1092
+        "__id__": 1091
       },
       {
-        "__id__": 1096
+        "__id__": 1095
       },
       {
-        "__id__": 1100
+        "__id__": 1099
       },
       {
-        "__id__": 1104
+        "__id__": 1103
       },
       {
-        "__id__": 1108
+        "__id__": 1107
       },
       {
-        "__id__": 1112
+        "__id__": 1111
       }
     ]
   },
@@ -34561,7 +34536,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1090
+      "__id__": 1089
     },
     "_enabled": true,
     "_layoutSize": {
@@ -34603,7 +34578,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1089
+      "__id__": 1088
     },
     "_enabled": true,
     "m_recordItemGroupPrefab": {
@@ -34611,7 +34586,7 @@
     },
     "m_recordItemGroups": [
       {
-        "__id__": 1115
+        "__id__": 1114
       }
     ]
   },
@@ -34620,7 +34595,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1089
+      "__id__": 1088
     },
     "_enabled": true,
     "_layoutSize": {
@@ -34656,6 +34631,37 @@
     },
     "fileId": "a678NV8apOeYZ5lBlGE1Gt",
     "sync": false
+  },
+  {
+    "__type__": "cc.Layout",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 401
+    },
+    "_enabled": true,
+    "_layoutSize": {
+      "__type__": "cc.Size",
+      "width": 300,
+      "height": 200
+    },
+    "_resize": 1,
+    "_N$layoutType": 0,
+    "_N$padding": 0,
+    "_N$cellSize": {
+      "__type__": "cc.Size",
+      "width": 40,
+      "height": 40
+    },
+    "_N$startAxis": 0,
+    "_N$paddingLeft": 0,
+    "_N$paddingRight": 0,
+    "_N$paddingTop": 0,
+    "_N$paddingBottom": 0,
+    "_N$spacingX": 0,
+    "_N$spacingY": 0,
+    "_N$verticalDirection": 1,
+    "_N$horizontalDirection": 0
   },
   {
     "__type__": "cc.PrefabInfo",
@@ -34762,7 +34768,7 @@
       "__id__": 1085
     },
     "m_recordRoot": {
-      "__id__": 1118
+      "__id__": 1117
     },
     "recordGroupCountInOneMapItem": 1,
     "mapItemCountMin": 31
@@ -34967,12 +34973,16 @@
         "__id__": 1133
       },
       {
-        "__id__": 1346
+        "__id__": 1345
       }
     ],
     "_tag": -1,
     "_active": true,
-    "_components": [],
+    "_components": [
+      {
+        "__id__": 1377
+      }
+    ],
     "_prefab": {
       "__id__": 1378
     },
@@ -35077,13 +35087,10 @@
       },
       {
         "__id__": 1343
-      },
-      {
-        "__id__": 1344
       }
     ],
     "_prefab": {
-      "__id__": 1345
+      "__id__": 1344
     },
     "_id": "",
     "_opacity": 255,
@@ -41471,32 +41478,6 @@
     "_N$horizontalDirection": 0
   },
   {
-    "__type__": "cc.Widget",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 1133
-    },
-    "_enabled": true,
-    "isAlignOnce": false,
-    "_target": null,
-    "_alignFlags": 13,
-    "_left": 0,
-    "_right": 0,
-    "_top": 0,
-    "_bottom": 0,
-    "_verticalCenter": 0,
-    "_horizontalCenter": 0,
-    "_isAbsLeft": true,
-    "_isAbsRight": true,
-    "_isAbsTop": true,
-    "_isAbsBottom": true,
-    "_isAbsHorizontalCenter": true,
-    "_isAbsVerticalCenter": true,
-    "_originalWidth": 0,
-    "_originalHeight": 54
-  },
-  {
     "__type__": "cc.PrefabInfo",
     "root": {
       "__id__": 1
@@ -41516,21 +41497,21 @@
     },
     "_children": [
       {
-        "__id__": 1347
+        "__id__": 1346
       }
     ],
     "_tag": -1,
     "_active": true,
     "_components": [
       {
-        "__id__": 1375
+        "__id__": 1374
       },
       {
-        "__id__": 1376
+        "__id__": 1375
       }
     ],
     "_prefab": {
-      "__id__": 1377
+      "__id__": 1376
     },
     "_id": "",
     "_opacity": 255,
@@ -41573,40 +41554,40 @@
     "_name": "ViceRoad1RecordItemGroup",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 1346
+      "__id__": 1345
     },
     "_children": [
       {
-        "__id__": 1348
+        "__id__": 1347
       },
       {
-        "__id__": 1352
+        "__id__": 1351
       },
       {
-        "__id__": 1356
+        "__id__": 1355
       },
       {
-        "__id__": 1360
+        "__id__": 1359
       },
       {
-        "__id__": 1364
+        "__id__": 1363
       },
       {
-        "__id__": 1368
+        "__id__": 1367
       }
     ],
     "_tag": -1,
     "_active": true,
     "_components": [
       {
-        "__id__": 1372
+        "__id__": 1371
       },
       {
-        "__id__": 1373
+        "__id__": 1372
       }
     ],
     "_prefab": {
-      "__id__": 1374
+      "__id__": 1373
     },
     "_id": "",
     "_opacity": 255,
@@ -41649,21 +41630,21 @@
     "_name": "ViceRoad1RecordItem0",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 1347
+      "__id__": 1346
     },
     "_children": [],
     "_tag": -1,
     "_active": true,
     "_components": [
       {
-        "__id__": 1349
+        "__id__": 1348
       },
       {
-        "__id__": 1350
+        "__id__": 1349
       }
     ],
     "_prefab": {
-      "__id__": 1351
+      "__id__": 1350
     },
     "_id": "",
     "_opacity": 255,
@@ -41706,7 +41687,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1348
+      "__id__": 1347
     },
     "_enabled": true,
     "m_recordUnitPrefab": {
@@ -41718,7 +41699,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1348
+      "__id__": 1347
     },
     "_enabled": true,
     "_layoutSize": {
@@ -41760,21 +41741,21 @@
     "_name": "ViceRoad1RecordItem1",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 1347
+      "__id__": 1346
     },
     "_children": [],
     "_tag": -1,
     "_active": true,
     "_components": [
       {
-        "__id__": 1353
+        "__id__": 1352
       },
       {
-        "__id__": 1354
+        "__id__": 1353
       }
     ],
     "_prefab": {
-      "__id__": 1355
+      "__id__": 1354
     },
     "_id": "",
     "_opacity": 255,
@@ -41817,7 +41798,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1352
+      "__id__": 1351
     },
     "_enabled": true,
     "m_recordUnitPrefab": {
@@ -41829,7 +41810,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1352
+      "__id__": 1351
     },
     "_enabled": true,
     "_layoutSize": {
@@ -41871,21 +41852,21 @@
     "_name": "ViceRoad1RecordItem2",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 1347
+      "__id__": 1346
     },
     "_children": [],
     "_tag": -1,
     "_active": true,
     "_components": [
       {
-        "__id__": 1357
+        "__id__": 1356
       },
       {
-        "__id__": 1358
+        "__id__": 1357
       }
     ],
     "_prefab": {
-      "__id__": 1359
+      "__id__": 1358
     },
     "_id": "",
     "_opacity": 255,
@@ -41928,7 +41909,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1356
+      "__id__": 1355
     },
     "_enabled": true,
     "m_recordUnitPrefab": {
@@ -41940,7 +41921,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1356
+      "__id__": 1355
     },
     "_enabled": true,
     "_layoutSize": {
@@ -41982,21 +41963,21 @@
     "_name": "ViceRoad1RecordItem3",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 1347
+      "__id__": 1346
     },
     "_children": [],
     "_tag": -1,
     "_active": true,
     "_components": [
       {
-        "__id__": 1361
+        "__id__": 1360
       },
       {
-        "__id__": 1362
+        "__id__": 1361
       }
     ],
     "_prefab": {
-      "__id__": 1363
+      "__id__": 1362
     },
     "_id": "",
     "_opacity": 255,
@@ -42039,7 +42020,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1360
+      "__id__": 1359
     },
     "_enabled": true,
     "m_recordUnitPrefab": {
@@ -42051,7 +42032,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1360
+      "__id__": 1359
     },
     "_enabled": true,
     "_layoutSize": {
@@ -42093,21 +42074,21 @@
     "_name": "ViceRoad1RecordItem4",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 1347
+      "__id__": 1346
     },
     "_children": [],
     "_tag": -1,
     "_active": true,
     "_components": [
       {
-        "__id__": 1365
+        "__id__": 1364
       },
       {
-        "__id__": 1366
+        "__id__": 1365
       }
     ],
     "_prefab": {
-      "__id__": 1367
+      "__id__": 1366
     },
     "_id": "",
     "_opacity": 255,
@@ -42150,7 +42131,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1364
+      "__id__": 1363
     },
     "_enabled": true,
     "m_recordUnitPrefab": {
@@ -42162,7 +42143,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1364
+      "__id__": 1363
     },
     "_enabled": true,
     "_layoutSize": {
@@ -42204,21 +42185,21 @@
     "_name": "ViceRoad1RecordItem5",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 1347
+      "__id__": 1346
     },
     "_children": [],
     "_tag": -1,
     "_active": true,
     "_components": [
       {
-        "__id__": 1369
+        "__id__": 1368
       },
       {
-        "__id__": 1370
+        "__id__": 1369
       }
     ],
     "_prefab": {
-      "__id__": 1371
+      "__id__": 1370
     },
     "_id": "",
     "_opacity": 255,
@@ -42261,7 +42242,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1368
+      "__id__": 1367
     },
     "_enabled": true,
     "m_recordUnitPrefab": {
@@ -42273,7 +42254,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1368
+      "__id__": 1367
     },
     "_enabled": true,
     "_layoutSize": {
@@ -42315,27 +42296,27 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1347
+      "__id__": 1346
     },
     "_enabled": true,
     "m_recordItemGroup": [
       {
-        "__id__": 1349
+        "__id__": 1348
       },
       {
-        "__id__": 1353
+        "__id__": 1352
       },
       {
-        "__id__": 1357
+        "__id__": 1356
       },
       {
-        "__id__": 1361
+        "__id__": 1360
       },
       {
-        "__id__": 1365
+        "__id__": 1364
       },
       {
-        "__id__": 1369
+        "__id__": 1368
       }
     ]
   },
@@ -42344,7 +42325,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1347
+      "__id__": 1346
     },
     "_enabled": true,
     "_layoutSize": {
@@ -42386,7 +42367,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1346
+      "__id__": 1345
     },
     "_enabled": true,
     "m_recordItemGroupPrefab": {
@@ -42394,7 +42375,7 @@
     },
     "m_recordItemGroups": [
       {
-        "__id__": 1372
+        "__id__": 1371
       }
     ]
   },
@@ -42403,7 +42384,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1346
+      "__id__": 1345
     },
     "_enabled": true,
     "_layoutSize": {
@@ -42439,6 +42420,37 @@
     },
     "fileId": "46KspN+6dJAKCutOUQ65kl",
     "sync": false
+  },
+  {
+    "__type__": "cc.Layout",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 1132
+    },
+    "_enabled": true,
+    "_layoutSize": {
+      "__type__": "cc.Size",
+      "width": 300,
+      "height": 200
+    },
+    "_resize": 1,
+    "_N$layoutType": 0,
+    "_N$padding": 0,
+    "_N$cellSize": {
+      "__type__": "cc.Size",
+      "width": 40,
+      "height": 40
+    },
+    "_N$startAxis": 0,
+    "_N$paddingLeft": 0,
+    "_N$paddingRight": 0,
+    "_N$paddingTop": 0,
+    "_N$paddingBottom": 0,
+    "_N$spacingX": 0,
+    "_N$spacingY": 0,
+    "_N$verticalDirection": 1,
+    "_N$horizontalDirection": 0
   },
   {
     "__type__": "cc.PrefabInfo",
@@ -42545,7 +42557,7 @@
       "__id__": 1342
     },
     "m_recordRoot": {
-      "__id__": 1375
+      "__id__": 1374
     },
     "recordGroupCountInOneMapItem": 2,
     "mapItemCountMin": 16
@@ -42653,12 +42665,12 @@
     "_cascadeOpacityEnabled": true,
     "_anchorPoint": {
       "__type__": "cc.Vec2",
-      "x": 0.5,
+      "x": 0,
       "y": 0.5
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 352,
+      "width": 330,
       "height": 54
     },
     "_rotationX": 0,
@@ -42667,7 +42679,7 @@
     "_scaleY": 1,
     "_position": {
       "__type__": "cc.Vec2",
-      "x": 0,
+      "x": -176.4,
       "y": 0
     },
     "_skewX": 0,
@@ -42728,7 +42740,7 @@
     "_scaleY": 1,
     "_position": {
       "__type__": "cc.Vec2",
-      "x": -176,
+      "x": 0,
       "y": 0
     },
     "_skewX": 0,
@@ -42750,12 +42762,16 @@
         "__id__": 1390
       },
       {
-        "__id__": 1590
+        "__id__": 1589
       }
     ],
     "_tag": -1,
     "_active": true,
-    "_components": [],
+    "_components": [
+      {
+        "__id__": 1621
+      }
+    ],
     "_prefab": {
       "__id__": 1622
     },
@@ -42857,13 +42873,10 @@
       },
       {
         "__id__": 1587
-      },
-      {
-        "__id__": 1588
       }
     ],
     "_prefab": {
-      "__id__": 1589
+      "__id__": 1588
     },
     "_id": "",
     "_opacity": 255,
@@ -48857,32 +48870,6 @@
     "_N$horizontalDirection": 0
   },
   {
-    "__type__": "cc.Widget",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 1390
-    },
-    "_enabled": true,
-    "isAlignOnce": false,
-    "_target": null,
-    "_alignFlags": 13,
-    "_left": 0,
-    "_right": 0,
-    "_top": 0,
-    "_bottom": 0,
-    "_verticalCenter": 0,
-    "_horizontalCenter": 0,
-    "_isAbsLeft": true,
-    "_isAbsRight": true,
-    "_isAbsTop": true,
-    "_isAbsBottom": true,
-    "_isAbsHorizontalCenter": true,
-    "_isAbsVerticalCenter": true,
-    "_originalWidth": 0,
-    "_originalHeight": 108
-  },
-  {
     "__type__": "cc.PrefabInfo",
     "root": {
       "__id__": 1
@@ -48902,21 +48889,21 @@
     },
     "_children": [
       {
-        "__id__": 1591
+        "__id__": 1590
       }
     ],
     "_tag": -1,
     "_active": true,
     "_components": [
       {
-        "__id__": 1619
+        "__id__": 1618
       },
       {
-        "__id__": 1620
+        "__id__": 1619
       }
     ],
     "_prefab": {
-      "__id__": 1621
+      "__id__": 1620
     },
     "_id": "",
     "_opacity": 255,
@@ -48931,7 +48918,7 @@
     "_anchorPoint": {
       "__type__": "cc.Vec2",
       "x": 0,
-      "y": 0
+      "y": 0.5
     },
     "_contentSize": {
       "__type__": "cc.Size",
@@ -48959,40 +48946,40 @@
     "_name": "ViceRoad2RecordItemGroup",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 1590
+      "__id__": 1589
     },
     "_children": [
       {
-        "__id__": 1592
+        "__id__": 1591
       },
       {
-        "__id__": 1596
+        "__id__": 1595
       },
       {
-        "__id__": 1600
+        "__id__": 1599
       },
       {
-        "__id__": 1604
+        "__id__": 1603
       },
       {
-        "__id__": 1608
+        "__id__": 1607
       },
       {
-        "__id__": 1612
+        "__id__": 1611
       }
     ],
     "_tag": -1,
     "_active": true,
     "_components": [
       {
-        "__id__": 1616
+        "__id__": 1615
       },
       {
-        "__id__": 1617
+        "__id__": 1616
       }
     ],
     "_prefab": {
-      "__id__": 1618
+      "__id__": 1617
     },
     "_id": "",
     "_opacity": 255,
@@ -49035,21 +49022,21 @@
     "_name": "ViceRoad2RecordItem0",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 1591
+      "__id__": 1590
     },
     "_children": [],
     "_tag": -1,
     "_active": true,
     "_components": [
       {
-        "__id__": 1593
+        "__id__": 1592
       },
       {
-        "__id__": 1594
+        "__id__": 1593
       }
     ],
     "_prefab": {
-      "__id__": 1595
+      "__id__": 1594
     },
     "_id": "",
     "_opacity": 255,
@@ -49092,7 +49079,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1592
+      "__id__": 1591
     },
     "_enabled": true,
     "m_recordUnitPrefab": {
@@ -49104,7 +49091,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1592
+      "__id__": 1591
     },
     "_enabled": true,
     "_layoutSize": {
@@ -49146,21 +49133,21 @@
     "_name": "ViceRoad2RecordItem1",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 1591
+      "__id__": 1590
     },
     "_children": [],
     "_tag": -1,
     "_active": true,
     "_components": [
       {
-        "__id__": 1597
+        "__id__": 1596
       },
       {
-        "__id__": 1598
+        "__id__": 1597
       }
     ],
     "_prefab": {
-      "__id__": 1599
+      "__id__": 1598
     },
     "_id": "",
     "_opacity": 255,
@@ -49203,7 +49190,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1596
+      "__id__": 1595
     },
     "_enabled": true,
     "m_recordUnitPrefab": {
@@ -49215,7 +49202,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1596
+      "__id__": 1595
     },
     "_enabled": true,
     "_layoutSize": {
@@ -49257,21 +49244,21 @@
     "_name": "ViceRoad2RecordItem2",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 1591
+      "__id__": 1590
     },
     "_children": [],
     "_tag": -1,
     "_active": true,
     "_components": [
       {
-        "__id__": 1601
+        "__id__": 1600
       },
       {
-        "__id__": 1602
+        "__id__": 1601
       }
     ],
     "_prefab": {
-      "__id__": 1603
+      "__id__": 1602
     },
     "_id": "",
     "_opacity": 255,
@@ -49314,7 +49301,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1600
+      "__id__": 1599
     },
     "_enabled": true,
     "m_recordUnitPrefab": {
@@ -49326,7 +49313,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1600
+      "__id__": 1599
     },
     "_enabled": true,
     "_layoutSize": {
@@ -49368,21 +49355,21 @@
     "_name": "ViceRoad2RecordItem3",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 1591
+      "__id__": 1590
     },
     "_children": [],
     "_tag": -1,
     "_active": true,
     "_components": [
       {
-        "__id__": 1605
+        "__id__": 1604
       },
       {
-        "__id__": 1606
+        "__id__": 1605
       }
     ],
     "_prefab": {
-      "__id__": 1607
+      "__id__": 1606
     },
     "_id": "",
     "_opacity": 255,
@@ -49425,7 +49412,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1604
+      "__id__": 1603
     },
     "_enabled": true,
     "m_recordUnitPrefab": {
@@ -49437,7 +49424,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1604
+      "__id__": 1603
     },
     "_enabled": true,
     "_layoutSize": {
@@ -49479,21 +49466,21 @@
     "_name": "ViceRoad2RecordItem4",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 1591
+      "__id__": 1590
     },
     "_children": [],
     "_tag": -1,
     "_active": true,
     "_components": [
       {
-        "__id__": 1609
+        "__id__": 1608
       },
       {
-        "__id__": 1610
+        "__id__": 1609
       }
     ],
     "_prefab": {
-      "__id__": 1611
+      "__id__": 1610
     },
     "_id": "",
     "_opacity": 255,
@@ -49536,7 +49523,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1608
+      "__id__": 1607
     },
     "_enabled": true,
     "m_recordUnitPrefab": {
@@ -49548,7 +49535,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1608
+      "__id__": 1607
     },
     "_enabled": true,
     "_layoutSize": {
@@ -49590,21 +49577,21 @@
     "_name": "ViceRoad2RecordItem5",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 1591
+      "__id__": 1590
     },
     "_children": [],
     "_tag": -1,
     "_active": true,
     "_components": [
       {
-        "__id__": 1613
+        "__id__": 1612
       },
       {
-        "__id__": 1614
+        "__id__": 1613
       }
     ],
     "_prefab": {
-      "__id__": 1615
+      "__id__": 1614
     },
     "_id": "",
     "_opacity": 255,
@@ -49647,7 +49634,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1612
+      "__id__": 1611
     },
     "_enabled": true,
     "m_recordUnitPrefab": {
@@ -49659,7 +49646,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1612
+      "__id__": 1611
     },
     "_enabled": true,
     "_layoutSize": {
@@ -49701,27 +49688,27 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1591
+      "__id__": 1590
     },
     "_enabled": true,
     "m_recordItemGroup": [
       {
-        "__id__": 1593
+        "__id__": 1592
       },
       {
-        "__id__": 1597
+        "__id__": 1596
       },
       {
-        "__id__": 1601
+        "__id__": 1600
       },
       {
-        "__id__": 1605
+        "__id__": 1604
       },
       {
-        "__id__": 1609
+        "__id__": 1608
       },
       {
-        "__id__": 1613
+        "__id__": 1612
       }
     ]
   },
@@ -49730,7 +49717,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1591
+      "__id__": 1590
     },
     "_enabled": true,
     "_layoutSize": {
@@ -49772,7 +49759,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1590
+      "__id__": 1589
     },
     "_enabled": true,
     "m_recordItemGroupPrefab": {
@@ -49780,7 +49767,7 @@
     },
     "m_recordItemGroups": [
       {
-        "__id__": 1616
+        "__id__": 1615
       }
     ]
   },
@@ -49789,7 +49776,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1590
+      "__id__": 1589
     },
     "_enabled": true,
     "_layoutSize": {
@@ -49825,6 +49812,37 @@
     },
     "fileId": "cbZsoe8RxCNLWNsoEbjLrL",
     "sync": false
+  },
+  {
+    "__type__": "cc.Layout",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 1389
+    },
+    "_enabled": true,
+    "_layoutSize": {
+      "__type__": "cc.Size",
+      "width": 330,
+      "height": 54
+    },
+    "_resize": 1,
+    "_N$layoutType": 0,
+    "_N$padding": 0,
+    "_N$cellSize": {
+      "__type__": "cc.Size",
+      "width": 40,
+      "height": 40
+    },
+    "_N$startAxis": 0,
+    "_N$paddingLeft": 0,
+    "_N$paddingRight": 0,
+    "_N$paddingTop": 0,
+    "_N$paddingBottom": 0,
+    "_N$spacingX": 0,
+    "_N$spacingY": 0,
+    "_N$verticalDirection": 1,
+    "_N$horizontalDirection": 0
   },
   {
     "__type__": "cc.PrefabInfo",
@@ -49863,7 +49881,7 @@
     "_target": null,
     "_alignFlags": 45,
     "_left": 0,
-    "_right": 22,
+    "_right": 0,
     "_top": 0,
     "_bottom": 0,
     "_verticalCenter": 0,
@@ -49931,7 +49949,7 @@
       "__id__": 1586
     },
     "m_recordRoot": {
-      "__id__": 1619
+      "__id__": 1618
     },
     "recordGroupCountInOneMapItem": 2,
     "mapItemCountMin": 15
@@ -50136,12 +50154,16 @@
         "__id__": 1634
       },
       {
-        "__id__": 1847
+        "__id__": 1846
       }
     ],
     "_tag": -1,
     "_active": true,
-    "_components": [],
+    "_components": [
+      {
+        "__id__": 1878
+      }
+    ],
     "_prefab": {
       "__id__": 1879
     },
@@ -50246,13 +50268,10 @@
       },
       {
         "__id__": 1844
-      },
-      {
-        "__id__": 1845
       }
     ],
     "_prefab": {
-      "__id__": 1846
+      "__id__": 1845
     },
     "_id": "",
     "_opacity": 255,
@@ -56640,32 +56659,6 @@
     "_N$horizontalDirection": 0
   },
   {
-    "__type__": "cc.Widget",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 1634
-    },
-    "_enabled": true,
-    "isAlignOnce": false,
-    "_target": null,
-    "_alignFlags": 13,
-    "_left": 0,
-    "_right": 0,
-    "_top": 0,
-    "_bottom": 0,
-    "_verticalCenter": 0,
-    "_horizontalCenter": 0,
-    "_isAbsLeft": true,
-    "_isAbsRight": true,
-    "_isAbsTop": true,
-    "_isAbsBottom": true,
-    "_isAbsHorizontalCenter": true,
-    "_isAbsVerticalCenter": true,
-    "_originalWidth": 0,
-    "_originalHeight": 108
-  },
-  {
     "__type__": "cc.PrefabInfo",
     "root": {
       "__id__": 1
@@ -56685,21 +56678,21 @@
     },
     "_children": [
       {
-        "__id__": 1848
+        "__id__": 1847
       }
     ],
     "_tag": -1,
     "_active": true,
     "_components": [
       {
-        "__id__": 1876
+        "__id__": 1875
       },
       {
-        "__id__": 1877
+        "__id__": 1876
       }
     ],
     "_prefab": {
-      "__id__": 1878
+      "__id__": 1877
     },
     "_id": "",
     "_opacity": 255,
@@ -56714,7 +56707,7 @@
     "_anchorPoint": {
       "__type__": "cc.Vec2",
       "x": 0,
-      "y": 0
+      "y": 0.5
     },
     "_contentSize": {
       "__type__": "cc.Size",
@@ -56742,40 +56735,40 @@
     "_name": "ViceRoad3RecordItemGroup",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 1847
+      "__id__": 1846
     },
     "_children": [
       {
-        "__id__": 1849
+        "__id__": 1848
       },
       {
-        "__id__": 1853
+        "__id__": 1852
       },
       {
-        "__id__": 1857
+        "__id__": 1856
       },
       {
-        "__id__": 1861
+        "__id__": 1860
       },
       {
-        "__id__": 1865
+        "__id__": 1864
       },
       {
-        "__id__": 1869
+        "__id__": 1868
       }
     ],
     "_tag": -1,
     "_active": true,
     "_components": [
       {
-        "__id__": 1873
+        "__id__": 1872
       },
       {
-        "__id__": 1874
+        "__id__": 1873
       }
     ],
     "_prefab": {
-      "__id__": 1875
+      "__id__": 1874
     },
     "_id": "",
     "_opacity": 255,
@@ -56818,21 +56811,21 @@
     "_name": "ViceRoad3RecordItem0",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 1848
+      "__id__": 1847
     },
     "_children": [],
     "_tag": -1,
     "_active": true,
     "_components": [
       {
-        "__id__": 1850
+        "__id__": 1849
       },
       {
-        "__id__": 1851
+        "__id__": 1850
       }
     ],
     "_prefab": {
-      "__id__": 1852
+      "__id__": 1851
     },
     "_id": "",
     "_opacity": 255,
@@ -56875,7 +56868,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1849
+      "__id__": 1848
     },
     "_enabled": true,
     "m_recordUnitPrefab": {
@@ -56887,7 +56880,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1849
+      "__id__": 1848
     },
     "_enabled": true,
     "_layoutSize": {
@@ -56929,21 +56922,21 @@
     "_name": "ViceRoad3RecordItem1",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 1848
+      "__id__": 1847
     },
     "_children": [],
     "_tag": -1,
     "_active": true,
     "_components": [
       {
-        "__id__": 1854
+        "__id__": 1853
       },
       {
-        "__id__": 1855
+        "__id__": 1854
       }
     ],
     "_prefab": {
-      "__id__": 1856
+      "__id__": 1855
     },
     "_id": "",
     "_opacity": 255,
@@ -56986,7 +56979,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1853
+      "__id__": 1852
     },
     "_enabled": true,
     "m_recordUnitPrefab": {
@@ -56998,7 +56991,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1853
+      "__id__": 1852
     },
     "_enabled": true,
     "_layoutSize": {
@@ -57040,21 +57033,21 @@
     "_name": "ViceRoad3RecordItem2",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 1848
+      "__id__": 1847
     },
     "_children": [],
     "_tag": -1,
     "_active": true,
     "_components": [
       {
-        "__id__": 1858
+        "__id__": 1857
       },
       {
-        "__id__": 1859
+        "__id__": 1858
       }
     ],
     "_prefab": {
-      "__id__": 1860
+      "__id__": 1859
     },
     "_id": "",
     "_opacity": 255,
@@ -57097,7 +57090,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1857
+      "__id__": 1856
     },
     "_enabled": true,
     "m_recordUnitPrefab": {
@@ -57109,7 +57102,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1857
+      "__id__": 1856
     },
     "_enabled": true,
     "_layoutSize": {
@@ -57151,21 +57144,21 @@
     "_name": "ViceRoad3RecordItem3",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 1848
+      "__id__": 1847
     },
     "_children": [],
     "_tag": -1,
     "_active": true,
     "_components": [
       {
-        "__id__": 1862
+        "__id__": 1861
       },
       {
-        "__id__": 1863
+        "__id__": 1862
       }
     ],
     "_prefab": {
-      "__id__": 1864
+      "__id__": 1863
     },
     "_id": "",
     "_opacity": 255,
@@ -57208,7 +57201,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1861
+      "__id__": 1860
     },
     "_enabled": true,
     "m_recordUnitPrefab": {
@@ -57220,7 +57213,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1861
+      "__id__": 1860
     },
     "_enabled": true,
     "_layoutSize": {
@@ -57262,21 +57255,21 @@
     "_name": "ViceRoad3RecordItem4",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 1848
+      "__id__": 1847
     },
     "_children": [],
     "_tag": -1,
     "_active": true,
     "_components": [
       {
-        "__id__": 1866
+        "__id__": 1865
       },
       {
-        "__id__": 1867
+        "__id__": 1866
       }
     ],
     "_prefab": {
-      "__id__": 1868
+      "__id__": 1867
     },
     "_id": "",
     "_opacity": 255,
@@ -57319,7 +57312,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1865
+      "__id__": 1864
     },
     "_enabled": true,
     "m_recordUnitPrefab": {
@@ -57331,7 +57324,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1865
+      "__id__": 1864
     },
     "_enabled": true,
     "_layoutSize": {
@@ -57373,21 +57366,21 @@
     "_name": "ViceRoad3RecordItem5",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 1848
+      "__id__": 1847
     },
     "_children": [],
     "_tag": -1,
     "_active": true,
     "_components": [
       {
-        "__id__": 1870
+        "__id__": 1869
       },
       {
-        "__id__": 1871
+        "__id__": 1870
       }
     ],
     "_prefab": {
-      "__id__": 1872
+      "__id__": 1871
     },
     "_id": "",
     "_opacity": 255,
@@ -57430,7 +57423,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1869
+      "__id__": 1868
     },
     "_enabled": true,
     "m_recordUnitPrefab": {
@@ -57442,7 +57435,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1869
+      "__id__": 1868
     },
     "_enabled": true,
     "_layoutSize": {
@@ -57484,27 +57477,27 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1848
+      "__id__": 1847
     },
     "_enabled": true,
     "m_recordItemGroup": [
       {
-        "__id__": 1850
+        "__id__": 1849
       },
       {
-        "__id__": 1854
+        "__id__": 1853
       },
       {
-        "__id__": 1858
+        "__id__": 1857
       },
       {
-        "__id__": 1862
+        "__id__": 1861
       },
       {
-        "__id__": 1866
+        "__id__": 1865
       },
       {
-        "__id__": 1870
+        "__id__": 1869
       }
     ]
   },
@@ -57513,7 +57506,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1848
+      "__id__": 1847
     },
     "_enabled": true,
     "_layoutSize": {
@@ -57555,7 +57548,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1847
+      "__id__": 1846
     },
     "_enabled": true,
     "m_recordItemGroupPrefab": {
@@ -57563,7 +57556,7 @@
     },
     "m_recordItemGroups": [
       {
-        "__id__": 1873
+        "__id__": 1872
       }
     ]
   },
@@ -57572,7 +57565,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1847
+      "__id__": 1846
     },
     "_enabled": true,
     "_layoutSize": {
@@ -57608,6 +57601,37 @@
     },
     "fileId": "ebjWwEYF1BPLWqYLD3ZPig",
     "sync": false
+  },
+  {
+    "__type__": "cc.Layout",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 1633
+    },
+    "_enabled": true,
+    "_layoutSize": {
+      "__type__": "cc.Size",
+      "width": 300,
+      "height": 200
+    },
+    "_resize": 1,
+    "_N$layoutType": 0,
+    "_N$padding": 0,
+    "_N$cellSize": {
+      "__type__": "cc.Size",
+      "width": 40,
+      "height": 40
+    },
+    "_N$startAxis": 0,
+    "_N$paddingLeft": 0,
+    "_N$paddingRight": 0,
+    "_N$paddingTop": 0,
+    "_N$paddingBottom": 0,
+    "_N$spacingX": 0,
+    "_N$spacingY": 0,
+    "_N$verticalDirection": 1,
+    "_N$horizontalDirection": 0
   },
   {
     "__type__": "cc.PrefabInfo",
@@ -57714,7 +57738,7 @@
       "__id__": 1843
     },
     "m_recordRoot": {
-      "__id__": 1876
+      "__id__": 1875
     },
     "recordGroupCountInOneMapItem": 2,
     "mapItemCountMin": 16

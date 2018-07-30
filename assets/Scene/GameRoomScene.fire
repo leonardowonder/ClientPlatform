@@ -7580,7 +7580,9 @@
       "__id__": 220
     },
     "_enabled": true,
-    "m_recordUnitPrefab": null,
+    "m_recordUnitPrefab": {
+      "__uuid__": "c61f0077-1302-49aa-96a1-5680125c8aa1"
+    },
     "m_recordUnitList": [],
     "m_maxRecordCount": 25
   },
@@ -7974,7 +7976,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "PlayerItem",
+    "_name": "MyPlayerItem",
     "_objFlags": 0,
     "_parent": {
       "__id__": 231
@@ -9315,6 +9317,9 @@
     ],
     "m_othersNode": {
       "__id__": 273
+    },
+    "m_myPlayerItem": {
+      "__id__": 269
     },
     "m_itemCount": 8
   },

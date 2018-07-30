@@ -69,7 +69,7 @@ export default class CardDisplay extends cc.Component {
         let value: number = this._card.value;
         let tagIdx: number = type - 1;
 
-        let isBlack: boolean = (type == EmCardTpye.CardType_club || type == EmCardTpye.CardType_Spade);
+        let isBlack: boolean = (type == EmCardTpye.CardType_Club || type == EmCardTpye.CardType_Spade);
         let vCardType: string[] = ['D', 'C', 'B', 'A'];
 
         let strNum: string;

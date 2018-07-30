@@ -33,7 +33,6 @@ class RoomDataManger extends Singleton {
         let roomData: RoomData = this.getRoomData();
 
         roomData.state = state;
-        cc.log('wd debug changeRoomState roomData =', roomData, this.getRoomData());
     }
 };
 

@@ -2,10 +2,12 @@ const { ccclass, property } = cc._decorator;
 
 import * as _ from 'lodash';
 
+import { EmGroupType, GroupTypeInfo } from '../../../Define/GamePlayDefine';
+import ClientEventDefine from '../../../Define/ClientEventDefine';
+
 import { addNewNodeFunc } from '../../../Utils/NodePoolUtils';
 import { goldenTypeToGroupType } from '../../../Utils/GamePlay/GameUtils';
 
-import { EmGroupType, GroupTypeInfo } from '../../../Define/GamePlayDefine';
 import CardTypeItem from './CardTypeItem';
 
 import GameRecordData from '../../../Data/GamePlay/GameRecordData';
@@ -34,12 +36,27 @@ export default class CardTypeItemList extends cc.Component {
 
     _recordLoaded: boolean = false;
 
+    private _registEvents() {
+        this._unregistEvents();
+        cc.systemEvent.on(ClientEventDefine.CUSTOM_EVENT_NEW_WIN_TYPE_ADDED, this.onNewRecordAdded, this);
+    }
+
+    private _unregistEvents() {
+        cc.systemEvent.targetOff(this);
+    }
+
     onLoad() {
+        this._registEvents();
+
         this._nodePool = new cc.NodePool(CardTypeItem);
 
         this.scheduleOnce(() => {
             this.updateRecords();
         })
+    }
+
+    onDestroy() {
+        this._unregistEvents();
     }
 
     updateRecords() {
@@ -63,6 +80,12 @@ export default class CardTypeItemList extends cc.Component {
         });
 
         this._recordLoaded = true;
+    }
+
+    onNewRecordAdded(event: cc.Event.EventCustom) {
+        let groupType: GroupTypeInfo = event.detail;
+
+        this.addGroupType(groupType);
     }
 
     addGroupType(typeInfo: GroupTypeInfo) {

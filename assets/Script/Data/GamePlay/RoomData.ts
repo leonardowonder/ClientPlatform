@@ -6,6 +6,11 @@ import { eRoomState, GoldenType, eBetPool } from '../../Define/GamePlayDefine';
 export class TypeRecordInfo {
     T: GoldenType = GoldenType.Golden_None;
     V: number = 0;
+
+    constructor(type: GoldenType, value: number) {
+        this.T = type;
+        this.V = value;
+    }
     
     reset() {
         this.T = GoldenType.Golden_None;
@@ -47,6 +52,14 @@ export default class RoomData {
 
     setRoomData(data) {
         _.merge(this, data);
+    }
+
+    addTypeRecord(recordInfo: TypeRecordInfo) {
+        this.vTypeRecord.push(recordInfo);
+    }
+
+    addWinRecrod(record: eBetPool) {
+        this.vWinRecord.push(record);
     }
 
     reset() {

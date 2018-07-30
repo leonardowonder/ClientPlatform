@@ -29,7 +29,7 @@ export default class MapRoot extends cc.Component {
 
         this.m_mapItemGroup.push(comp);
 
-        this._updateParentNodeSize();
+        // this._updateParentNodeSize();
     }
 
     removeLastItem() {
@@ -40,20 +40,21 @@ export default class MapRoot extends cc.Component {
 
             this._nodePool.put(targetNode);
             
-            this._updateParentNodeSize();
+            // this._updateParentNodeSize();
         }
     }
 
-    private _updateParentNodeSize() {
-        this.scheduleOnce(() => {
-            this._resizeParentNodeContent();
-        })
-    }
+    // private _updateParentNodeSize() {
+    //     this.scheduleOnce(() => {
+    //         this._resizeParentNodeContent();
+    //     })
+    // }
 
-    private _resizeParentNodeContent() {
-        let parentNode: cc.Node = this.node.parent;
-        if (parentNode) {
-            parentNode.setContentSize(this.node.getContentSize());
-        }
-    }
+    // private _resizeParentNodeContent() {
+    //     let parentNode: cc.Node = this.node.parent;
+    //     if (parentNode) {
+    //         cc.log('wd debug parentNode =', parentNode, 'size =', this.node.getContentSize());
+    //         parentNode.setContentSize(this.node.getContentSize());
+    //     }
+    // }
 }

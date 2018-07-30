@@ -2,6 +2,8 @@ const { ccclass, property } = cc._decorator;
 
 import * as _ from 'lodash';
 
+import ClientEventDefine from '../../../../Define/ClientEventDefine';
+
 import StringUtils from '../../../../Utils/StringUtils';
 
 import GameRecordData from '../../../../Data/GamePlay/GameRecordData';
@@ -47,10 +49,38 @@ export default class TendencyChart extends cc.Component {
 
     _recordLoaded: boolean = false;
 
+
+    private _registEvents() {
+        this._unregistEvents();
+        cc.systemEvent.on(ClientEventDefine.CUSTOM_EVENT_NEW_RECORD_ADDED, this.onNewRecordAdded, this);
+    }
+
+    private _unregistEvents() {
+        cc.systemEvent.targetOff(this);
+    }
+
     onLoad() {
+        this._registEvents();
+
         this.scheduleOnce(() => {
             this.updateRecords();
         })
+    }
+
+    onDestroy() {
+        this._unregistEvents();
+    }
+
+    init() {
+        this._registEvents();
+    }
+    
+    hide() {
+        this._unregistEvents();
+        
+        this._recordLoaded = false;
+        
+        this.node.active = false;
     }
 
     updateRecords() {
@@ -109,9 +139,11 @@ export default class TendencyChart extends cc.Component {
 
         this._updateLabels(types);
     }
-    
-    hide() {
-        this.node.active = false;
+
+    onNewRecordAdded(event: cc.Event.EventCustom) {
+        let record: EmRecordType = event.detail;
+
+        this.addRecord(record);
     }
 
     private _addRecordToChartData(type: EmRecordType) {

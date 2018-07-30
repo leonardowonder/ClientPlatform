@@ -2,9 +2,15 @@ const { ccclass, property } = cc._decorator;
 
 import * as _ from 'lodash';
 
-import { addNewNodeFunc } from '../../../Utils/NodePoolUtils';
+import { EmRecordType, eBetPool } from '../../../Define/GamePlayDefine';
+import ClientEventDefine from '../../../Define/ClientEventDefine';
 
-import { EmRecordType } from '../../../Define/GamePlayDefine';
+import { addNewNodeFunc } from '../../../Utils/NodePoolUtils';
+import { betPoolToRecordType } from '../../../Utils/GamePlay/GameUtils';
+
+import RoomData from '../../../Data/GamePlay/RoomData';
+
+import RoomDataManger from '../../../Manager/DataManager/GamePlayDataManger/RoomDataManger';
 
 import RecordUnit from '../../../Component/GamePlay/TendencyChart/RecordUnit';
 
@@ -21,8 +27,51 @@ export default class RecentRecordsLayer extends cc.Component {
 
     private _nodePool: cc.NodePool = null;
 
+    _recordLoaded: boolean = false;
+
+    private _registEvents() {
+        this._unregistEvents();
+        cc.systemEvent.on(ClientEventDefine.CUSTOM_EVENT_NEW_RECORD_ADDED, this.onNewRecordAdded, this);
+    }
+
+    private _unregistEvents() {
+        cc.systemEvent.targetOff(this);
+    }
+
     onLoad() {
+        this._registEvents();
+
         this._nodePool = new cc.NodePool(RecordUnit);
+
+        this.scheduleOnce(() => {
+            this.updateRecords();
+        });
+    }
+
+    onDestroy() {
+        this._unregistEvents();
+    }
+
+    updateRecords() {
+        if (this._recordLoaded) {
+            return;
+        }
+
+        let roomData: RoomData = RoomDataManger.getInstance().getRoomData();
+
+        let records: eBetPool[] = roomData.vWinRecord;
+        let typeInfos: EmRecordType[] = [];
+        _.forEach(records, (record: eBetPool) => {
+            let recordType: EmRecordType = betPoolToRecordType(record);
+
+            typeInfos.push(recordType);
+        });
+
+        _.forEach(typeInfos, (type: EmRecordType) => {
+            this.addRecord(type);
+        });
+
+        this._recordLoaded = true;
     }
 
     addRecord(type: EmRecordType) {
@@ -40,13 +89,19 @@ export default class RecentRecordsLayer extends cc.Component {
         }
     }
 
+    onNewRecordAdded(event: cc.Event.EventCustom) {
+        let record: EmRecordType = event.detail;
+
+        this.addRecord(record);
+    }
+
     private _checkTypeValid(type: EmRecordType) {
         return type > EmRecordType.Type_None && type < EmRecordType.Type_Max;
     }
 
     private _addNewNode() {
         let node: cc.Node = addNewNodeFunc(this.node, this.m_recordUnitPrefab, this._nodePool);
-        
+
         let comp: RecordUnit = node.getComponent(RecordUnit);
 
         this.m_recordUnitList.push(comp);
@@ -68,7 +123,7 @@ export default class RecentRecordsLayer extends cc.Component {
 
     private _doRemoveFirstRecord() {
         let unit: RecordUnit = this.m_recordUnitList.shift();
-        
+
         this._nodePool.put(unit.node);
     }
 }

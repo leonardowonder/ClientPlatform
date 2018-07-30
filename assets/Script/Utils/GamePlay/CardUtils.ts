@@ -259,9 +259,7 @@ class CardUtils extends Singleton {
     }
 
     private _getPairWeight(cards: Card[]): number {
-        let sortedCards: Card[] = _.sortBy(cards, (card1: Card, card2: Card) => {
-            return card1.weight - card2.weight;
-        });
+        let sortedCards: Card[] = _.sortBy(cards, ['weight']);
 
         let pairWeight = sortedCards[0].value == sortedCards[1].value ? sortedCards[1].weight : sortedCards[2].weight;
         let singleWeight = sortedCards[0].value == sortedCards[1].value ? sortedCards[2].weight : sortedCards[1].weight;
@@ -270,9 +268,7 @@ class CardUtils extends Singleton {
     }
 
     private _getPairValue(cards: Card[]): number {
-        let sortedCards: Card[] = _.sortBy(cards, (card1: Card, card2: Card) => {
-            return card1.value - card2.value;
-        });
+        let sortedCards: Card[] = _.sortBy(cards, ['value']);
 
         let pairValue = sortedCards[0].value == sortedCards[1].value ? sortedCards[1].value : sortedCards[2].value;
 

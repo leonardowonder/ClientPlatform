@@ -1,4 +1,4 @@
-import { EmBetAreaType, eBetPool, EmChipType, GoldenType, EmGroupType } from '../../Define/GamePlayDefine';
+import { EmBetAreaType, eBetPool, EmChipType, GoldenType, EmGroupType, EmRecordType, EmCardTpye, eCardType } from '../../Define/GamePlayDefine';
 
 export function betAreaTypeToBetPool(type: EmBetAreaType): eBetPool {
     let ret: eBetPool = eBetPool.eBet_Max;
@@ -169,6 +169,102 @@ export function goldenTypeToGroupType(type: GoldenType) {
         }
         default: {
             cc.warn(`GameUtils groupTypeToGoldenType invalid type =${type}`);
+            break;
+        }
+    }
+
+    return ret;
+};
+
+export function recordTypeToBetPool(type: EmRecordType): eBetPool {
+    let ret: eBetPool = eBetPool.eBet_Max;
+    switch (type) {
+        case EmRecordType.Type_Red: {
+            ret = eBetPool.eBet_Red;
+            break;
+        }
+        case EmRecordType.Type_Black: {
+            ret = eBetPool.eBet_Black;
+            break;
+        }
+        default: {
+            cc.warn(`GameUtils recordTypeToBetPool invalid type = ${type}`);
+            break;
+        }
+    }
+
+    return ret;
+};
+
+export function betPoolToRecordType(type: eBetPool): EmRecordType {
+    let ret: EmRecordType = EmRecordType.Type_None;
+    switch (type) {
+        case eBetPool.eBet_Red: {
+            ret = EmRecordType.Type_Red;
+            break;
+        }
+        case eBetPool.eBet_Black: {
+            ret = EmRecordType.Type_Black;
+            break;
+        }
+        default: {
+            cc.warn(`GameUtils betPoolToRecordType invalid type = ${type}`);
+            break;
+        }
+    }
+
+    return ret;
+};
+
+export function emCardTypeToCardType(type: EmCardTpye): eCardType {
+    let ret: eCardType = eCardType.eCard_Max;
+    switch (type) {
+        case EmCardTpye.CardType_Diamond: {
+            ret = eCardType.eCard_Diamond;
+            break;
+        }
+        case EmCardTpye.CardType_Club: {
+            ret = eCardType.eCard_Club;
+            break;
+        }
+        case EmCardTpye.CardType_Heart: {
+            ret = eCardType.eCard_Heart;
+            break;
+        }
+        case EmCardTpye.CardType_Spade: {
+            ret = eCardType.eCard_Sword;
+            break;
+        }
+        default: {
+            cc.warn(`GameUtils emCardTypeToCardType invalid type = ${type}`);
+            break;
+        }
+    }
+
+    return ret;
+};
+
+export function cardTypeToBetEmCardType(type: eCardType): EmCardTpye {
+    let ret: EmCardTpye = EmCardTpye.CardType_None;
+    switch (type) {
+        case eCardType.eCard_Diamond: {
+            ret = EmCardTpye.CardType_Diamond;
+            break;
+        }
+        case eCardType.eCard_Club: {
+            ret = EmCardTpye.CardType_Club;
+            break;
+        }
+        case eCardType.eCard_Heart: {
+            ret = EmCardTpye.CardType_Heart;
+            break;
+        }
+        case eCardType.eCard_Sword: {
+            ret = EmCardTpye.CardType_Spade;
+            break;
+        }
+        default: {
+            cc.warn(`GameUtils cardTypeToBetEmCardType invalid type = ${type}`);
             break;
         }
     }

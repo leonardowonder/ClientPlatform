@@ -132,6 +132,8 @@ class GameRoomLogic extends Singleton {
     private _onMsgRoomInfoRsp(jsMsg) {
         RoomDataManger.getInstance().setRoomData(jsMsg);
 
+        gameController.onGetRoomInfo(jsMsg)
+
         this.m_curView && this.m_curView.onGetRoomInfo();
     }
 
@@ -205,9 +207,7 @@ class GameRoomLogic extends Singleton {
     }
 
     private _onMsgRBStartGameRsp(jsMsg) {
-        if (jsMsg.ret == 0) {
-            gameController.onGameStart();
-        }
+        gameController.onGameStart();
     }
 
     private _onMsgRBPlayerBetRsp(jsMsg) {
@@ -223,16 +223,7 @@ class GameRoomLogic extends Singleton {
     }
 
     private _onMsgRBRoomResultRsp(jsMsg) {
-        if (jsMsg.ret == 0) {
-            gameController.onGameStopBet();
-
-            let type = jsMsg.type;
-            let nums = jsMsg.nums;
-            cardDataManager.udpateCardData(type, nums);
-
-            gameController.distributeCards();
-            recordManager.addRecord(jsMsg.type);
-        }
+        gameController.onGameResult(jsMsg);
     }
 
     //private
