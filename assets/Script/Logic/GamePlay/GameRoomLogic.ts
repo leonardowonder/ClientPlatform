@@ -161,7 +161,12 @@ class GameRoomLogic extends Singleton {
         if (players && players.length > 0) {
             let uidList: number[] = [];
             _.forEach(players, (player) => {
-                uidList.push(player.uid);
+                if (typeof player.uid == 'number' && player.uid > 0) {
+                    uidList.push(player.uid);
+                }
+                else {
+                    cc.warn(`_onMsgRoomPlayerInfoRsp invalid player.uid = ${player.uid}`);
+                }
             });
 
             PlayerDataManager.getInstance().reqPlayerData(uidList);
@@ -251,14 +256,25 @@ class GameRoomLogic extends Singleton {
         let roomInfo: RoomData = RoomDataManger.getInstance().getRoomData();
 
         let uidList: number[] = [];
-        if (roomInfo.bankerID != -1) {
+        if (typeof roomInfo.bankerID == 'number' && roomInfo.bankerID != -1) {
             uidList.push(roomInfo.bankerID);
         }
-        if (roomInfo.bestBetUID) {
+        else {
+            cc.warn(`_onMsgRoomPlayerInfoRsp invalid player.uid = ${roomInfo.bankerID}`);
+        }
+        
+        if (typeof roomInfo.bestBetUID == 'number' && roomInfo.bestBetUID > 0) {
             uidList.push(roomInfo.bestBetUID);
         }
-        if (roomInfo.richestUID) {
+        else {
+            cc.warn(`_onMsgRoomPlayerInfoRsp invalid player.uid = ${roomInfo.bestBetUID}`);
+        }
+
+        if (typeof roomInfo.richestUID == 'number' && roomInfo.richestUID > 0) {
             uidList.push(roomInfo.richestUID);
+        }
+        else {
+            cc.warn(`_onMsgRoomPlayerInfoRsp invalid player.uid = ${roomInfo.richestUID}`);
         }
 
         if (uidList.length > 0) {
