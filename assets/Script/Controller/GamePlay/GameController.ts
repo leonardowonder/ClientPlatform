@@ -4,7 +4,8 @@ import * as _ from 'lodash';
 
 import StateMachine, { Transition, Method } from '../../Utils/StateMachine';
 
-import { EmChipType, EmRecordType, CardsInfo, EmCampType, eRoomState, GroupTypeInfo, eBetPool, WinInfo, ResultInfo } from '../../Define/GamePlayDefine';
+import { EmChipType, EmRecordType, EmCampType, eRoomState, GroupTypeInfo, eBetPool } from '../../Define/GamePlayDefine';
+import { CardsInfo, WinInfo, ResultMessegeInfo, BetMessageInfo } from '../../Define/GameMessegeDefine';
 import ClientEventDefine from '../../Define/ClientEventDefine';
 
 import { goldenTypeToGroupType } from '../../Utils/GamePlay/GameUtils';
@@ -19,6 +20,7 @@ import GameRoomScene from '../../View/Scene/GameRoomScene';
 import GameRoomData from '../../Data/GamePlay/GameRoomData';
 import GamePlayerData from '../../Data/GamePlay/GamePlayerData';
 import GamePlayerDataManager from '../../Manager/DataManager/GamePlayDataManger/GamePlayerDataManager';
+import UserData, { UserInfo } from '../../Data/UserData';
 
 class GameController extends Singleton {
     private m_gameRoomScene: GameRoomScene = null;
@@ -74,46 +76,74 @@ class GameController extends Singleton {
         }
     }
 
+    onRoomBet(jsMsg: BetMessageInfo) {
+        let userData = UserData.getInstance().getUserData();
+
+        let betCoin: number = jsMsg.coin;
+        if (userData.uid == jsMsg.uid) {
+            userData.coin -= betCoin;
+        }
+
+        let roomInfo: RoomData = RoomDataManger.getInstance().getRoomData();
+        if (jsMsg.uid == roomInfo.bestBetUID) {
+            roomInfo.bestBetCoin -= betCoin;
+        }
+
+        if (jsMsg.uid == roomInfo.richestUID) {
+            roomInfo.richestCoin -= betCoin;
+        }
+
+        let playerData: GamePlayerData = GamePlayerDataManager.getInstance().getPlayerDataByServerIdx(jsMsg.idx);
+
+        if (playerData && playerData.isValid()) {
+            playerData.chips -= betCoin;
+        }
+    }
+
     //state machine
     onGameStart() {
         this.m_Basefsm.changeState('Restart');
 
-        this.m_gameRoomScene && this.m_gameRoomScene.clearAllAnim();
+        this.m_gameRoomScene && this.m_gameRoomScene.onGameStart();
 
         this.distributeCards();
     }
 
-    onGameResult(jsMsg: ResultInfo) {
+    onGameResult(jsMsg: ResultMessegeInfo) {
         this.m_Basefsm.changeState('Account');
 
         this._updateWinCardsInfo(jsMsg);
 
         this._updateChips(jsMsg);
 
-        this.m_gameRoomScene && this.m_gameRoomScene.playResultAnim(jsMsg);
+        this.m_gameRoomScene && this.m_gameRoomScene.onGameResult(jsMsg);
     }
 
     //scene
     distributeCards() {
-        this.m_gameRoomScene.distributeCards();
+        this.m_gameRoomScene && this.m_gameRoomScene.distributeCards();
     }
 
     getCurChipType(): EmChipType {
-        return this.m_gameRoomScene.getCurChipType();
+        let ret: EmChipType = EmChipType.Type_None;
+        if (this.m_gameRoomScene) {
+            ret = this.m_gameRoomScene.getCurChipType();
+        }
+        return ret;
     }
 
     getPlayerHeadWorldPos(clientIdx: number): cc.Vec2 {
         return this.m_gameRoomScene.getPlayerHeadWorldPos(clientIdx);
     }
 
-    private _updateWinCardsInfo(jsMsg: ResultInfo) {
+    private _updateWinCardsInfo(jsMsg: ResultMessegeInfo) {
         let winCardsInfo: CardsInfo = jsMsg.isRedWin ? jsMsg.red : jsMsg.black;
 
         this._addRecord(jsMsg.isRedWin, winCardsInfo);
         this._addCards(jsMsg.red, jsMsg.black);
     }
 
-    private _updateChips(jsMsg: ResultInfo) {
+    private _updateChips(jsMsg: ResultMessegeInfo) {
         this._updateSpecialPlayerChips(jsMsg);
 
         this._updateSitPlayerChips(jsMsg);
@@ -121,7 +151,7 @@ class GameController extends Singleton {
         this._updateSelfChip(jsMsg);
     }
 
-    private _updateSpecialPlayerChips(jsMsg: ResultInfo) {
+    private _updateSpecialPlayerChips(jsMsg: ResultMessegeInfo) {
         let maxWinRateOffset: number = jsMsg.bestBetOffset;
         let maxCoinOffset: number = jsMsg.richestOffset;
 
@@ -135,7 +165,7 @@ class GameController extends Singleton {
         }
     }
 
-    private _updateSitPlayerChips(jsMsg: ResultInfo) {
+    private _updateSitPlayerChips(jsMsg: ResultMessegeInfo) {
         let winInfos: WinInfo[] = jsMsg.result;
         if (winInfos && winInfos.length > 0) {
             _.forEach(winInfos, (info: WinInfo) => {
@@ -147,8 +177,14 @@ class GameController extends Singleton {
         }
     }
 
-    private _updateSelfChip(jsMsg: ResultInfo) {
-        
+    private _updateSelfChip(jsMsg: ResultMessegeInfo) {
+        let offset: number = jsMsg.selfOffset;
+
+        if (offset) {
+            let userData: UserInfo = UserData.getInstance().getUserData();
+
+            userData.coin += offset;
+        }
     }
 
     private _addRecord(isRedWin: number, winCardsInfo: CardsInfo) {
@@ -170,7 +206,7 @@ class GameController extends Singleton {
         CardDataManager.getInstance().udpateCardData(EmCampType.Type_Red, redCardsInfo.cards);
         CardDataManager.getInstance().udpateCardData(EmCampType.Type_Black, blackCardsInfo.cards);
 
-        this.m_gameRoomScene.flipCards(redCardsInfo, blackCardsInfo);
+        this.m_gameRoomScene && this.m_gameRoomScene.flipCards(redCardsInfo, blackCardsInfo);
     }
 
     private _dispatchNewRecordEvent(recordType: EmRecordType) {

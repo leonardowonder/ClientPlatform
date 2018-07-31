@@ -3,8 +3,11 @@ import Singleton from '../../Utils/Singleton';
 import * as _ from 'lodash';
 
 import { eMsgPort, eMsgType } from '../../Define/MessageIdentifer';
+
 import ClientDefine from '../../Define/ClientDefine';
 import { EmBetAreaType, eBetPool } from '../../Define/GamePlayDefine';
+import { BetMessageInfo } from '../../Define/GameMessegeDefine';
+
 import { betAreaTypeToBetPool } from '../../Utils/GamePlay/GameUtils';
 
 import Network from '../../Utils/Network';
@@ -20,6 +23,7 @@ import RoomDataManger from '../../Manager/DataManager/GamePlayDataManger/RoomDat
 import PrefabManager, { EmPrefabEnum } from '../../Manager/CommonManager/PrefabManager';
 import PlayerDataManager from '../../Manager/DataManager/PlayerDataManager';
 import RoomData from '../../Data/GamePlay/RoomData';
+import UserData from '../../Data/UserData';
 
 let gameController = GameController.getInstance();
 
@@ -42,6 +46,8 @@ class GameRoomLogic extends Singleton {
 
     unsetCurView() {
         this.m_curView = null;
+
+        this._unregistEvent();
     }
 
     //net work
@@ -225,12 +231,10 @@ class GameRoomLogic extends Singleton {
 
     }
 
-    private _onMsgRBRoomBetRsp(jsMsg) {
-        let serverIdx: number = jsMsg.idx;
-        let coin: number = jsMsg.coin;
-        let betPoolType: eBetPool = jsMsg.poolType;
+    private _onMsgRBRoomBetRsp(jsMsg: BetMessageInfo) {
+        gameController.onRoomBet(jsMsg)
 
-        this.m_curView && this.m_curView.onRoomBet(serverIdx, coin, betPoolType);
+        this.m_curView && this.m_curView.onRoomBet(jsMsg);
     }
 
     private _onMsgRBRoomResultRsp(jsMsg) {
@@ -247,9 +251,14 @@ class GameRoomLogic extends Singleton {
 
     //private
     private _registEvent() {
+        this._unregistEvent();
         cc.systemEvent.on(ClientDefine.netEventClose, this.onNetClose, this);
         cc.systemEvent.on(ClientDefine.netEventReconnectd, this.onNetReconnected, this);
         cc.systemEvent.on(ClientDefine.netEventMsg, this.onMsg, this);
+    }
+
+    private _unregistEvent() {
+        cc.systemEvent.targetOff(this);
     }
 
     private _updateSpecialPlayerInfo() {

@@ -2,29 +2,29 @@ const { ccclass, property } = cc._decorator;
 
 import * as _ from 'lodash';
 
-import {
-    EmChipType, eBetPool, EmBetAreaType, CardsInfo, GroupTypeInfo, eRoomState,
-    WinInfo, ResultInfo, Game_Room_Max_Coin_Idx, Game_Room_Max_Win_Rate_Idx, Game_Room_Players_Max_Count
-} from '../../Define/GamePlayDefine';
+import { EmChipType, EmBetAreaType, GroupTypeInfo, eRoomState, Game_Room_Max_Coin_Idx, Game_Room_Max_Win_Rate_Idx, Game_Room_Players_Max_Count } from '../../Define/GamePlayDefine';
+import { CardsInfo, WinInfo, ResultMessegeInfo, BetMessageInfo } from '../../Define/GameMessegeDefine';
 
 import GameController from '../../Controller/GamePlay/GameController';
 
 import GameRoomLogic from '../../Logic/GamePlay/GameRoomLogic';
 
 import RoomData from '../../Data/GamePlay/RoomData';
+import UserData, { UserInfo } from '../../Data/UserData';
 
-import { coinToChipType, betPoolToBetAreaType, goldenTypeToGroupType } from '../../Utils/GamePlay/GameUtils';
+import { coinToChipType, betPoolToBetAreaType, goldenTypeToGroupType, judgeSpecialType } from '../../Utils/GamePlay/GameUtils';
 
 import SceneManager, { EmSceneID } from '../../Manager/CommonManager/SceneManager';
 import PrefabManager, { EmPrefabEnum } from '../../Manager/CommonManager/PrefabManager';
 import RoomDataManger from '../../Manager/DataManager/GamePlayDataManger/RoomDataManger';
-import TableDataManager from '../../Manager/DataManager/GamePlayDataManger/TableDataManager';
 
 import CardsContainer from '../Layer/GamePlay/CardsContainer';
 import ChipSelectLayer from '../Layer/GamePlay/ChipSelectLayer';
 import ChipsLayer from '../Layer/GamePlay/ChipsLayer';
 import PlayerRootLayer from '../Layer/GamePlay/PlayerRootLayer';
-import { eRoomPeerState } from '../../../resources/NewDDZ/script/Define/DDZDefine';
+import GameRoomAnimRootLayer from '../Layer/GamePlay/GameRoomAnimRootLayer';
+
+import PlayerItem from '../Layer/GamePlay/PlayerItem';
 
 @ccclass
 export default class GameRoomScene extends cc.Component {
@@ -40,6 +40,9 @@ export default class GameRoomScene extends cc.Component {
 
     @property(PlayerRootLayer)
     m_playerRootLayer: PlayerRootLayer = null;
+
+    @property(GameRoomAnimRootLayer)
+    m_animRootLayer: GameRoomAnimRootLayer = null;
 
     onDestroy() {
         GameRoomLogic.getInstance().unsetCurView();
@@ -60,9 +63,25 @@ export default class GameRoomScene extends cc.Component {
     }
 
     updateRoomView() {
+        this._updateCountDown();
+        this._showWaitNextGame();
+
         this.updateContainer();
 
         this.updatePlayersView();
+    }
+
+    onGameStart() {
+        this.clearAllAnim();
+
+        this.m_animRootLayer.startCountDown();
+
+        this.m_animRootLayer.hideWatiNextGame();
+    }
+
+    onGameResult(jsMsg: ResultMessegeInfo) {
+        this.m_animRootLayer.stopCountDown();
+        this.playResultAnim(jsMsg);
     }
 
     clearAllAnim() {
@@ -87,11 +106,29 @@ export default class GameRoomScene extends cc.Component {
         // cc.log('wd debug onGetRoomInfo roomdata =', RoomDataManger.getInstance().getRoomData());
     }
 
-    onRoomBet(serverIdx: number, coin: number, betPoolType: eBetPool) {
-        // let clientIdx: number = TableDataManager.getInstance().svrIdxToClientIdx(serverIdx);
-        let clientIdx: number = serverIdx;
-        let chipType: EmChipType = coinToChipType(coin);
-        let areaType: EmBetAreaType = betPoolToBetAreaType(betPoolType);
+    onRoomBet(jsMsg: BetMessageInfo) {
+        let clientIdx: number = jsMsg.idx;
+        let chipType: EmChipType = coinToChipType(jsMsg.coin);
+        let areaType: EmBetAreaType = betPoolToBetAreaType(jsMsg.poolType);
+
+        let msgUid = jsMsg.uid;
+
+        let userData: UserInfo = UserData.getInstance().getUserData();
+
+        let roomdata: RoomData = RoomDataManger.getInstance().getRoomData();
+        if (msgUid == roomdata.bestBetUID) {
+            clientIdx = Game_Room_Max_Win_Rate_Idx;
+        }
+
+        if (msgUid == roomdata.richestUID) {
+            clientIdx = Game_Room_Max_Coin_Idx;
+        }
+
+        if (userData.uid == msgUid) {
+            clientIdx = 0;
+        }
+
+        this.m_playerRootLayer.updateAllPlayerDatas();
 
         this.m_chipsLayer.playChipMoveFromHeadToPoolAction(clientIdx, chipType, areaType);
     }
@@ -120,10 +157,10 @@ export default class GameRoomScene extends cc.Component {
     }
 
 
-    playResultAnim(resultInfo: ResultInfo) {
-        this._playPoolHighLightAnim(resultInfo);
-        this._playChipMoveAnim(resultInfo);
-        this._playPlayerResultAnim(resultInfo);
+    playResultAnim(ResultMessegeInfo: ResultMessegeInfo) {
+        this._playPoolHighLightAnim(ResultMessegeInfo);
+        this._playChipMoveAnim(ResultMessegeInfo);
+        this._playPlayerResultAnim(ResultMessegeInfo);
     }
 
     getPlayerHeadWorldPos(clientIdx: number): cc.Vec2 {
@@ -155,23 +192,32 @@ export default class GameRoomScene extends cc.Component {
         this.m_playerRootLayer.refreshPlayerItem(serverIdx);
     }
 
-    private _playPoolHighLightAnim(resultInfo: ResultInfo) {
+    private _playPoolHighLightAnim(resultMessegeInfo: ResultMessegeInfo) {
+        let type: EmBetAreaType = resultMessegeInfo.isRedWin ? EmBetAreaType.Type_Red : EmBetAreaType.Type_Black;
 
+        this.m_animRootLayer.playBetAreaWinAnim(type);
+
+        let targetCardsInfo: CardsInfo = resultMessegeInfo.isRedWin ? resultMessegeInfo.red : resultMessegeInfo.black;
+
+        let groupInfo: GroupTypeInfo = new GroupTypeInfo(goldenTypeToGroupType(targetCardsInfo.T), targetCardsInfo.V);
+        if (judgeSpecialType(groupInfo)) {
+            this.m_animRootLayer.playBetAreaWinAnim(EmBetAreaType.Type_Special);
+        }
     }
 
-    private _playChipMoveAnim(resultInfo: ResultInfo) {
+    private _playChipMoveAnim(ResultMessegeInfo: ResultMessegeInfo) {
         let idxList: number[] = [Game_Room_Players_Max_Count];
-        
-        if (resultInfo.bestBetOffset && resultInfo.bestBetOffset > 0) {
+
+        if (ResultMessegeInfo.bestBetOffset && ResultMessegeInfo.bestBetOffset > 0) {
             idxList.push(Game_Room_Max_Win_Rate_Idx);
         }
 
-        if (resultInfo.richestOffset && resultInfo.richestOffset > 0) {
+        if (ResultMessegeInfo.richestOffset && ResultMessegeInfo.richestOffset > 0) {
             idxList.push(Game_Room_Max_Coin_Idx);
         }
 
-        if (resultInfo.result && resultInfo.result.length > 0) {
-            _.forEach(resultInfo.result, (info: WinInfo) => {
+        if (ResultMessegeInfo.result && ResultMessegeInfo.result.length > 0) {
+            _.forEach(ResultMessegeInfo.result, (info: WinInfo) => {
                 idxList.push(info.idx);
             });
         }
@@ -181,8 +227,8 @@ export default class GameRoomScene extends cc.Component {
         this.m_chipsLayer.playChipMoveFromPoolToPlayerAction(EmBetAreaType.Type_Special, idxList);
     }
 
-    private _playPlayerResultAnim(resultInfo: ResultInfo) {        
-        let winInfos: WinInfo[] = resultInfo.result;
+    private _playPlayerResultAnim(resultMessegeInfo: ResultMessegeInfo) {
+        let winInfos: WinInfo[] = resultMessegeInfo.result;
         if (winInfos && winInfos.length > 0) {
             _.forEach(winInfos, (info: WinInfo) => {
                 let playerItem = this.m_playerRootLayer.getPlayerItem(info.idx);
@@ -192,5 +238,40 @@ export default class GameRoomScene extends cc.Component {
                 playerItem.setResult(info.offset);
             })
         }
+
+        let selfOffset: number = resultMessegeInfo.selfOffset;
+        if (selfOffset != 0) {
+            let playerItem: PlayerItem = this.m_playerRootLayer.getPlayerItem(0);
+
+            playerItem.refreshViewBySelfData();
+
+            playerItem.setResult(selfOffset);
+        }
+
+        let bestBetOffset: number = resultMessegeInfo.bestBetOffset;
+        if (bestBetOffset != 0) {
+            let playerItem: PlayerItem = this.m_playerRootLayer.getPlayerItem(Game_Room_Max_Win_Rate_Idx);
+
+            playerItem.refreshViewByMaxWinRateInfo();
+
+            playerItem.setResult(bestBetOffset);
+        }
+
+        let richestOffset: number = resultMessegeInfo.richestOffset;
+        if (richestOffset != 0) {
+            let playerItem: PlayerItem = this.m_playerRootLayer.getPlayerItem(Game_Room_Max_Coin_Idx);
+
+            playerItem.refreshViewByMaxCoinInfo();
+
+            playerItem.setResult(richestOffset);
+        }
+    }
+
+    private _updateCountDown() {
+        this.m_animRootLayer.updateCountDown();
+    }
+
+    private _showWaitNextGame() {
+        this.m_animRootLayer.showWaitNextGame();
     }
 }

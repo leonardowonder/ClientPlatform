@@ -64,7 +64,7 @@ export default class PlayerItem extends cc.Component {
 
     updateLeftRight(isLeft: boolean) {
         this.m_isLeft = isLeft;
-        
+
         this._updateLeftRight(isLeft);
     }
 
@@ -78,7 +78,13 @@ export default class PlayerItem extends cc.Component {
 
     setResult(num: number) {
         this.m_resultRootNode.active = true;
-        this.m_resultLabel.string = num.toString();
+        let str: string = '+';
+        if (num < 0) {
+            str = '-';
+        }
+
+        str += num.toString();
+        this.m_resultLabel.string = str;
     }
 
     hideResult() {
@@ -87,7 +93,7 @@ export default class PlayerItem extends cc.Component {
 
     refreshViewByServerIdx() {
         this._resetView();
-        
+
         if (this.m_serverChairID == -1) {
             return;
         }
@@ -115,8 +121,9 @@ export default class PlayerItem extends cc.Component {
     }
 
     refreshViewBySelfData() {
+        this.hideSeat();
         let player = UserData.getInstance().getUserData();
-        
+
         if (player) {
             this.node.active = player.uid != 0;
 

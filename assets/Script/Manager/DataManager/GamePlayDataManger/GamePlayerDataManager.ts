@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 
 import Singleton from '../../../Utils/Singleton';
 
-import { Game_Room_Seat_Max_Count } from '../../../Define/GamePlayDefine';
+import { Game_Room_Players_Max_Count } from '../../../Define/GamePlayDefine';
 
 import GameRoomData from '../../../Data/GamePlay/GameRoomData';
 import GamePlayerData from '../../../Data/GamePlay/GamePlayerData';
@@ -38,7 +38,7 @@ class GamePlayerDataManager extends Singleton {
 
         if (jsMsg.players && jsMsg.players.length) {
             for (let idx = 0; idx < jsMsg.players.length; idx++) {
-                if (jsMsg.players[idx].idx < Game_Room_Seat_Max_Count) {
+                if (jsMsg.players[idx].idx < Game_Room_Players_Max_Count) {
                     let serverIDx = jsMsg.players[idx].idx;
                     let playerData: GamePlayerData = playerDatas[serverIDx];
                     if (playerData) {
@@ -57,7 +57,7 @@ class GamePlayerDataManager extends Singleton {
 
         let data: GamePlayerData = null;
 
-        if (idx >= 0 && idx < playerDatas.length) {
+        if (idx > 0 && idx < playerDatas.length) {
             data = playerDatas[idx];
         }
 

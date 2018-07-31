@@ -32,8 +32,6 @@ class MainUiSceneLogic extends Singleton {
     init() {
         this._registEvent();
 
-        NetSink.getInstance();
-        GameRoomLogic.getInstance();
         super.init();
     }
 
@@ -103,12 +101,14 @@ class MainUiSceneLogic extends Singleton {
         if (jsMsg) {
             if (jsMsg.opts) {
                 let gameType: eGameType = jsMsg.opts.gameType
-                switch(gameType) {
+                switch (gameType) {
                     case eGameType.eGame_CYDouDiZhu: {
+                        NetSink.getInstance();
                         SceneManager.changeScene(EmSceneID.SceneID_DDZScene);
                         break;
                     }
                     case eGameType.eGame_Golden: {
+                        GameRoomLogic.getInstance();
                         SceneManager.changeScene(EmSceneID.SceneID_GameRoomScene);
                         break;
                     }
@@ -126,13 +126,15 @@ class MainUiSceneLogic extends Singleton {
     private _onMsgEnterCoinGameRsp(jsMsg) {
         if (jsMsg.ret == 0) {
             let gamePort = jsMsg.gamePort;
-            switch(gamePort) {
-                case eMsgPort.ID_MSG_PORT_GOLDEN: {
-                    SceneManager.changeScene(EmSceneID.SceneID_GameRoomScene);
+            switch (gamePort) {
+                case eMsgPort.ID_MSG_PORT_DOU_DI_ZHU: {
+                    NetSink.getInstance();
+                    SceneManager.changeScene(EmSceneID.SceneID_DDZScene);
                     break;
                 }
-                case eMsgPort.ID_MSG_PORT_DOU_DI_ZHU: {
-                    SceneManager.changeScene(EmSceneID.SceneID_DDZScene);
+                case eMsgPort.ID_MSG_PORT_GOLDEN: {
+                    GameRoomLogic.getInstance();
+                    SceneManager.changeScene(EmSceneID.SceneID_GameRoomScene);
                     break;
                 }
                 default: {

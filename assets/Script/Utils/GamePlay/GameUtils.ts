@@ -1,4 +1,4 @@
-import { EmBetAreaType, eBetPool, EmChipType, GoldenType, EmGroupType, EmRecordType, EmCardTpye, eCardType } from '../../Define/GamePlayDefine';
+import { EmBetAreaType, eBetPool, EmChipType, GoldenType, EmGroupType, EmRecordType, EmCardTpye, eCardType, GroupTypeInfo, Normal_Type_Max_Value } from '../../Define/GamePlayDefine';
 
 export function betAreaTypeToBetPool(type: EmBetAreaType): eBetPool {
     let ret: eBetPool = eBetPool.eBet_Max;
@@ -271,3 +271,19 @@ export function cardTypeToBetEmCardType(type: eCardType): EmCardTpye {
 
     return ret;
 };
+
+export function judgeSpecialType(typeInfo: GroupTypeInfo) {
+    let isSpecial: boolean = false;
+    if (typeInfo.type > EmGroupType.GroupType_None && typeInfo.type < EmGroupType.GroupType_Max) {
+        if (typeInfo.type == EmGroupType.GroupType_Pair) {
+            if (typeInfo.value > Normal_Type_Max_Value) {
+                isSpecial = true;
+            }
+        }
+        else {
+            isSpecial = true;
+        }
+    }
+
+    return isSpecial;
+}

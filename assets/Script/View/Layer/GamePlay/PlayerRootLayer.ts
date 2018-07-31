@@ -2,7 +2,7 @@ const { ccclass, property } = cc._decorator;
 
 import * as _ from 'lodash';
 
-import { Game_Room_Seat_Max_Count, Game_Room_Max_Coin_Idx, Game_Room_Max_Win_Rate_Idx } from '../../../Define/GamePlayDefine';
+import { Game_Room_Players_Max_Count, Game_Room_Max_Coin_Idx, Game_Room_Max_Win_Rate_Idx } from '../../../Define/GamePlayDefine';
 
 import GamePlayerData from '../../../Data/GamePlay/GamePlayerData';
 
@@ -21,17 +21,14 @@ export default class PlayerRootLayer extends cc.Component {
     @property(cc.Node)
     m_othersNode: cc.Node = null;
 
-    @property(PlayerItem)
-    m_myPlayerItem: PlayerItem = null;
-
     @property
-    m_itemCount: number = Game_Room_Seat_Max_Count;
+    m_itemCount: number = Game_Room_Players_Max_Count;
 
-    private _leftRightInfo: boolean[] = [true, true, true, true, false, false, false, false];
+    private _leftRightInfo: boolean[] = [true, true, true, true, true, false, false, false, false];
     private m_playerItems: PlayerItem[] = [];
 
     onLoad() {
-        this._initOtherPlayerItems();
+        this._initPlayerItems();
     }
 
     getPlayerItem(clientIdx: number): PlayerItem {
@@ -46,7 +43,7 @@ export default class PlayerRootLayer extends cc.Component {
     updateAllPlayerDatas() {
         this.updateSelfPlayer();
 
-        for (let i = 0; i < Game_Room_Seat_Max_Count; ++i) {
+        for (let i = 1; i < Game_Room_Players_Max_Count; ++i) {
             this.refreshPlayerItem(i);
         }
 
@@ -60,10 +57,8 @@ export default class PlayerRootLayer extends cc.Component {
             return;
         }
 
-        if (serverChairID >= 0) {
-            if (serverChairID != Game_Room_Max_Coin_Idx && serverChairID != Game_Room_Max_Win_Rate_Idx) {
-                this.m_playerItems[serverChairID].refreshViewByServerIdx();
-            }
+        if (serverChairID != Game_Room_Max_Coin_Idx && serverChairID != Game_Room_Max_Win_Rate_Idx) {
+            this.m_playerItems[serverChairID].refreshViewByServerIdx();
         }
     }
 
@@ -84,7 +79,7 @@ export default class PlayerRootLayer extends cc.Component {
     }
 
     updateSelfPlayer() {
-        this.m_myPlayerItem.refreshViewBySelfData();
+        this.m_playerItems[0].refreshViewBySelfData();
     }
 
     getPlayerHeadWorldPos(clientIdx: number): cc.Vec2 {
@@ -95,8 +90,8 @@ export default class PlayerRootLayer extends cc.Component {
         }
 
         if (clientIdx < this.m_playerItems.length) {
-            let selfPlayerItem: PlayerItem = this.m_playerItems[clientIdx];
-            pos = selfPlayerItem.getHeadWorldPos();
+            let playerItem: PlayerItem = this.m_playerItems[clientIdx];
+            pos = playerItem.getHeadWorldPos();
         }
         else {
             pos = this.m_othersNode.parent.convertToWorldSpaceAR(this.m_othersNode.getPosition());
@@ -112,10 +107,10 @@ export default class PlayerRootLayer extends cc.Component {
     }
 
     private _checkIdxValid(idx: number) {
-        return idx >= 0 && idx < Game_Room_Seat_Max_Count;
+        return idx >= 0 && idx < Game_Room_Players_Max_Count;
     }
 
-    private _initOtherPlayerItems() {
+    private _initPlayerItems() {
         for (let i = 0; i < this.m_itemCount; ++i) {
             let newNode: cc.Node = cc.instantiate(this.m_itemPrefab);
             if (newNode) {
@@ -144,7 +139,7 @@ export default class PlayerRootLayer extends cc.Component {
                     item.node.setPosition(this.m_itemPositions[idx]);
                 }
 
-                if (idx != Game_Room_Max_Coin_Idx && idx != Game_Room_Max_Win_Rate_Idx) {
+                if (idx != 0 && idx != Game_Room_Max_Coin_Idx && idx != Game_Room_Max_Win_Rate_Idx) {
                     item.setServerChairID(idx);
                 }
             }

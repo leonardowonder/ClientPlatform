@@ -2,7 +2,7 @@ import Singleton from '../../Utils/Singleton';
 
 import * as _ from 'lodash';
 
-import { Game_Room_Seat_Max_Count } from '../../Define/GamePlayDefine';
+import { Game_Room_Players_Max_Count } from '../../Define/GamePlayDefine';
 
 import CardData from './CardData';
 import GameRecordData from './GameRecordData';
@@ -25,7 +25,7 @@ class GameRoomData extends Singleton {
         this.recordData = new GameRecordData();
         this.tableData = new TableData();
 
-        for (let idx = 0; idx < Game_Room_Seat_Max_Count; idx++) {
+        for (let idx = 0; idx < Game_Room_Players_Max_Count; idx++) {
             let player: GamePlayerData = new GamePlayerData();
             this.gamePlayerDatas.push(player);
         }

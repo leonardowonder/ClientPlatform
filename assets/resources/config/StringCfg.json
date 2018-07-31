@@ -70,5 +70,8 @@
     },
     "game_play_black_cap": {
         "cn": "黑方队长"
+    },
+    "game_play_count_down": {
+        "cn": "请下注!{0}"
     }
 }

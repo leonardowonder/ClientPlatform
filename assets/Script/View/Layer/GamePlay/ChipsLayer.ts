@@ -2,13 +2,13 @@ const { ccclass, property } = cc._decorator;
 
 import * as _ from 'lodash';
 
-import { EmChipType, EmBetAreaType, Game_Room_Players_Max_Count, eRoomState } from '../../../Define/GamePlayDefine';
+import { EmChipType, EmBetAreaType, eRoomState } from '../../../Define/GamePlayDefine';
 
 import { addNewNodeFunc } from '../../../Utils/NodePoolUtils';
 import MathUtils from '../../../Utils/MathUtils';
 import { chipTypeToCoin } from '../../../Utils/GamePlay/GameUtils';
 
-import RoomData, { RoomOptsInfo } from '../../../Data/GamePlay/RoomData';
+import RoomData from '../../../Data/GamePlay/RoomData';
 
 import GameController from '../../../Controller/GamePlay/GameController';
 import TableDataManager from '../../../Manager/DataManager/GamePlayDataManger/TableDataManager';
@@ -19,7 +19,6 @@ import GameRoomLogic from '../../../Logic/GamePlay/GameRoomLogic';
 import Chip from '../../../Component/GamePlay/Common/Chip';
 
 let gameController = GameController.getInstance();
-let tableDataManager = TableDataManager.getInstance();
 
 @ccclass
 export default class ChipsLayer extends cc.Component {
@@ -196,11 +195,11 @@ export default class ChipsLayer extends cc.Component {
         return node;
     }
 
-    private _getSelfChipType(): EmChipType {
-        let type: EmChipType = gameController.getCurChipType();
+    // private _getSelfChipType(): EmChipType {
+    //     let type: EmChipType = gameController.getCurChipType();
 
-        return type;
-    }
+    //     return type;
+    // }
 
     private _updateChip(chip: cc.Node, type: EmChipType) {
         let comp: Chip = chip.getComponent(Chip);
@@ -210,9 +209,9 @@ export default class ChipsLayer extends cc.Component {
     }
 
     private _getPlayerHeadPosByClientIdx(idx: number, parentNode: cc.Node): cc.Vec2 {
-        let selfHeadWorldPos: cc.Vec2 = gameController.getPlayerHeadWorldPos(idx);
+        let headWorldPos: cc.Vec2 = gameController.getPlayerHeadWorldPos(idx);
 
-        let nodePos: cc.Vec2 = parentNode.convertToNodeSpace(selfHeadWorldPos);
+        let nodePos: cc.Vec2 = parentNode.convertToNodeSpace(headWorldPos);
         return nodePos;
     }
 

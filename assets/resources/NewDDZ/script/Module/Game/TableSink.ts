@@ -37,6 +37,8 @@ class TableSink extends Singleton {
     unsetCurView() {
         this.m_curView = null;
         DDZGameDataLogic.getInstance().clearAllData();
+        
+        this._unregistEvents();
     }
 
     //customEvent
@@ -465,10 +467,14 @@ class TableSink extends Singleton {
     }
 
     private _registEvents() {
-        // cc.systemEvent.targetOff(this);
+        this._unregistEvents();
         cc.systemEvent.on(ClientDefine.netEventMsg, this.onMsg, this);
         cc.systemEvent.on('reconnect', this.reconnect, this);
         cc.systemEvent.on('reconnectFailed', this.reconnectedFailed, this);
+    }
+
+    private _unregistEvents() {
+        cc.systemEvent.targetOff(this);
     }
 }
 
