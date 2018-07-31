@@ -98,6 +98,9 @@ export default class PlayerItem extends cc.Component {
             this.showSeat();
             return;
         }
+        else {
+            this.hideSeat();
+        }
 
         this.node.active = playerData.uid != 0;
 

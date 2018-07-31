@@ -1,5 +1,7 @@
 import Singleton from '../../Utils/Singleton';
 
+import * as _ from 'lodash';
+
 import StateMachine, { Transition, Method } from '../../Utils/StateMachine';
 
 import { EmChipType, EmRecordType, CardsInfo, EmCampType, eRoomState, GroupTypeInfo, eBetPool, WinInfo, ResultInfo } from '../../Define/GamePlayDefine';
@@ -15,6 +17,8 @@ import RoomDataManger from '../../Manager/DataManager/GamePlayDataManger/RoomDat
 
 import GameRoomScene from '../../View/Scene/GameRoomScene';
 import GameRoomData from '../../Data/GamePlay/GameRoomData';
+import GamePlayerData from '../../Data/GamePlay/GamePlayerData';
+import GamePlayerDataManager from '../../Manager/DataManager/GamePlayDataManger/GamePlayerDataManager';
 
 class GameController extends Singleton {
     private m_gameRoomScene: GameRoomScene = null;
@@ -74,16 +78,17 @@ class GameController extends Singleton {
     onGameStart() {
         this.m_Basefsm.changeState('Restart');
 
+        this.m_gameRoomScene && this.m_gameRoomScene.clearAllAnim();
+
         this.distributeCards();
     }
 
     onGameResult(jsMsg: ResultInfo) {
         this.m_Basefsm.changeState('Account');
 
-        let winCardsInfo: CardsInfo = jsMsg.isRedWin ? jsMsg.red : jsMsg.black;
+        this._updateWinCardsInfo(jsMsg);
 
-        this._addRecord(jsMsg.isRedWin, winCardsInfo);
-        this._addCards(jsMsg.red, jsMsg.black);
+        this._updateChips(jsMsg);
 
         this.m_gameRoomScene && this.m_gameRoomScene.playResultAnim(jsMsg);
     }
@@ -99,6 +104,51 @@ class GameController extends Singleton {
 
     getPlayerHeadWorldPos(clientIdx: number): cc.Vec2 {
         return this.m_gameRoomScene.getPlayerHeadWorldPos(clientIdx);
+    }
+
+    private _updateWinCardsInfo(jsMsg: ResultInfo) {
+        let winCardsInfo: CardsInfo = jsMsg.isRedWin ? jsMsg.red : jsMsg.black;
+
+        this._addRecord(jsMsg.isRedWin, winCardsInfo);
+        this._addCards(jsMsg.red, jsMsg.black);
+    }
+
+    private _updateChips(jsMsg: ResultInfo) {
+        this._updateSpecialPlayerChips(jsMsg);
+
+        this._updateSitPlayerChips(jsMsg);
+
+        this._updateSelfChip(jsMsg);
+    }
+
+    private _updateSpecialPlayerChips(jsMsg: ResultInfo) {
+        let maxWinRateOffset: number = jsMsg.bestBetOffset;
+        let maxCoinOffset: number = jsMsg.richestOffset;
+
+        let roomData: RoomData = RoomDataManger.getInstance().getRoomData();
+        if (roomData.richestUID != null && roomData.richestUID > 0) {
+            roomData.richestCoin += maxCoinOffset;
+        }
+
+        if (roomData.bestBetUID != null && roomData.bestBetUID > 0) {
+            roomData.bestBetCoin += maxWinRateOffset;
+        }
+    }
+
+    private _updateSitPlayerChips(jsMsg: ResultInfo) {
+        let winInfos: WinInfo[] = jsMsg.result;
+        if (winInfos && winInfos.length > 0) {
+            _.forEach(winInfos, (info: WinInfo) => {
+                let playerData: GamePlayerData = GamePlayerDataManager.getInstance().getPlayerDataByServerIdx(info.idx);
+                if (playerData && playerData.isValid()) {
+                    playerData.chips += info.offset;
+                }
+            })
+        }
+    }
+
+    private _updateSelfChip(jsMsg: ResultInfo) {
+        
     }
 
     private _addRecord(isRedWin: number, winCardsInfo: CardsInfo) {

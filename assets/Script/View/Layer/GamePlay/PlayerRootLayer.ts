@@ -34,6 +34,15 @@ export default class PlayerRootLayer extends cc.Component {
         this._initOtherPlayerItems();
     }
 
+    getPlayerItem(clientIdx: number): PlayerItem {
+        if (!this._checkIdxValid(clientIdx)) {
+            cc.warn(`PlayerRootLayer setPlayerData invalid clientIdx = ${clientIdx}`);
+            return;
+        }
+
+        return this.m_playerItems[clientIdx];
+    }
+
     updateAllPlayerDatas() {
         this.updateSelfPlayer();
 
@@ -94,6 +103,12 @@ export default class PlayerRootLayer extends cc.Component {
         }
 
         return pos;
+    }
+
+    clearAllAnim() {
+        _.forEach(this.m_playerItems, (item: PlayerItem) => {
+            item.hideResult();
+        })
     }
 
     private _checkIdxValid(idx: number) {

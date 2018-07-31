@@ -65,6 +65,10 @@ export default class GameRoomScene extends cc.Component {
         this.updatePlayersView();
     }
 
+    clearAllAnim() {
+        this.m_playerRootLayer.clearAllAnim();
+    }
+
     //callback
     onTendencyChartClick() {
         PrefabManager.getInstance().showPrefab(EmPrefabEnum.Prefab_TendencyChart);
@@ -119,6 +123,7 @@ export default class GameRoomScene extends cc.Component {
     playResultAnim(resultInfo: ResultInfo) {
         this._playPoolHighLightAnim(resultInfo);
         this._playChipMoveAnim(resultInfo);
+        this._playPlayerResultAnim(resultInfo);
     }
 
     getPlayerHeadWorldPos(clientIdx: number): cc.Vec2 {
@@ -174,5 +179,18 @@ export default class GameRoomScene extends cc.Component {
         this.m_chipsLayer.playChipMoveFromPoolToPlayerAction(EmBetAreaType.Type_Red, idxList);
         this.m_chipsLayer.playChipMoveFromPoolToPlayerAction(EmBetAreaType.Type_Black, idxList);
         this.m_chipsLayer.playChipMoveFromPoolToPlayerAction(EmBetAreaType.Type_Special, idxList);
+    }
+
+    private _playPlayerResultAnim(resultInfo: ResultInfo) {        
+        let winInfos: WinInfo[] = resultInfo.result;
+        if (winInfos && winInfos.length > 0) {
+            _.forEach(winInfos, (info: WinInfo) => {
+                let playerItem = this.m_playerRootLayer.getPlayerItem(info.idx);
+
+                playerItem.refreshViewByServerIdx();
+
+                playerItem.setResult(info.offset);
+            })
+        }
     }
 }
