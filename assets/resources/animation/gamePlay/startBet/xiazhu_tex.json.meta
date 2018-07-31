@@ -1,0 +1,7 @@
+{
+  "ver": "1.0.0",
+  "uuid": "4c894c8e-b0f0-4e29-937e-472717e41296",
+  "atlasJson": "{\"SubTexture\":[{\"width\":640,\"y\":1,\"height\":221,\"name\":\"xiazhudi\",\"x\":1},{\"y\":1,\"frameWidth\":239,\"x\":643,\"frameHeight\":97,\"width\":239,\"frameY\":-9,\"height\":86,\"name\":\"zi_qingxiazhu\",\"frameX\":0}],\"width\":1024,\"imagePath\":\"xiazhu_tex.png\",\"name\":\"xiazhu\",\"height\":256}",
+  "texture": "c5cd6190-83e5-487b-a8df-0ad33f91e89e",
+  "subMetas": {}
+}

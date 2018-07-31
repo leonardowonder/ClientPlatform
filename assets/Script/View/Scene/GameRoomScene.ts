@@ -12,7 +12,7 @@ import GameRoomLogic from '../../Logic/GamePlay/GameRoomLogic';
 import RoomData from '../../Data/GamePlay/RoomData';
 import UserData, { UserInfo } from '../../Data/UserData';
 
-import { coinToChipType, betPoolToBetAreaType, goldenTypeToGroupType, judgeSpecialType } from '../../Utils/GamePlay/GameUtils';
+import { coinToChipType, betPoolToBetAreaType, goldenTypeToGroupType } from '../../Utils/GamePlay/GameUtils';
 
 import SceneManager, { EmSceneID } from '../../Manager/CommonManager/SceneManager';
 import PrefabManager, { EmPrefabEnum } from '../../Manager/CommonManager/PrefabManager';
@@ -23,6 +23,7 @@ import ChipSelectLayer from '../Layer/GamePlay/ChipSelectLayer';
 import ChipsLayer from '../Layer/GamePlay/ChipsLayer';
 import PlayerRootLayer from '../Layer/GamePlay/PlayerRootLayer';
 import GameRoomAnimRootLayer from '../Layer/GamePlay/GameRoomAnimRootLayer';
+import BetPoolInfoLayer from '../Layer/GamePlay/BetPoolInfoLayer';
 
 import PlayerItem from '../Layer/GamePlay/PlayerItem';
 
@@ -43,6 +44,9 @@ export default class GameRoomScene extends cc.Component {
 
     @property(GameRoomAnimRootLayer)
     m_animRootLayer: GameRoomAnimRootLayer = null;
+
+    @property(BetPoolInfoLayer)
+    m_betPoolInfoLayer: BetPoolInfoLayer = null;
 
     onDestroy() {
         GameRoomLogic.getInstance().unsetCurView();
@@ -65,6 +69,7 @@ export default class GameRoomScene extends cc.Component {
     updateRoomView() {
         this._updateCountDown();
         this._showWaitNextGame();
+        this._updatePoolInfo();
 
         this.updateContainer();
 
@@ -74,13 +79,18 @@ export default class GameRoomScene extends cc.Component {
     onGameStart() {
         this.clearAllAnim();
 
+        this.clearBetPoolInfo();
+
         this.m_animRootLayer.startCountDown();
 
         this.m_animRootLayer.hideWatiNextGame();
+
+        this.m_animRootLayer.playGameStartEffect();
     }
 
     onGameResult(jsMsg: ResultMessegeInfo) {
         this.m_animRootLayer.stopCountDown();
+
         this.playResultAnim(jsMsg);
     }
 
@@ -98,6 +108,10 @@ export default class GameRoomScene extends cc.Component {
     }
 
     //interface
+    getCurChipType(): EmChipType {
+        return this.m_chipSelectLayer.getCurChipType();
+    }
+
     exitGame() {
         SceneManager.getInstance().changeScene(EmSceneID.SceneID_MainScene);
     }
@@ -110,6 +124,8 @@ export default class GameRoomScene extends cc.Component {
         let clientIdx: number = jsMsg.idx;
         let chipType: EmChipType = coinToChipType(jsMsg.coin);
         let areaType: EmBetAreaType = betPoolToBetAreaType(jsMsg.poolType);
+
+        this.m_betPoolInfoLayer.addPoolChip(jsMsg.coin, areaType);
 
         let msgUid = jsMsg.uid;
 
@@ -139,7 +155,9 @@ export default class GameRoomScene extends cc.Component {
         });
     }
 
-    flipCards(redCardsInfo: CardsInfo, blackCardsInfo: CardsInfo) {
+    flipCards(resultMessegeInfo: ResultMessegeInfo) {
+        let redCardsInfo: CardsInfo = resultMessegeInfo.red;
+        let blackCardsInfo: CardsInfo = resultMessegeInfo.black;
         _.forEach(this.m_containers, (container: CardsContainer, idx: number) => {
             let targetInfo: CardsInfo = idx == 0 ? redCardsInfo : blackCardsInfo;
             let cards: number[] = targetInfo.cards;
@@ -152,15 +170,74 @@ export default class GameRoomScene extends cc.Component {
         });
     }
 
-    getCurChipType(): EmChipType {
-        return this.m_chipSelectLayer.getCurChipType();
+    playChipMoveAnim(ResultMessegeInfo: ResultMessegeInfo) {
+        let idxList: number[] = [Game_Room_Players_Max_Count];
+
+        if (ResultMessegeInfo.bestBetOffset && ResultMessegeInfo.bestBetOffset > 0) {
+            idxList.push(Game_Room_Max_Win_Rate_Idx);
+        }
+
+        if (ResultMessegeInfo.richestOffset && ResultMessegeInfo.richestOffset > 0) {
+            idxList.push(Game_Room_Max_Coin_Idx);
+        }
+
+        if (ResultMessegeInfo.result && ResultMessegeInfo.result.length > 0) {
+            _.forEach(ResultMessegeInfo.result, (info: WinInfo) => {
+                idxList.push(info.idx);
+            });
+        }
+
+        this.m_chipsLayer.playChipMoveFromPoolToPlayerAction(EmBetAreaType.Type_Red, idxList);
+        this.m_chipsLayer.playChipMoveFromPoolToPlayerAction(EmBetAreaType.Type_Black, idxList);
+        this.m_chipsLayer.playChipMoveFromPoolToPlayerAction(EmBetAreaType.Type_Special, idxList);
     }
 
+    playPlayerResultAnim(resultMessegeInfo: ResultMessegeInfo) {
+        let winInfos: WinInfo[] = resultMessegeInfo.result;
+        if (winInfos && winInfos.length > 0) {
+            _.forEach(winInfos, (info: WinInfo) => {
+                let playerItem = this.m_playerRootLayer.getPlayerItem(info.idx);
 
-    playResultAnim(ResultMessegeInfo: ResultMessegeInfo) {
-        this._playPoolHighLightAnim(ResultMessegeInfo);
-        this._playChipMoveAnim(ResultMessegeInfo);
-        this._playPlayerResultAnim(ResultMessegeInfo);
+                playerItem.refreshViewByServerIdx();
+
+                playerItem.playResultAnim(info.offset);
+            })
+        }
+
+        let selfOffset: number = resultMessegeInfo.selfOffset;
+        if (selfOffset != 0) {
+            let playerItem: PlayerItem = this.m_playerRootLayer.getPlayerItem(0);
+
+            playerItem.refreshViewBySelfData();
+
+            playerItem.playResultAnim(selfOffset);
+        }
+
+        let bestBetOffset: number = resultMessegeInfo.bestBetOffset;
+        if (bestBetOffset != 0) {
+            let playerItem: PlayerItem = this.m_playerRootLayer.getPlayerItem(Game_Room_Max_Win_Rate_Idx);
+
+            playerItem.refreshViewByMaxWinRateInfo();
+
+            playerItem.playResultAnim(bestBetOffset);
+        }
+
+        let richestOffset: number = resultMessegeInfo.richestOffset;
+        if (richestOffset != 0) {
+            let playerItem: PlayerItem = this.m_playerRootLayer.getPlayerItem(Game_Room_Max_Coin_Idx);
+
+            playerItem.refreshViewByMaxCoinInfo();
+
+            playerItem.playResultAnim(richestOffset);
+        }
+    }
+
+    clearBetPoolInfo() {
+        this.m_betPoolInfoLayer.reset();
+    }
+
+    playResultAnim(resultMessegeInfo: ResultMessegeInfo) {
+        this.m_animRootLayer.playResultAnim(resultMessegeInfo);
     }
 
     getPlayerHeadWorldPos(clientIdx: number): cc.Vec2 {
@@ -192,86 +269,17 @@ export default class GameRoomScene extends cc.Component {
         this.m_playerRootLayer.refreshPlayerItem(serverIdx);
     }
 
-    private _playPoolHighLightAnim(resultMessegeInfo: ResultMessegeInfo) {
-        let type: EmBetAreaType = resultMessegeInfo.isRedWin ? EmBetAreaType.Type_Red : EmBetAreaType.Type_Black;
-
-        this.m_animRootLayer.playBetAreaWinAnim(type);
-
-        let targetCardsInfo: CardsInfo = resultMessegeInfo.isRedWin ? resultMessegeInfo.red : resultMessegeInfo.black;
-
-        let groupInfo: GroupTypeInfo = new GroupTypeInfo(goldenTypeToGroupType(targetCardsInfo.T), targetCardsInfo.V);
-        if (judgeSpecialType(groupInfo)) {
-            this.m_animRootLayer.playBetAreaWinAnim(EmBetAreaType.Type_Special);
-        }
-    }
-
-    private _playChipMoveAnim(ResultMessegeInfo: ResultMessegeInfo) {
-        let idxList: number[] = [Game_Room_Players_Max_Count];
-
-        if (ResultMessegeInfo.bestBetOffset && ResultMessegeInfo.bestBetOffset > 0) {
-            idxList.push(Game_Room_Max_Win_Rate_Idx);
-        }
-
-        if (ResultMessegeInfo.richestOffset && ResultMessegeInfo.richestOffset > 0) {
-            idxList.push(Game_Room_Max_Coin_Idx);
-        }
-
-        if (ResultMessegeInfo.result && ResultMessegeInfo.result.length > 0) {
-            _.forEach(ResultMessegeInfo.result, (info: WinInfo) => {
-                idxList.push(info.idx);
-            });
-        }
-
-        this.m_chipsLayer.playChipMoveFromPoolToPlayerAction(EmBetAreaType.Type_Red, idxList);
-        this.m_chipsLayer.playChipMoveFromPoolToPlayerAction(EmBetAreaType.Type_Black, idxList);
-        this.m_chipsLayer.playChipMoveFromPoolToPlayerAction(EmBetAreaType.Type_Special, idxList);
-    }
-
-    private _playPlayerResultAnim(resultMessegeInfo: ResultMessegeInfo) {
-        let winInfos: WinInfo[] = resultMessegeInfo.result;
-        if (winInfos && winInfos.length > 0) {
-            _.forEach(winInfos, (info: WinInfo) => {
-                let playerItem = this.m_playerRootLayer.getPlayerItem(info.idx);
-
-                playerItem.refreshViewByServerIdx();
-
-                playerItem.setResult(info.offset);
-            })
-        }
-
-        let selfOffset: number = resultMessegeInfo.selfOffset;
-        if (selfOffset != 0) {
-            let playerItem: PlayerItem = this.m_playerRootLayer.getPlayerItem(0);
-
-            playerItem.refreshViewBySelfData();
-
-            playerItem.setResult(selfOffset);
-        }
-
-        let bestBetOffset: number = resultMessegeInfo.bestBetOffset;
-        if (bestBetOffset != 0) {
-            let playerItem: PlayerItem = this.m_playerRootLayer.getPlayerItem(Game_Room_Max_Win_Rate_Idx);
-
-            playerItem.refreshViewByMaxWinRateInfo();
-
-            playerItem.setResult(bestBetOffset);
-        }
-
-        let richestOffset: number = resultMessegeInfo.richestOffset;
-        if (richestOffset != 0) {
-            let playerItem: PlayerItem = this.m_playerRootLayer.getPlayerItem(Game_Room_Max_Coin_Idx);
-
-            playerItem.refreshViewByMaxCoinInfo();
-
-            playerItem.setResult(richestOffset);
-        }
-    }
-
     private _updateCountDown() {
         this.m_animRootLayer.updateCountDown();
     }
 
     private _showWaitNextGame() {
         this.m_animRootLayer.showWaitNextGame();
+    }
+
+    private _updatePoolInfo() {
+        let roomInfo: RoomData = RoomDataManger.getInstance().getRoomData();
+
+        this.m_betPoolInfoLayer.setPoolInfos(roomInfo.vBetPool);
     }
 }

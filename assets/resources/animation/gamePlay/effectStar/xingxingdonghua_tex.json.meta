@@ -1,0 +1,7 @@
+{
+  "ver": "1.0.0",
+  "uuid": "a1801515-5c57-4893-90bf-85f4b594a509",
+  "atlasJson": "{\"width\":64,\"imagePath\":\"xingxingdonghua_tex.png\",\"height\":64,\"name\":\"xingxingdonghua\",\"SubTexture\":[{\"width\":61,\"y\":1,\"height\":60,\"name\":\"xingxing\",\"x\":1}]}",
+  "texture": "d3d0efa7-a0fc-4d18-851a-e2087aa6562d",
+  "subMetas": {}
+}

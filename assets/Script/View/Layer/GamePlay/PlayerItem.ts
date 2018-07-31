@@ -76,15 +76,26 @@ export default class PlayerItem extends cc.Component {
         this.m_coinLabel.string = num.toString();
     }
 
-    setResult(num: number) {
+    playResultAnim(num: number) {
         this.m_resultRootNode.active = true;
-        let str: string = '+';
-        if (num < 0) {
-            str = '-';
+        let str: string = '';
+        if (num > 0) {
+            str = '+';
         }
 
         str += num.toString();
         this.m_resultLabel.string = str;
+
+        this.node.runAction(
+            cc.sequence(
+                cc.delayTime(1),
+                cc.callFunc(
+                    () => {
+                        this.m_resultRootNode.active = false;
+                    }
+                )
+            )
+        )
     }
 
     hideResult() {

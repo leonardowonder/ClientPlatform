@@ -102,6 +102,17 @@ export enum EmChipType {
     Type_Max
 }
 
+export let GamePlayAnimKeyMap = {
+    Key_VS: 'Key_VS',
+    Key_StartBet: 'Key_StartBet',
+    Key_StoptBet: 'Key_StoptBet',
+    Key_Star: 'Key_Star',
+    Key_FlipCards: 'Key_FlipCards',
+    Key_PoolWinAnim: 'Key_PoolWinAnim',
+    Key_ChipMoveToHeadAnim: 'Key_ChipMoveToHeadAnim',
+    Key_OffsetAnim: 'Key_OffsetAnim'
+}
+
 //server
 
 export enum eBetPool {

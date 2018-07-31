@@ -16,6 +16,10 @@ export enum EmPrefabEnum {
     Prefab_DDZEffectRocket,
     Prefab_GameRoomCountDownLayer,
     Prefab_WaitNextGameLayer,
+    Prefab_EffectStartBet,
+    Prefab_EffectStopBet,
+    Prefab_EffectVS,
+    Prefab_EffectStar,
     Prefab_Max
 }
 
@@ -44,6 +48,10 @@ class PrefabManager extends Singleton {
         { path: 'NewDDZ/prefab/effect/DDZEffectRocket', componentName: 'DDZEffectRocket' },
         { path: 'prefab/gamePlay/GameRoomCountDownLayer', componentName: 'GameRoomCountDownLayer' },
         { path: 'prefab/gamePlay/WaitNextGameLayer', componentName: 'WaitNextGameLayer' },
+        { path: 'prefab/gamePlay/effect/EffectStartBet', componentName: 'EffectStartBet' },
+        { path: 'prefab/gamePlay/effect/EffectStopBet', componentName: 'EffectStopBet' },
+        { path: 'prefab/gamePlay/effect/EffectVS', componentName: 'EffectVS' },
+        { path: 'prefab/gamePlay/effect/EffectStar', componentName: 'EffectStar' },
     ];
 
     private _loadingList: EmPrefabEnum[] = [];

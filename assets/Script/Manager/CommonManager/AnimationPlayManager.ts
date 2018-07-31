@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 
 import Singleton from '../../Utils/Singleton';
 
-class Anim {
+export class Anim {
     public key: string;
     public animPlayCallback: Function;
     public playTime: number;
@@ -73,6 +73,7 @@ class AnimationPlayManager extends Singleton {
 
                     if (anim.playTime && anim.playTime > 0) {
                         setTimeout(() => {
+                            anim.animStopCallback && anim.animStopCallback();
                             next();
                         }, anim.playTime);
                     }

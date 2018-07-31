@@ -205,8 +205,6 @@ class GameController extends Singleton {
     private _addCards(redCardsInfo: CardsInfo, blackCardsInfo: CardsInfo) {
         CardDataManager.getInstance().udpateCardData(EmCampType.Type_Red, redCardsInfo.cards);
         CardDataManager.getInstance().udpateCardData(EmCampType.Type_Black, blackCardsInfo.cards);
-
-        this.m_gameRoomScene && this.m_gameRoomScene.flipCards(redCardsInfo, blackCardsInfo);
     }
 
     private _dispatchNewRecordEvent(recordType: EmRecordType) {
