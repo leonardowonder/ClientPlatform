@@ -70,7 +70,10 @@
     "node": {
       "__id__": 1
     },
-    "_enabled": true
+    "_enabled": true,
+    "m_anim": {
+      "__id__": 3
+    }
   },
   {
     "__type__": "dragonBones.ArmatureDisplay",

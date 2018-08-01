@@ -4,11 +4,11 @@ import * as _ from 'lodash';
 import ClientDefine from '../../../../../Script/Define/ClientDefine';
 import { eMsgPort, eMsgType } from '../../../../../Script/Define/MessageIdentifer';
 import Network from '../../../../../Script/Utils/Network';
-import { eRoomPeerState } from '../../Define/DDZDefine';
+import { eRoomPeerState, eRoomState } from '../../Define/DDZDefine';
 import UserData from '../../../../../Script/Data/UserData';
-import DDZGameDataLogic from '../../Data/DDZGameDataLogic';
+import DDZGameDataLogic, { DDZRoomInfo } from '../../Data/DDZGameDataLogic';
 import GameLogic from './GameLogic';
-import DDZPlayerDataManager from '../../Data/DDZPlayerDataManager';
+import DDZPlayerDataManager, { DDZPlayerData } from '../../Data/DDZPlayerDataManager';
 import DDZLanguage from '../../Data/DDZLanguage';
 import PrefabManager, { EmPrefabEnum } from '../../../../../Script/Manager/CommonManager/PrefabManager';
 import TableMainUI from '../../UI/TableMainUI';
@@ -37,7 +37,7 @@ class TableSink extends Singleton {
     unsetCurView() {
         this.m_curView = null;
         DDZGameDataLogic.getInstance().clearAllData();
-        
+
         this._unregistEvents();
     }
 
@@ -196,7 +196,7 @@ class TableSink extends Singleton {
                 break;
             }
             case eMsgType.MSG_DDZ_PLAYER_ROBOT_DZ: {
-                this.onMsgDDZPlayerRobDZRsp(jsonMessage);
+                this.onMsgDDZPlayerRobDZRsp();
                 break;
             }
             case eMsgType.MSG_DDZ_ROOM_ROBOT_DZ: {
@@ -224,7 +224,7 @@ class TableSink extends Singleton {
                 break;
             }
             case eMsgType.MSG_DDZ_PLAYER_UPDATE_TUO_GUAN: {
-                this.onMsgDDZPlayerUpdateTuoGuanRsp();
+                this.onMsgDDZPlayerUpdateTuoGuanRsp(jsonMessage);
                 break;
             }
             case eMsgType.MSG_DDZ_ROOM_UPDATE_TUO_GUAN: {
@@ -316,12 +316,12 @@ class TableSink extends Singleton {
         DDZPlayerDataManager.getInstance().onPlayerSitDown(jsonMessage);
 
         let player = DDZPlayerDataManager.getInstance()._players[jsonMessage.idx];
-        if (userData.uid == player.uid) {
-            if (jsonMessage.state == eRoomPeerState.eRoomPeer_WaitNextGame) {
-                //auto sendReady
-                this.requestReady();
-            }
-        }
+        // if (userData.uid == player.uid) {
+        //     if (jsonMessage.state == eRoomPeerState.eRoomPeer_WaitNextGame) {
+        //         //auto sendReady
+        //         this.requestReady();
+        //     }
+        // }
 
         this.m_curView && this.m_curView.updatePlayerData(jsonMessage.idx);
 
@@ -370,15 +370,10 @@ class TableSink extends Singleton {
         this.m_curView && this.m_curView.onWaitPlayerRob(serverIdxToRob);
     }
 
-    onMsgDDZPlayerRobDZRsp(jsonMessage) {
-        if (jsonMessage.ret == 0) {
-            // let serverIdxToRob: number = jsonMessage.idx;
+    onMsgDDZPlayerRobDZRsp() {
+        // let serverIdxToRob: number = jsonMessage.idx;
 
-            this.m_curView && this.m_curView.onPlayerRob();
-        }
-        else {
-            cc.warn('TableSink onMsgDDZPlayerRobDZRsp failed ret =', jsonMessage.ret);
-        }
+        this.m_curView && this.m_curView.onPlayerRob();
     }
 
     onMsgDDZRoomRobDZRsp(jsonMessage) {
@@ -427,8 +422,13 @@ class TableSink extends Singleton {
         }
     }
 
-    onMsgDDZPlayerUpdateTuoGuanRsp() {
+    onMsgDDZPlayerUpdateTuoGuanRsp(jsonMessage) {
+        if (jsonMessage.ret == 0) {
+            let trusteeshipIdx: number = jsonMessage.idx;
+            let isTrusteeship: boolean = jsonMessage.isTuoGuan != 0;
 
+            this.m_curView && this.m_curView.onPlayerTuoGuan(trusteeshipIdx, isTrusteeship);
+        }
     }
 
     onMsgDDZRoomUpdateTuoGuanRsp(jsonMessage) {
@@ -453,16 +453,27 @@ class TableSink extends Singleton {
 
     onMsgRoomPlayerInfoRsp(jsonMessage) {
         DDZPlayerDataManager.getInstance().updatePlayerInfo(jsonMessage);
-        let players = jsonMessage.players;
+        let players: DDZPlayerData[] = DDZPlayerDataManager.getInstance()._players;
+
+        let roomInfo: DDZRoomInfo = DDZGameDataLogic.getInstance().getRoomInfo();
         if (players && players.length > 0) {
             let uidList: number[] = [];
             _.forEach(players, (player) => {
-                uidList.push(player.uid);
+                if (player.isValid()) {
+                    // if (userData.uid == player.uid) {
+                    //     if (roomInfo.state == eRoomState.eRoomSate_WaitReady && !player.haveState(eRoomPeerState.eRoomPeer_SysAutoAct)) {
+                    //         //auto sendReady 
+                    //         this.requestReady();
+                    //     }
+                    // }
+
+                    uidList.push(player.uid);
+                }
             });
 
             PlayerDataManager.getInstance().reqPlayerData(uidList);
         }
-        
+
         this.m_curView && this.m_curView.updateAllPlayerDatas();
     }
 

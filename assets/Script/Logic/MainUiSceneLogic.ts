@@ -103,12 +103,12 @@ class MainUiSceneLogic extends Singleton {
                 let gameType: eGameType = jsMsg.opts.gameType
                 switch (gameType) {
                     case eGameType.eGame_CYDouDiZhu: {
-                        NetSink.getInstance();
+                        NetSink.getInstance().onMsgRoomInfoRsp(jsMsg);
                         SceneManager.changeScene(EmSceneID.SceneID_DDZScene);
                         break;
                     }
                     case eGameType.eGame_Golden: {
-                        GameRoomLogic.getInstance();
+                        GameRoomLogic.getInstance().onMsgRoomInfoRsp(jsMsg);
                         SceneManager.changeScene(EmSceneID.SceneID_GameRoomScene);
                         break;
                     }

@@ -25,6 +25,10 @@ export class DDZPlayerData {
         _.merge(this, jsonMessage);
     }
 
+    isValid(): boolean {
+        return this.uid > 0;
+    }
+
     isTuoGuan(): boolean {
         return this.haveState(eRoomPeerState.eRoomPeer_SysAutoAct);
     }

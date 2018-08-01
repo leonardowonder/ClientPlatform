@@ -97,7 +97,7 @@ class GameRoomLogic extends Singleton {
 
         switch (msg.nMsgID) {
             case eMsgType.MSG_ROOM_INFO: {
-                this._onMsgRoomInfoRsp(msg.jsMsg);
+                this.onMsgRoomInfoRsp(msg.jsMsg);
                 break;
             }
             case eMsgType.MSG_ROOM_PLAYER_INFO: {
@@ -151,7 +151,7 @@ class GameRoomLogic extends Singleton {
     }
 
     //net msg rsp    
-    private _onMsgRoomInfoRsp(jsMsg) {
+    onMsgRoomInfoRsp(jsMsg) {
         RoomDataManger.getInstance().setRoomData(jsMsg);
 
         gameController.onGetRoomInfo(jsMsg);

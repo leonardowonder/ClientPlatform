@@ -1,11 +1,11 @@
 const { ccclass, property } = cc._decorator;
 
-import DDZGameDataLogic from '../Data/DDZGameDataLogic';
 import { eRoomPeerState, eRoomState } from '../Define/DDZDefine';
 import { EmDDZPlayerState } from '../Module/DDZGameDefine';
 import HandCardLogic from '../Control/HandCardLogic';
 import DDZPlayerDataManager from '../Data/DDZPlayerDataManager';
 import PlayerDataManager from '../../../../Script/Manager/DataManager/PlayerDataManager';
+import DDZGameDataLogic, { DDZRoomInfo } from '../Data/DDZGameDataLogic';
 
 import { DDZPlayerData } from '../Data/DDZPlayerDataManager';
 import UserData from '../../../../Script/Data/UserData';
@@ -19,6 +19,8 @@ export default class DDZPlayerItem extends cc.Component {
     m_landlordTag: cc.Node = null;
     @property(cc.Label)
     m_restCardNumLabel: cc.Label = null;
+    @property(cc.Node)
+    m_tuoGuanNode: cc.Node = null;
 
     @property(cc.Sprite)
     m_stateSprite: cc.Sprite = null;
@@ -70,6 +72,7 @@ export default class DDZPlayerItem extends cc.Component {
         this.setHead('');
         this.setCoin(0);
         this.clearResult();
+        this.setTuoGuan(false);
     }
 
     refreshView() {
@@ -89,12 +92,19 @@ export default class DDZPlayerItem extends cc.Component {
         this.node.active = ddzPlayerData.uid != 0;
 
         if (ddzPlayerData.uid != 0) {
+            let roomInfo: DDZRoomInfo = DDZGameDataLogic.getInstance().getRoomInfo();
+
+            if (roomInfo.state == eRoomState.eRoomState_DDZ_Chu) {
+                this.setIsBanker(this.m_serverChairID == roomInfo.dzIdx)
+            }
+
             let player = PlayerDataManager.getInstance().getPlayerData(ddzPlayerData.uid);
             if (player) {
                 this.setName(player.name);
                 this.setHead(player.headIcon);
             }
 
+            this.setTuoGuan(ddzPlayerData.haveState(eRoomPeerState.eRoomPeer_SysAutoAct));
             this.setCoin(ddzPlayerData.chips);
 
             this.setState(EmDDZPlayerState.State_None);
@@ -126,6 +136,12 @@ export default class DDZPlayerItem extends cc.Component {
 
     setCoin(num: number) {
         this.m_coinLabel.string = num.toString();
+    }
+
+    setTuoGuan(tuoGuan: boolean) {
+        if (this.m_tuoGuanNode) {
+            this.m_tuoGuanNode.active = tuoGuan;
+        }
     }
 
     setIsBanker(isBanker: boolean) {
