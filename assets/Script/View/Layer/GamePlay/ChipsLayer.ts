@@ -219,8 +219,8 @@ export default class ChipsLayer extends cc.Component {
         let width: number = node.width;
         let height: number = node.height;
 
-        let randomX = MathUtils.getInstance().getRandomBetween(0 + chipNode.width / 2, width - chipNode.width / 2);
-        let randomY = MathUtils.getInstance().getRandomBetween(0 + chipNode.height / 2, height - chipNode.height / 2);
+        let randomX = MathUtils.getInstance().getRandomBetween(chipNode.width * 1.5, width - chipNode.width * 1.5);
+        let randomY = MathUtils.getInstance().getRandomBetween(chipNode.height * 1.5, height - chipNode.height * 1.5);
 
         return new cc.Vec2(randomX, randomY);
     }

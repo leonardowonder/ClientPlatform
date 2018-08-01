@@ -16,6 +16,9 @@ export default class CardTypeItem extends cc.Component {
     @property(cc.SpriteFrame)
     m_bgs: cc.SpriteFrame[] = [];
 
+    @property(cc.Color)
+    m_labelColors: cc.Color[] = [];
+
     unuse() {
         this._resetView();
     }
@@ -25,6 +28,7 @@ export default class CardTypeItem extends cc.Component {
 
         let idx = this._getFrameIdx(judgeSpecialType(typeInfo));
         this.m_bgSprite.spriteFrame = this.m_bgs[idx];
+        this.m_cardTypeLabel.node.color = this.m_labelColors[idx];
     }
 
     private _getFrameIdx(isSpecialType: boolean): number {

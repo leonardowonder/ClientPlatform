@@ -1,5 +1,7 @@
 const { ccclass, property } = cc._decorator;
 
+import { Game_Room_Max_Coin_Idx, Game_Room_Max_Win_Rate_Idx } from '../../../Define/GamePlayDefine';
+
 import GamePlayerData from '../../../Data/GamePlay/GamePlayerData';
 
 import GameRoomLogic from '../../../Logic/GamePlay/GameRoomLogic';
@@ -22,6 +24,11 @@ export default class PlayerItem extends cc.Component {
 
     @property(cc.Node)
     m_resultRootNode: cc.Node = null;
+
+    @property(cc.Node)
+    m_maxcoinNode: cc.Node = null;
+    @property(cc.Node)
+    m_maxrateNode: cc.Node = null;
 
     @property(cc.Node)
     m_seatNode: cc.Node = null;
@@ -151,6 +158,8 @@ export default class PlayerItem extends cc.Component {
             return;
         }
 
+        this.m_maxcoinNode.active = true;
+
         let roomInfo: RoomData = RoomDataManger.getInstance().getRoomData();
 
         let playerData = PlayerDataManager.getInstance().getPlayerData(roomInfo.richestUID);
@@ -168,6 +177,8 @@ export default class PlayerItem extends cc.Component {
             cc.warn(`PlayerItem refreshViewByMaxWinRateInfo invalid chairID = ${this.m_serverChairID}`);
             return;
         }
+
+        this.m_maxrateNode.active = true;
 
         let roomInfo: RoomData = RoomDataManger.getInstance().getRoomData();
 

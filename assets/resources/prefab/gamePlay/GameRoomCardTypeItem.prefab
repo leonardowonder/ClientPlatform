@@ -153,7 +153,7 @@
       "__id__": 1
     },
     "asset": {
-      "__id__": 0
+      "__uuid__": "1579da1e-5331-4266-8170-ca62bf522631"
     },
     "fileId": "0cqMnlsttMFaxrVF1V09+N",
     "sync": false
@@ -240,7 +240,7 @@
       "__id__": 1
     },
     "asset": {
-      "__id__": 0
+      "__uuid__": "1579da1e-5331-4266-8170-ca62bf522631"
     },
     "fileId": "a1yrnGnyJAF4xevoYE/NC1",
     "sync": false
@@ -266,6 +266,22 @@
       {
         "__uuid__": "12a39c64-001c-4dc9-b5ef-95ff7afe404d"
       }
+    ],
+    "m_labelColors": [
+      {
+        "__type__": "cc.Color",
+        "r": 166,
+        "g": 254,
+        "b": 254,
+        "a": 255
+      },
+      {
+        "__type__": "cc.Color",
+        "r": 102,
+        "g": 53,
+        "b": 14,
+        "a": 255
+      }
     ]
   },
   {
@@ -274,7 +290,7 @@
       "__id__": 1
     },
     "asset": {
-      "__id__": 0
+      "__uuid__": "1579da1e-5331-4266-8170-ca62bf522631"
     },
     "fileId": "dczNapkRtHsqP8tZKSdwRB",
     "sync": false

@@ -7,11 +7,11 @@
             <key>LargeCard_commom_shuzi_hei_1.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{176,293},{38,42}}</string>
+                <string>{{298,89},{38,42}}</string>
                 <key>offset</key>
                 <string>{0,1}</string>
                 <key>rotated</key>
-                <false/>
+                <true/>
                 <key>sourceColorRect</key>
                 <string>{{6,3},{38,42}}</string>
                 <key>sourceSize</key>
@@ -20,7 +20,7 @@
             <key>LargeCard_commom_shuzi_hei_10.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{250,145},{42,42}}</string>
+                <string>{{356,81},{42,42}}</string>
                 <key>offset</key>
                 <string>{-1,0}</string>
                 <key>rotated</key>
@@ -33,7 +33,7 @@
             <key>LargeCard_commom_shuzi_hei_11.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{441,36},{32,42}}</string>
+                <string>{{440,120},{32,42}}</string>
                 <key>offset</key>
                 <string>{1,0}</string>
                 <key>rotated</key>
@@ -46,7 +46,7 @@
             <key>LargeCard_commom_shuzi_hei_12.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{214,149},{34,44}}</string>
+                <string>{{180,101},{34,44}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -59,11 +59,11 @@
             <key>LargeCard_commom_shuzi_hei_13.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{426,220},{36,40}}</string>
+                <string>{{474,216},{36,40}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <true/>
+                <false/>
                 <key>sourceColorRect</key>
                 <string>{{7,5},{36,40}}</string>
                 <key>sourceSize</key>
@@ -72,11 +72,11 @@
             <key>LargeCard_commom_shuzi_hei_2.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{338,195},{26,42}}</string>
+                <string>{{258,192},{26,42}}</string>
                 <key>offset</key>
                 <string>{1,1}</string>
                 <key>rotated</key>
-                <true/>
+                <false/>
                 <key>sourceColorRect</key>
                 <string>{{13,3},{26,42}}</string>
                 <key>sourceSize</key>
@@ -85,7 +85,7 @@
             <key>LargeCard_commom_shuzi_hei_3.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{294,169},{28,42}}</string>
+                <string>{{298,161},{28,42}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -98,7 +98,7 @@
             <key>LargeCard_commom_shuzi_hei_4.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{294,137},{30,42}}</string>
+                <string>{{298,129},{30,42}}</string>
                 <key>offset</key>
                 <string>{1,1}</string>
                 <key>rotated</key>
@@ -111,7 +111,7 @@
             <key>LargeCard_commom_shuzi_hei_5.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{382,193},{26,42}}</string>
+                <string>{{298,191},{26,42}}</string>
                 <key>offset</key>
                 <string>{1,0}</string>
                 <key>rotated</key>
@@ -124,7 +124,7 @@
             <key>LargeCard_commom_shuzi_hei_6.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{338,165},{28,42}}</string>
+                <string>{{430,214},{28,42}}</string>
                 <key>offset</key>
                 <string>{1,0}</string>
                 <key>rotated</key>
@@ -137,7 +137,7 @@
             <key>LargeCard_commom_shuzi_hei_7.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{426,192},{26,42}}</string>
+                <string>{{342,187},{26,42}}</string>
                 <key>offset</key>
                 <string>{2,0}</string>
                 <key>rotated</key>
@@ -150,11 +150,11 @@
             <key>LargeCard_commom_shuzi_hei_8.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{482,190},{28,42}}</string>
+                <string>{{386,185},{28,42}}</string>
                 <key>offset</key>
                 <string>{1,0}</string>
                 <key>rotated</key>
-                <false/>
+                <true/>
                 <key>sourceColorRect</key>
                 <string>{{12,4},{28,42}}</string>
                 <key>sourceSize</key>
@@ -163,7 +163,7 @@
             <key>LargeCard_commom_shuzi_hei_9.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{438,162},{28,42}}</string>
+                <string>{{342,157},{28,42}}</string>
                 <key>offset</key>
                 <string>{1,0}</string>
                 <key>rotated</key>
@@ -176,7 +176,7 @@
             <key>LargeCard_commom_shuzi_hong_1.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{286,93},{38,42}}</string>
+                <string>{{400,81},{38,42}}</string>
                 <key>offset</key>
                 <string>{0,1}</string>
                 <key>rotated</key>
@@ -189,7 +189,7 @@
             <key>LargeCard_commom_shuzi_hong_10.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{242,101},{42,42}}</string>
+                <string>{{440,42},{42,42}}</string>
                 <key>offset</key>
                 <string>{-1,0}</string>
                 <key>rotated</key>
@@ -202,7 +202,7 @@
             <key>LargeCard_commom_shuzi_hong_11.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{441,2},{32,42}}</string>
+                <string>{{440,86},{32,42}}</string>
                 <key>offset</key>
                 <string>{1,0}</string>
                 <key>rotated</key>
@@ -228,11 +228,11 @@
             <key>LargeCard_commom_shuzi_hong_13.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{286,199},{36,40}}</string>
+                <string>{{474,174},{36,40}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <true/>
+                <false/>
                 <key>sourceColorRect</key>
                 <string>{{7,5},{36,40}}</string>
                 <key>sourceSize</key>
@@ -241,11 +241,11 @@
             <key>LargeCard_commom_shuzi_hong_2.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{382,165},{26,42}}</string>
+                <string>{{484,130},{26,42}}</string>
                 <key>offset</key>
                 <string>{1,1}</string>
                 <key>rotated</key>
-                <true/>
+                <false/>
                 <key>sourceColorRect</key>
                 <string>{{13,3},{26,42}}</string>
                 <key>sourceSize</key>
@@ -254,11 +254,11 @@
             <key>LargeCard_commom_shuzi_hong_3.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{482,146},{28,42}}</string>
+                <string>{{430,184},{28,42}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <false/>
+                <true/>
                 <key>sourceColorRect</key>
                 <string>{{11,4},{28,42}}</string>
                 <key>sourceSize</key>
@@ -267,7 +267,7 @@
             <key>LargeCard_commom_shuzi_hong_4.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{441,70},{30,42}}</string>
+                <string>{{342,125},{30,42}}</string>
                 <key>offset</key>
                 <string>{1,1}</string>
                 <key>rotated</key>
@@ -280,7 +280,7 @@
             <key>LargeCard_commom_shuzi_hong_5.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{258,189},{26,42}}</string>
+                <string>{{484,86},{26,42}}</string>
                 <key>offset</key>
                 <string>{1,0}</string>
                 <key>rotated</key>
@@ -293,7 +293,7 @@
             <key>LargeCard_commom_shuzi_hong_6.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{438,132},{28,42}}</string>
+                <string>{{386,155},{28,42}}</string>
                 <key>offset</key>
                 <string>{1,0}</string>
                 <key>rotated</key>
@@ -306,7 +306,7 @@
             <key>LargeCard_commom_shuzi_hong_7.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{326,93},{26,42}}</string>
+                <string>{{484,42},{26,42}}</string>
                 <key>offset</key>
                 <string>{2,0}</string>
                 <key>rotated</key>
@@ -319,11 +319,11 @@
             <key>LargeCard_commom_shuzi_hong_8.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{482,102},{28,42}}</string>
+                <string>{{430,154},{28,42}}</string>
                 <key>offset</key>
                 <string>{1,0}</string>
                 <key>rotated</key>
-                <false/>
+                <true/>
                 <key>sourceColorRect</key>
                 <string>{{12,4},{28,42}}</string>
                 <key>sourceSize</key>
@@ -332,7 +332,7 @@
             <key>LargeCard_commom_shuzi_hong_9.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{438,102},{28,42}}</string>
+                <string>{{386,125},{28,42}}</string>
                 <key>offset</key>
                 <string>{1,0}</string>
                 <key>rotated</key>
@@ -345,7 +345,7 @@
             <key>LargeCard_huase_1.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{272,2},{80,89}}</string>
+                <string>{{216,101},{80,89}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -358,7 +358,7 @@
             <key>LargeCard_huase_2.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{354,86},{82,77}}</string>
+                <string>{{356,2},{82,77}}</string>
                 <key>offset</key>
                 <string>{0,-4}</string>
                 <key>rotated</key>
@@ -371,11 +371,11 @@
             <key>LargeCard_huase_3.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{354,2},{82,85}}</string>
+                <string>{{272,2},{82,85}}</string>
                 <key>offset</key>
                 <string>{0,-3}</string>
                 <key>rotated</key>
-                <true/>
+                <false/>
                 <key>sourceColorRect</key>
                 <string>{{10,7},{82,85}}</string>
                 <key>sourceSize</key>
@@ -449,28 +449,28 @@
             <key>SmallCard_king_huase_14.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{212,101},{46,28}}</string>
+                <string>{{176,293},{40,52}}</string>
                 <key>offset</key>
-                <string>{2,1}</string>
+                <string>{1,2}</string>
                 <key>rotated</key>
-                <true/>
+                <false/>
                 <key>sourceColorRect</key>
-                <string>{{5,2},{46,28}}</string>
+                <string>{{4,3},{40,52}}</string>
                 <key>sourceSize</key>
-                <string>{52,34}</string>
+                <string>{46,62}</string>
             </dict>
             <key>SmallCard_king_huase_15.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{180,101},{46,30}}</string>
+                <string>{{440,2},{38,52}}</string>
                 <key>offset</key>
-                <string>{1,1}</string>
+                <string>{0,2}</string>
                 <key>rotated</key>
                 <true/>
                 <key>sourceColorRect</key>
-                <string>{{4,1},{46,30}}</string>
+                <string>{{4,3},{38,52}}</string>
                 <key>sourceSize</key>
-                <string>{52,34}</string>
+                <string>{46,62}</string>
             </dict>
             <key>ddz_dizhutag.png</key>
             <dict>
@@ -534,7 +534,7 @@
             <key>size</key>
             <string>{512,512}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:bd59776c82a2543a256a2a7a06e2b91f$</string>
+            <string>$TexturePacker:SmartUpdate:65b4fea524a851df5269b86d47b1d905$</string>
             <key>textureFileName</key>
             <string>cards.png</string>
         </dict>

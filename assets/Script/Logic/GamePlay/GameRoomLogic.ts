@@ -5,8 +5,9 @@ import * as _ from 'lodash';
 import { eMsgPort, eMsgType } from '../../Define/MessageIdentifer';
 
 import ClientDefine from '../../Define/ClientDefine';
-import { EmBetAreaType, eBetPool } from '../../Define/GamePlayDefine';
-import { BetMessageInfo } from '../../Define/GameMessegeDefine';
+import ClientEventDefine from '../../Define/ClientEventDefine';
+import { EmBetAreaType } from '../../Define/GamePlayDefine';
+import { BetMessageInfo, UpdateBankerMessageInfo, BankerListMessageInfo } from '../../Define/GameMessegeDefine';
 
 import { betAreaTypeToBetPool } from '../../Utils/GamePlay/GameUtils';
 
@@ -17,18 +18,13 @@ import GameRoomScene from '../../View/Scene/GameRoomScene';
 
 import GameController from '../../Controller/GamePlay/GameController';
 import GamePlayerDataManager from '../../Manager/DataManager/GamePlayDataManger/GamePlayerDataManager';
-import CardDataManager from '../../Manager/DataManager/GamePlayDataManger/CardDataManager';
-import GameRecordDataManager from '../../Manager/DataManager/GamePlayDataManger/GameRecordDataManager';
 import RoomDataManger from '../../Manager/DataManager/GamePlayDataManger/RoomDataManger';
 import PrefabManager, { EmPrefabEnum } from '../../Manager/CommonManager/PrefabManager';
 import PlayerDataManager from '../../Manager/DataManager/PlayerDataManager';
 import RoomData from '../../Data/GamePlay/RoomData';
-import UserData from '../../Data/UserData';
+import BankerDataManager from '../../Manager/DataManager/GamePlayDataManger/BankerDataManager';
 
 let gameController = GameController.getInstance();
-
-let cardDataManager = CardDataManager.getInstance();
-let recordManager = GameRecordDataManager.getInstance();
 
 class GameRoomLogic extends Singleton {
 
@@ -84,6 +80,36 @@ class GameRoomLogic extends Singleton {
             RoomDataManger.getInstance().getRoomID());
     }
 
+    requestApplyBanker() {
+        Network.getInstance().sendMsg(
+            {
+                msgID: eMsgType.MSG_RB_APPLY_BANKER,
+            },
+            eMsgType.MSG_RB_APPLY_BANKER,
+            eMsgPort.ID_MSG_PORT_GOLDEN,
+            RoomDataManger.getInstance().getRoomID());
+    }
+
+    requestApplyBankerList() {
+        Network.getInstance().sendMsg(
+            {
+                msgID: eMsgType.MSG_RB_APPLY_BANKER_LIST,
+            },
+            eMsgType.MSG_RB_APPLY_BANKER_LIST,
+            eMsgPort.ID_MSG_PORT_GOLDEN,
+            RoomDataManger.getInstance().getRoomID());
+    }
+
+    requestApplyResignBanker() {
+        Network.getInstance().sendMsg(
+            {
+                msgID: eMsgType.MSG_RB_PLAYER_RESIGN_BANKER,
+            },
+            eMsgType.MSG_RB_PLAYER_RESIGN_BANKER,
+            eMsgPort.ID_MSG_PORT_GOLDEN,
+            RoomDataManger.getInstance().getRoomID());
+    }
+
     onNetClose() {
 
     }
@@ -125,7 +151,7 @@ class GameRoomLogic extends Singleton {
                 break;
             }
             case eMsgType.MSG_RB_START_GAME: {
-                this._onMsgRBStartGameRsp(msg.jsMsg);
+                this._onMsgRBStartGameRsp();
                 break;
             }
             case eMsgType.MSG_RB_PLAYER_BET: {
@@ -142,6 +168,14 @@ class GameRoomLogic extends Singleton {
             }
             case eMsgType.MSG_RB_UPDATE_RICH_AND_BEST: {
                 this._onMsgRBUpdateRichiAndBestRsp(msg.jsMsg);
+                break;
+            }
+            case eMsgType.MSG_RB_UPDATE_BANKER: {
+                this._onMsgRBUpdateBankerRsp(msg.jsMsg);
+                break;
+            }
+            case eMsgType.MSG_RB_APPLY_BANKER_LIST: {
+                this._onMsgRBApplayBankerListRsp(msg.jsMsg);
                 break;
             }
             default: {
@@ -223,12 +257,26 @@ class GameRoomLogic extends Singleton {
         RoomDataManger.getInstance().changeRoomState(jsMsg.newState);
     }
 
-    private _onMsgRBStartGameRsp(jsMsg) {
+    private _onMsgRBStartGameRsp() {
         gameController.onGameStart();
     }
 
     private _onMsgRBPlayerBetRsp(jsMsg) {
+        let ret = jsMsg.ret;
+        let errTxt = null;
+        if (ret == 1) {
+            errTxt = '金币不足，无法下注';
+        }
+        else if (ret == 2) {
+            errTxt = '池子已满，无法下注';
+        }
+        else if (ret == 3) {
+            errTxt = '未知错误，无法下注';
+        }
 
+        if (errTxt) {
+            PrefabManager.getInstance().showPrefab(EmPrefabEnum.Prefab_PromptDialogLayer, [errTxt]);
+        }
     }
 
     private _onMsgRBRoomBetRsp(jsMsg: BetMessageInfo) {
@@ -247,6 +295,23 @@ class GameRoomLogic extends Singleton {
         roomInfo.updateSpecialInfo(jsMsg.richestUID, jsMsg.richestCoin, jsMsg.bestBetUID, jsMsg.bestBetCoin);
 
         this._updateSpecialPlayerInfo();
+    }
+
+    private _onMsgRBUpdateBankerRsp(jsMsg: UpdateBankerMessageInfo) {
+        let roomInfo: RoomData = RoomDataManger.getInstance().getRoomData();
+
+        roomInfo.bankerID = jsMsg.newBankerID;
+        roomInfo.bankerCoin = jsMsg.coin;
+        
+        this.m_curView && this.m_curView.onUpdateBanker();
+    }
+
+    private _onMsgRBApplayBankerListRsp(jsMsg: BankerListMessageInfo) {
+        BankerDataManager.getInstance().setBankerList(jsMsg.list);
+        
+        let dispEvent: cc.Event.EventCustom = new cc.Event.EventCustom(ClientEventDefine.CUSTOM_EVENT_BANKER_LIST_GET, true);
+
+        cc.systemEvent.dispatchEvent(dispEvent);
     }
 
     //private
@@ -271,7 +336,7 @@ class GameRoomLogic extends Singleton {
         else {
             cc.warn(`_onMsgRoomPlayerInfoRsp invalid player.uid = ${roomInfo.bankerID}`);
         }
-        
+
         if (typeof roomInfo.bestBetUID == 'number' && roomInfo.bestBetUID > 0) {
             uidList.push(roomInfo.bestBetUID);
         }

@@ -39,6 +39,7 @@ export default class RoomData {
     roomID: number = 0;
 
     bankerID: number = 0;
+    bankerCoin: number = 0;
     opts: RoomOptsInfo = null;
     state: eRoomState = eRoomState.eRoomState_StartGame;
     bestBetUID: number = 0;

@@ -20,6 +20,7 @@ export enum EmPrefabEnum {
     Prefab_EffectStopBet,
     Prefab_EffectVS,
     Prefab_EffectStar,
+    Prefab_BankerListLayer,
     Prefab_Max
 }
 
@@ -52,6 +53,7 @@ class PrefabManager extends Singleton {
         { path: 'prefab/gamePlay/effect/EffectStopBet', componentName: 'EffectStopBet' },
         { path: 'prefab/gamePlay/effect/EffectVS', componentName: 'EffectVS' },
         { path: 'prefab/gamePlay/effect/EffectStar', componentName: 'EffectStar' },
+        { path: 'prefab/popup/BankerListLayer', componentName: 'BankerListLayer' },
     ];
 
     private _loadingList: EmPrefabEnum[] = [];

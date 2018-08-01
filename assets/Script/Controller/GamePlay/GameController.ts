@@ -69,10 +69,10 @@ class GameController extends Singleton {
         let state: eRoomState = roomData.state;
 
         if (state == eRoomState.eRoomState_StartGame) {
-            this.m_Basefsm.changeState('Restart');
+            this.m_Basefsm && this.m_Basefsm.changeState('Restart');
         }
         else {
-            this.m_Basefsm.changeState('Account');
+            this.m_Basefsm && this.m_Basefsm.changeState('Account');
         }
     }
 
@@ -149,6 +149,8 @@ class GameController extends Singleton {
         this._updateSitPlayerChips(jsMsg);
 
         this._updateSelfChip(jsMsg);
+
+        this._updateBankerChip(jsMsg);
     }
 
     private _updateSpecialPlayerChips(jsMsg: ResultMessegeInfo) {
@@ -184,6 +186,13 @@ class GameController extends Singleton {
             let userData: UserInfo = UserData.getInstance().getUserData();
 
             userData.coin += offset;
+        }
+    }
+
+    private _updateBankerChip(jsMsg: ResultMessegeInfo) {
+        let roomData: RoomData = RoomDataManger.getInstance().getRoomData();
+        if (roomData.bankerID > 0) {    
+            roomData.bankerCoin += jsMsg.bankerOffset;
         }
     }
 

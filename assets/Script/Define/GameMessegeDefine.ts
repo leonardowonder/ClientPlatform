@@ -1,4 +1,5 @@
-import { GoldenType, eBetPool } from './GamePlayDefine'
+import { GoldenType, eBetPool } from './GamePlayDefine';
+import BankerData from '../Data/GamePlay/BankerData';
 
 export class CardsInfo {
     cards: number[] = [];
@@ -17,7 +18,7 @@ export class WinInfo {
 }
 
 export class ResultMessegeInfo {
-    bankerLose: number = 0;
+    bankerOffset: number = 0;
     bestBetOffset: number = 0;
     richestOffset: number = 0;
     selfOffset: number = 0;
@@ -33,4 +34,13 @@ export class BetMessageInfo {
     idx: number = 0;
     coin: number = 0;
     poolType: eBetPool = eBetPool.eBet_Max;
+}
+
+export class UpdateBankerMessageInfo {
+    newBankerID: number = 0;
+    coin: number = 0;
+}
+
+export class BankerListMessageInfo {
+    list: BankerData[] = [];
 }

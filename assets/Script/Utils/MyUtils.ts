@@ -17,6 +17,19 @@ export enum PlatForm {
     CC_PLATFORM_WINRT
 }
 
+export function loadHead(sp: cc.Sprite, headUrl: string) {
+    if (typeof headUrl == 'string' && headUrl.length > 0) {
+        cc.loader.load({ url: headUrl, type: 'png' }, (err, texture) => {
+            if (!err) {
+                sp.spriteFrame = new cc.SpriteFrame(texture);
+                sp.node.setContentSize(cc.size(96, 96));
+            } else {
+                sp.spriteFrame = null;
+            }
+        });
+    }
+}
+
 class MyUtils extends Singleton {
     private m_bIsCheck: boolean = false;//是否正在审核
 

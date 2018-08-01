@@ -3,7 +3,8 @@ const { ccclass, property } = cc._decorator;
 import * as _ from 'lodash';
 
 import { EmChipType, EmBetAreaType, GroupTypeInfo, eRoomState, Game_Room_Max_Coin_Idx, Game_Room_Max_Win_Rate_Idx, Game_Room_Players_Max_Count } from '../../Define/GamePlayDefine';
-import { CardsInfo, WinInfo, ResultMessegeInfo, BetMessageInfo } from '../../Define/GameMessegeDefine';
+import { CardsInfo, WinInfo, ResultMessegeInfo, BetMessageInfo, UpdateBankerMessageInfo } from '../../Define/GameMessegeDefine';
+import ClientEventDefine from '../../Define/ClientEventDefine';
 
 import GameController from '../../Controller/GamePlay/GameController';
 
@@ -11,12 +12,14 @@ import GameRoomLogic from '../../Logic/GamePlay/GameRoomLogic';
 
 import RoomData from '../../Data/GamePlay/RoomData';
 import UserData, { UserInfo } from '../../Data/UserData';
+import BankerData from '../../Data/GamePlay/BankerData';
 
 import { coinToChipType, betPoolToBetAreaType, goldenTypeToGroupType } from '../../Utils/GamePlay/GameUtils';
 
 import SceneManager, { EmSceneID } from '../../Manager/CommonManager/SceneManager';
 import PrefabManager, { EmPrefabEnum } from '../../Manager/CommonManager/PrefabManager';
 import RoomDataManger from '../../Manager/DataManager/GamePlayDataManger/RoomDataManger';
+import BankerDataManager from '../../Manager/DataManager/GamePlayDataManger/BankerDataManager';
 
 import CardsContainer from '../Layer/GamePlay/CardsContainer';
 import ChipSelectLayer from '../Layer/GamePlay/ChipSelectLayer';
@@ -24,6 +27,7 @@ import ChipsLayer from '../Layer/GamePlay/ChipsLayer';
 import PlayerRootLayer from '../Layer/GamePlay/PlayerRootLayer';
 import GameRoomAnimRootLayer from '../Layer/GamePlay/GameRoomAnimRootLayer';
 import BetPoolInfoLayer from '../Layer/GamePlay/BetPoolInfoLayer';
+import BankerRootLayer from '../Layer/GamePlay/BankerRootLayer';
 
 import PlayerItem from '../Layer/GamePlay/PlayerItem';
 
@@ -47,13 +51,18 @@ export default class GameRoomScene extends cc.Component {
 
     @property(BetPoolInfoLayer)
     m_betPoolInfoLayer: BetPoolInfoLayer = null;
+    
+    @property(BankerRootLayer)
+    m_bankerRootLayer: BankerRootLayer = null;
 
     onDestroy() {
+        this._unregistEvents();
         GameRoomLogic.getInstance().unsetCurView();
         GameController.getInstance().unsetCurView();
     }
 
     onLoad() {
+        this._registEvents();
         GameRoomLogic.getInstance().setCurView(this);
         GameController.getInstance().setCurView(this);
     }
@@ -67,6 +76,7 @@ export default class GameRoomScene extends cc.Component {
     }
 
     updateRoomView() {
+        this._updatebankerRootInfo();
         this._updateCountDown();
         this._showWaitNextGame();
         this._updatePoolInfo();
@@ -147,6 +157,11 @@ export default class GameRoomScene extends cc.Component {
         this.m_playerRootLayer.updateAllPlayerDatas();
 
         this.m_chipsLayer.playChipMoveFromHeadToPoolAction(clientIdx, chipType, areaType);
+    }
+
+    onUpdateBanker() {
+        this._updatebankerRootInfo();
+        this.m_bankerRootLayer.updateBankerInfo();
     }
 
     distributeCards() {
@@ -267,6 +282,39 @@ export default class GameRoomScene extends cc.Component {
         // let clientIdx: number = TableDataManager.getInstance().svrIdxToClientIdx(serverIdx);
 
         this.m_playerRootLayer.refreshPlayerItem(serverIdx);
+    }
+
+    private _registEvents() {
+        this._unregistEvents();
+        cc.systemEvent.on(ClientEventDefine.CUSTOM_EVENT_BANKER_LIST_GET, this._updatebankerRootInfo, this);
+        cc.systemEvent.on(ClientEventDefine.CUSTOM_EVENT_PLAYER_DATA_REQ_FINISHED, this._updatebankerRootInfo, this);
+    }
+
+    private _unregistEvents() {
+        cc.systemEvent.targetOff(this);
+    }
+
+    private _updatebankerRootInfo() {
+        let userData: UserInfo = UserData.getInstance().getUserData();
+
+        let roomData: RoomData = RoomDataManger.getInstance().getRoomData();
+
+        if (userData.uid == roomData.bankerID) {
+            this.m_bankerRootLayer.showApplyQuitBankerButton();
+        }
+        else {
+            let bankerList: BankerData[] = BankerDataManager.getInstance().getBankerList();
+            let idx = _.findIndex(bankerList, (banker: BankerData) => {
+                return userData.uid == banker.uid;
+            });
+
+            if (idx == -1) {
+                this.m_bankerRootLayer.showApplyBanker();
+            }
+            else {
+                this.m_bankerRootLayer.showCancelApplyBankerButton();
+            }
+        }
     }
 
     private _updateCountDown() {
