@@ -76,14 +76,14 @@ class GameController extends Singleton {
     }
 
     onRoomBet(jsMsg: BetMessageInfo) {
+        let roomInfo: RoomData = RoomDataManger.getInstance().getRoomData();
         let userData = UserData.getInstance().getUserData();
 
         let betCoin: number = jsMsg.coin;
         if (userData.uid == jsMsg.uid) {
-            userData.coin -= betCoin;
+            roomInfo.selfCoin -= betCoin;
         }
 
-        let roomInfo: RoomData = RoomDataManger.getInstance().getRoomData();
         if (jsMsg.uid == roomInfo.bestBetUID) {
             roomInfo.bestBetCoin -= betCoin;
         }
