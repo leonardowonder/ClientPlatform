@@ -155,11 +155,13 @@ export default class TableMainUI extends cc.Component {
 
         this.m_countDownRootLayer.showCountDown(DDZ_WaitRobBankerTime, clientIdx);
 
+        this.sendOutCard(clientIdx, [], DDZ_Type.DDZ_Max);
+
         let playerItem: DDZPlayerItem = this.m_playerRootLayer.getPlayerByClientIdx(clientIdx);
         if (playerItem) {
             playerItem.setState(EmDDZPlayerState.State_None);
         }
-        
+
         this.updateOptions(false);
     }
 
@@ -219,6 +221,8 @@ export default class TableMainUI extends cc.Component {
         }
 
         this.m_countDownRootLayer.showCountDown(DDZ_WaitPlayerActTime, clientIdx);
+        
+        this.sendOutCard(clientIdx, [], DDZ_Type.DDZ_Max);
 
         let playerItem: DDZPlayerItem = this.m_playerRootLayer.getPlayerByClientIdx(clientIdx);
         if (playerItem) {
@@ -379,7 +383,7 @@ export default class TableMainUI extends cc.Component {
     continuePlay() {
         let roomInfo = DDZGameDataLogic.getInstance().getRoomInfo();
         roomInfo.state = eRoomState.eRoomSate_WaitReady;
-        
+
         MainUiSceneLogic.getInstance().requestEnterDDZRoom();
     }
 
@@ -444,7 +448,7 @@ export default class TableMainUI extends cc.Component {
         for (let i = 0; i < cardType.length; i++) {
             str += GameLogicIns.debugShowCardType(cardType[i]);
         }
-        
+
         this.m_testLabel.string = str;
         return cardType;
     }
@@ -620,6 +624,8 @@ export default class TableMainUI extends cc.Component {
                 else {
                     let clientIdx: number = this.getLocalIDByChairID(this.m_curServerActIdx);
                     this.m_countDownRootLayer.showCountDown(roomInfo.stateTime, clientIdx);
+
+                    this.sendOutCard(clientIdx, [], DDZ_Type.DDZ_Max);
 
                     let playerItem: DDZPlayerItem = this.m_playerRootLayer.getPlayerByClientIdx(clientIdx);
                     if (playerItem) {
@@ -851,7 +857,7 @@ export default class TableMainUI extends cc.Component {
         if (this.getLocalIDByChairID(this.m_curServerActIdx) != 0) {
             return false;
         }
-        
+
         let roomInfo: DDZRoomInfo = DDZGameDataLogic.getInstance().getRoomInfo();
         if (roomInfo.state == eRoomState.eRoomState_DecideBanker && this._bankerProduced) {
             return true;
