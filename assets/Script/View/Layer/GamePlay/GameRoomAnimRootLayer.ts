@@ -115,6 +115,10 @@ export default class GameRoomAnimRootLayer extends cc.Component {
     }
 
     showStarEffect(type: EmBetAreaType) {
+        if (this.m_betAreaContentNodes == null) {
+            return;
+        }
+        
         let idx: number = this._getIdx(type);
 
         let contentNode: cc.Node = this.m_betAreaContentNodes[idx];
