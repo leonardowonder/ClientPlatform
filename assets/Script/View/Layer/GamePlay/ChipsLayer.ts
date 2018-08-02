@@ -17,6 +17,7 @@ import RoomDataManger from '../../../Manager/DataManager/GamePlayDataManger/Room
 import GameRoomLogic from '../../../Logic/GamePlay/GameRoomLogic';
 
 import Chip from '../../../Component/GamePlay/Common/Chip';
+import PrefabManager, { EmPrefabEnum } from '../../../Manager/CommonManager/PrefabManager';
 
 let gameController = GameController.getInstance();
 
@@ -37,6 +38,11 @@ export default class ChipsLayer extends cc.Component {
     }
 
     onAreaTouch(event: cc.Event.EventCustom) {
+        if (gameController.isSelfBanker()) {
+            PrefabManager.getInstance().showPrefab(EmPrefabEnum.Prefab_PromptDialogLayer, ['庄家不能下注'])；
+            return;
+        }
+        
         if (this._canBetNow()) {
             let curChipType: EmChipType = gameController.getCurChipType();
             let coin: number = chipTypeToCoin(curChipType);
@@ -49,14 +55,6 @@ export default class ChipsLayer extends cc.Component {
         else {
             cc.warn(`ChipsLayer onAreaTouch cannot bet now`);
         }
-        // let node = event.target;
-
-        // let newChip: cc.Node = this._getChip(node);
-        // let fromPos: cc.Vec2 = this._getPlayerHeadPosByClientIdx(tableDataManager.getSelfClientIdx(), node);
-        // let toPos: cc.Vec2 = this._getRandomTargetPos(newChip, node);
-
-        // this._updateChip(newChip, this._getSelfChipType());
-        // this._playChipMoveForwardAction(newChip, fromPos, toPos);
     }
 
     playChipMoveFromHeadToPoolAction(clientIdx: number, chipType: EmChipType, areaType: EmBetAreaType) {
@@ -68,10 +66,6 @@ export default class ChipsLayer extends cc.Component {
 
         this._updateChip(newChip, chipType);
         this._playChipMoveForwardAction(newChip, fromPos, toPos);
-    }
-
-    foo() {
-        this.playChipMoveFromPoolToPlayerAction(EmBetAreaType.Type_Black, [0, 2, 5, 10])
     }
 
     playChipMoveFromPoolToPlayerAction(areaType: EmBetAreaType, clientIdxList: number[]) {

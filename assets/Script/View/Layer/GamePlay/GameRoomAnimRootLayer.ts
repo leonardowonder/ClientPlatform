@@ -161,7 +161,8 @@ export default class GameRoomAnimRootLayer extends cc.Component {
             this.playPoolHighLightAnim.bind(this, resultMessegeInfo), 2500,
             this.m_gameRoomScene.clearBetPoolInfo.bind(this.m_gameRoomScene));
         let chipMoveAnim = new Anim(GamePlayAnimKeyMap.Key_ChipMoveToHeadAnim,
-            this.m_gameRoomScene.playChipMoveAnim.bind(this.m_gameRoomScene, resultMessegeInfo), 1000, null);
+            this.m_gameRoomScene.playChipMoveAnim.bind(this.m_gameRoomScene, resultMessegeInfo), 1000,
+            this.m_gameRoomScene.onUpdateBanker.bind(this.m_gameRoomScene));
         let offsetAnim = new Anim(GamePlayAnimKeyMap.Key_OffsetAnim,
             this.m_gameRoomScene.playPlayerResultAnim.bind(this.m_gameRoomScene, resultMessegeInfo), 1500, () => {
                 AnimationPlayManager.getInstance().clearAnimList();

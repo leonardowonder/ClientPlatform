@@ -17,7 +17,6 @@ import CardDataManager from '../../Manager/DataManager/GamePlayDataManger/CardDa
 import RoomDataManger from '../../Manager/DataManager/GamePlayDataManger/RoomDataManger';
 
 import GameRoomScene from '../../View/Scene/GameRoomScene';
-import GameRoomData from '../../Data/GamePlay/GameRoomData';
 import GamePlayerData from '../../Data/GamePlay/GamePlayerData';
 import GamePlayerDataManager from '../../Manager/DataManager/GamePlayDataManger/GamePlayerDataManager';
 import UserData, { UserInfo } from '../../Data/UserData';
@@ -136,6 +135,12 @@ class GameController extends Singleton {
         return this.m_gameRoomScene.getPlayerHeadWorldPos(clientIdx);
     }
 
+    isSelfBanker(): boolean {
+        let roomData: RoomData = RoomDataManger.getInstance().getRoomData();
+        
+        return roomData.bankerID == UserData.getInstance().getUserData().uid;
+    }
+
     private _updateWinCardsInfo(jsMsg: ResultMessegeInfo) {
         let winCardsInfo: CardsInfo = jsMsg.isRedWin ? jsMsg.red : jsMsg.black;
 
@@ -154,16 +159,13 @@ class GameController extends Singleton {
     }
 
     private _updateSpecialPlayerChips(jsMsg: ResultMessegeInfo) {
-        let maxCoinOffset: number = jsMsg.richestOffset;
-        let maxWinRateOffset: number = jsMsg.bestBetOffset;
-
         let roomData: RoomData = RoomDataManger.getInstance().getRoomData();
-        if (maxCoinOffset > 0 && roomData.richestUID != null && roomData.richestUID > 0) {
-            roomData.richestCoin += maxCoinOffset;
+        if (roomData.richestUID != null && roomData.richestUID > 0) {
+            roomData.richestCoin = jsMsg.richestCoin;
         }
 
-        if (maxWinRateOffset > 0 && roomData.bestBetUID != null && roomData.bestBetUID > 0) {
-            roomData.bestBetCoin += maxWinRateOffset;
+        if (roomData.bestBetUID != null && roomData.bestBetUID > 0) {
+            roomData.bestBetCoin = jsMsg.bestCoin;
         }
     }
 
@@ -171,30 +173,24 @@ class GameController extends Singleton {
         let winInfos: WinInfo[] = jsMsg.result;
         if (winInfos && winInfos.length > 0) {
             _.forEach(winInfos, (info: WinInfo) => {
-                if (info.offset > 0) {
-                    let playerData: GamePlayerData = GamePlayerDataManager.getInstance().getPlayerDataByServerIdx(info.idx);
-                    if (playerData && playerData.isValid()) {
-                        playerData.chips += info.offset;
-                    }
+                let playerData: GamePlayerData = GamePlayerDataManager.getInstance().getPlayerDataByServerIdx(info.idx);
+                if (playerData && playerData.isValid()) {
+                    playerData.chips = info.coin;
                 }
             })
         }
     }
 
     private _updateSelfChip(jsMsg: ResultMessegeInfo) {
-        let offset: number = jsMsg.selfOffset;
+        let userData: UserInfo = UserData.getInstance().getUserData();
 
-        if (offset > 0) {
-            let userData: UserInfo = UserData.getInstance().getUserData();
-
-            userData.coin += offset;
-        }
+        userData.coin = jsMsg.selfCoin;
     }
 
     private _updateBankerChip(jsMsg: ResultMessegeInfo) {
         let roomData: RoomData = RoomDataManger.getInstance().getRoomData();
-        if (roomData.bankerID > 0) {    
-            roomData.bankerCoin += jsMsg.bankerOffset;
+        if (roomData.bankerID > 0) {
+            roomData.bankerCoin = jsMsg.bankerCoin;
         }
     }
 

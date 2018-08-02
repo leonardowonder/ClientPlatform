@@ -10,6 +10,7 @@ export class CardsInfo {
 export class WinInfo {
     idx: number = 0;
     offset: number = 0;
+    coin: number = 0;
 
     constructor(info) {
         this.idx = info.idx;
@@ -19,9 +20,13 @@ export class WinInfo {
 
 export class ResultMessegeInfo {
     bankerOffset: number = 0;
+    bankerCoin: number = 0;
     bestBetOffset: number = 0;
+    bestCoin: number = 0;
     richestOffset: number = 0;
+    richestCoin: number = 0;
     selfOffset: number = 0;
+    selfCoin: number = 0;
 
     black: CardsInfo = null;
     red: CardsInfo = null;

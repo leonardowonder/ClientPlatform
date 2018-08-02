@@ -247,6 +247,8 @@ class GameRoomLogic extends Singleton {
             errorText = "没有找到该房间";
         } else if (jsMsg.ret == 201) {
             errorText = "操作超时";
+        } else if (jsMsg.ret == 3) {
+            errorText = "坐庄中 无法离开";
         } else if (jsMsg.ret != 0) {
             errorText = "退出失败,code = " + jsMsg.ret;
         }
