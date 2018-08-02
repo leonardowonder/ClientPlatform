@@ -96,14 +96,17 @@ export default class BankerListLayer extends cc.Component {
 
     onApplyBankerClick() {
         GameRoomLogic.getInstance().requestApplyBanker();
+        this.close();
     }
 
     onCancelApplyBankerClick() {
         GameRoomLogic.getInstance().requestApplyResignBanker();
+        this.close();
     }
 
     onQuitBankerClick() {
         GameRoomLogic.getInstance().requestApplyResignBanker();
+        this.close();
     }
 
     private _registEvents() {
