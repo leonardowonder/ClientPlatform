@@ -23,6 +23,7 @@ import PrefabManager, { EmPrefabEnum } from '../../Manager/CommonManager/PrefabM
 import PlayerDataManager from '../../Manager/DataManager/PlayerDataManager';
 import RoomData from '../../Data/GamePlay/RoomData';
 import BankerDataManager from '../../Manager/DataManager/GamePlayDataManger/BankerDataManager';
+import SceneManager, { EmSceneID } from '../../Manager/CommonManager/SceneManager';
 
 let gameController = GameController.getInstance();
 
@@ -256,9 +257,10 @@ class GameRoomLogic extends Singleton {
         } else if (jsMsg.ret == 201) {
             errorText = "操作超时";
         } else if (jsMsg.ret == 3) {
-            errorText = "坐庄中 无法离开";
-        } else if (jsMsg.ret != 0) {
-            errorText = "退出失败,code = " + jsMsg.ret;
+            errorText = "请等待牌局结算";
+        } else if (jsMsg.ret == 4) {
+            SceneManager.getInstance().changeScene(EmSceneID.SceneID_MainScene);
+            return;
         }
         if (errorText) {
             PrefabManager.getInstance().showPrefab(EmPrefabEnum.Prefab_PromptDialogLayer, [errorText]);
