@@ -69,6 +69,8 @@ export default class TableMainUI extends cc.Component {
     @property(cc.Node)
     m_topNode: cc.Node = null;
 
+    _bankerProduced: boolean = false;
+
     regisEvent() {
         cc.systemEvent.on(ClientEventDefine.CUSTOM_EVENT_PLAYER_DATA_REQ_FINISHED, this.onPlayerReqFinished, this);
     }
@@ -126,6 +128,7 @@ export default class TableMainUI extends cc.Component {
         this._clearCards();
         this._clearAllProcess();
         this.m_tuoGuanNode.active = false;
+        this._bankerProduced = false;
         this.m_btnGroupController.reset();
         this.m_countDownRootLayer.hideCountDown();
         this.m_bottomCardRootLayer.reset();
@@ -176,23 +179,17 @@ export default class TableMainUI extends cc.Component {
         // player && player.setState(state);
     }
 
-    onBankerProduced(serverIdx: number) {
-        let clientIdx: number = this.getLocalIDByChairID(serverIdx);
-        if (clientIdx == -1) {
-            cc.warn('TableMainUI onBankerProduced invalid serverIdx =', serverIdx);
-            return;
-        }
-
-        let player: DDZPlayerItem = this.m_playerRootLayer.getPlayerByClientIdx(clientIdx);
-        player && player.setIsBanker(true);
-    }
-
     onRoomProducedDZ(serverIdx: number, baseScore: number, cards: number[]) {
+        this._bankerProduced = true;
+
         let clientIdx: number = this.getLocalIDByChairID(serverIdx);
         if (clientIdx == -1) {
             cc.warn('TableMainUI onRoomProducedDZ invalid serverIdx =', serverIdx);
             return;
         }
+
+        let player: DDZPlayerItem = this.m_playerRootLayer.getPlayerByClientIdx(clientIdx);
+        player && player.setIsBanker(true);
 
         this._clearAllPlayerState();
 
@@ -449,10 +446,7 @@ export default class TableMainUI extends cc.Component {
     }
 
     analyeMyCard() {
-        let roomInfo: DDZRoomInfo = DDZGameDataLogic.getInstance().getRoomInfo();
-
-        if (this.getLocalIDByChairID(this.m_curServerActIdx) != 0 || 
-            (roomInfo.state != eRoomState.eRoomState_DDZ_Chu && roomInfo.state != eRoomState.eRoomState_DecideBanker)) {
+        if (!this._needShowMyTurnNode()) {
             return;
         }
 
@@ -588,6 +582,7 @@ export default class TableMainUI extends cc.Component {
             }
 
             if (state == eRoomState.eRoomState_DDZ_Chu) {
+                this._bankerProduced = true;
                 let bankerIdx = roomInfo.dzIdx;
 
                 let clientIdx = this.getLocalIDByChairID(bankerIdx);
@@ -595,6 +590,9 @@ export default class TableMainUI extends cc.Component {
 
                 cc.log('wd debug updateRoomView setIsBanker true');
                 player && player.setIsBanker(true);
+            }
+            else {
+                this._bankerProduced = false;
             }
 
             if (stateInfo) {
@@ -825,5 +823,22 @@ export default class TableMainUI extends cc.Component {
 
     private _doPlaySpecialEffect(effectType: DDZAnimType, clientIdx: number) {
         this.m_animationRootLayer.playSpecialEffect(effectType, clientIdx);
+    }
+
+    private _needShowMyTurnNode(): boolean {
+        if (this.getLocalIDByChairID(this.m_curServerActIdx) != 0) {
+            return false;
+        }
+        
+        let roomInfo: DDZRoomInfo = DDZGameDataLogic.getInstance().getRoomInfo();
+        if (roomInfo.state == eRoomState.eRoomState_DecideBanker && this._bankerProduced) {
+            return true;
+        }
+
+        if (roomInfo.state != eRoomState.eRoomState_DDZ_Chu) {
+            return false;
+        }
+
+        return true;
     }
 };

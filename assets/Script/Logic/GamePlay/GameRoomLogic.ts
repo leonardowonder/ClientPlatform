@@ -185,7 +185,7 @@ class GameRoomLogic extends Singleton {
         }
     }
 
-    //net msg rsp    
+    //net msg rsp
     onMsgRoomInfoRsp(jsMsg) {
         RoomDataManger.getInstance().setRoomData(jsMsg);
 

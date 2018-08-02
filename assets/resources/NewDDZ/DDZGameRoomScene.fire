@@ -4415,7 +4415,7 @@
       "__uuid__": "247ca10b-c05e-4c92-9714-bc9e577e7705"
     },
     "_N$alphaThreshold": 1,
-    "_N$inverted": true
+    "_N$inverted": false
   },
   {
     "__type__": "cc.PrefabInfo",
@@ -9234,8 +9234,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 46,
-      "height": 30
+      "width": 38,
+      "height": 52
     },
     "_rotationX": 0,
     "_rotationY": 0,
@@ -9806,8 +9806,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 46,
-      "height": 30
+      "width": 38,
+      "height": 52
     },
     "_rotationX": 0,
     "_rotationY": 0,
@@ -10378,8 +10378,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 46,
-      "height": 30
+      "width": 38,
+      "height": 52
     },
     "_rotationX": 0,
     "_rotationY": 0,
