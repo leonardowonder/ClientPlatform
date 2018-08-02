@@ -1,20 +1,11 @@
-const { ccclass } = cc._decorator;
+import Singleton from '../../Utils/Singleton';
 
 import VoiceManager from './VoiceManager';
 
-@ccclass
-export default class AudioManager {
-    private static s_pAudioManager: AudioManager = null;
+class AudioManager extends Singleton {
     private m_nBackGroundMusicID: number = 0;
     private m_nBackGroundMusicPath: string = '';
     private m_nEffectID: number = 0;
-
-    public getInstance() {
-        if (AudioManager.s_pAudioManager == null) {
-            AudioManager.s_pAudioManager = new AudioManager();
-        }
-        return AudioManager.s_pAudioManager;
-    }
 
     //播放背景音乐
     public playerBackGroundMusic(musicPath) {
@@ -86,3 +77,5 @@ export default class AudioManager {
         cc.audioEngine.resumeAll();
     }
 };
+
+export default new AudioManager();
