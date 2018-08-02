@@ -39,10 +39,10 @@ export default class ChipsLayer extends cc.Component {
 
     onAreaTouch(event: cc.Event.EventCustom) {
         if (gameController.isSelfBanker()) {
-            PrefabManager.getInstance().showPrefab(EmPrefabEnum.Prefab_PromptDialogLayer, ['庄家不能下注'])；
+            PrefabManager.getInstance().showPrefab(EmPrefabEnum.Prefab_PromptDialogLayer, ['庄家不能下注']);
             return;
         }
-        
+
         if (this._canBetNow()) {
             let curChipType: EmChipType = gameController.getCurChipType();
             let coin: number = chipTypeToCoin(curChipType);
