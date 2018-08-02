@@ -154,15 +154,15 @@ class GameController extends Singleton {
     }
 
     private _updateSpecialPlayerChips(jsMsg: ResultMessegeInfo) {
-        let maxWinRateOffset: number = jsMsg.bestBetOffset;
         let maxCoinOffset: number = jsMsg.richestOffset;
+        let maxWinRateOffset: number = jsMsg.bestBetOffset;
 
         let roomData: RoomData = RoomDataManger.getInstance().getRoomData();
-        if (roomData.richestUID != null && roomData.richestUID > 0) {
+        if (maxCoinOffset > 0 && roomData.richestUID != null && roomData.richestUID > 0) {
             roomData.richestCoin += maxCoinOffset;
         }
 
-        if (roomData.bestBetUID != null && roomData.bestBetUID > 0) {
+        if (maxWinRateOffset > 0 && roomData.bestBetUID != null && roomData.bestBetUID > 0) {
             roomData.bestBetCoin += maxWinRateOffset;
         }
     }
@@ -171,9 +171,11 @@ class GameController extends Singleton {
         let winInfos: WinInfo[] = jsMsg.result;
         if (winInfos && winInfos.length > 0) {
             _.forEach(winInfos, (info: WinInfo) => {
-                let playerData: GamePlayerData = GamePlayerDataManager.getInstance().getPlayerDataByServerIdx(info.idx);
-                if (playerData && playerData.isValid()) {
-                    playerData.chips += info.offset;
+                if (info.offset > 0) {
+                    let playerData: GamePlayerData = GamePlayerDataManager.getInstance().getPlayerDataByServerIdx(info.idx);
+                    if (playerData && playerData.isValid()) {
+                        playerData.chips += info.offset;
+                    }
                 }
             })
         }
@@ -182,7 +184,7 @@ class GameController extends Singleton {
     private _updateSelfChip(jsMsg: ResultMessegeInfo) {
         let offset: number = jsMsg.selfOffset;
 
-        if (offset) {
+        if (offset > 0) {
             let userData: UserInfo = UserData.getInstance().getUserData();
 
             userData.coin += offset;

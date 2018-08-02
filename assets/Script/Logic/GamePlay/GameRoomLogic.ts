@@ -23,6 +23,7 @@ import PrefabManager, { EmPrefabEnum } from '../../Manager/CommonManager/PrefabM
 import PlayerDataManager from '../../Manager/DataManager/PlayerDataManager';
 import RoomData from '../../Data/GamePlay/RoomData';
 import BankerDataManager from '../../Manager/DataManager/GamePlayDataManger/BankerDataManager';
+import SceneManager, { EmSceneID } from '../../Manager/CommonManager/SceneManager';
 
 let gameController = GameController.getInstance();
 
@@ -238,7 +239,8 @@ class GameRoomLogic extends Singleton {
     private _onMsgPlayerLeaveRoomRsp(jsMsg) {
         var errorText = null;
         if (jsMsg.ret == 0) {
-            this.m_curView && this.m_curView.exitGame();
+            // this.m_curView && this.m_curView.exitGame();
+            SceneManager.getInstance().changeScene(EmSceneID.SceneID_MainScene);
         } else if (jsMsg.ret == 1) {
             errorText = "您没有在该房间";
         } else if (jsMsg.ret == 200) {
@@ -302,13 +304,13 @@ class GameRoomLogic extends Singleton {
 
         roomInfo.bankerID = jsMsg.newBankerID;
         roomInfo.bankerCoin = jsMsg.coin;
-        
+
         this.m_curView && this.m_curView.onUpdateBanker();
     }
 
     private _onMsgRBApplayBankerListRsp(jsMsg: BankerListMessageInfo) {
         BankerDataManager.getInstance().setBankerList(jsMsg.list);
-        
+
         let dispEvent: cc.Event.EventCustom = new cc.Event.EventCustom(ClientEventDefine.CUSTOM_EVENT_BANKER_LIST_GET, true);
 
         cc.systemEvent.dispatchEvent(dispEvent);
