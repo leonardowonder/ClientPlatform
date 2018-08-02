@@ -251,13 +251,13 @@ class GameRoomLogic extends Singleton {
         if (jsMsg.ret == 0) {
             this.m_curView && this.m_curView.exitGame();
         } else if (jsMsg.ret == 1) {
-            errorText = "您没有在该房间";
+            errorText = '您没有在该房间';
         } else if (jsMsg.ret == 200) {
-            errorText = "没有找到该房间";
+            errorText = '没有找到该房间';
         } else if (jsMsg.ret == 201) {
-            errorText = "操作超时";
+            errorText = '操作超时';
         } else if (jsMsg.ret == 3) {
-            errorText = "请等待牌局结算";
+            errorText = '请等待牌局结算';
         } else if (jsMsg.ret == 4) {
             SceneManager.getInstance().changeScene(EmSceneID.SceneID_MainScene);
             return;
