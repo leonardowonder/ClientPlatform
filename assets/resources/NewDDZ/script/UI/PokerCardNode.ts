@@ -40,7 +40,7 @@ export default class PokerCardNode extends cc.Component {
         return this._cardData;
     }
 
-    initWithCardData (cardData) {
+    initWithCardData(cardData) {
         this.setCardFace();
         this.setCardGray(false);
         this._cardData = cardData;
@@ -49,13 +49,13 @@ export default class PokerCardNode extends cc.Component {
         let spriteFrameStruct = this.getCardSpriteFrameName(cardData);
         if (spriteFrameStruct.cardNumSp == null) {
             this.m_jokerSprite.node.active = true,
-            this.m_jokerSprite.spriteFrame = spriteAtlas.getSpriteFrame(spriteFrameStruct.JokerNum);
+                this.m_jokerSprite.spriteFrame = spriteAtlas.getSpriteFrame(spriteFrameStruct.JokerNum);
             this.m_cardNumSprite.node.active = false;
             this.m_cardColorSprite.node.active = false;
             this.m_cardLargeColorSprite.spriteFrame = spriteAtlas.getSpriteFrame(spriteFrameStruct.cardColorSp);
         } else {
             this.m_jokerSprite.node.active = false,
-            this.m_cardNumSprite.node.active = true;
+                this.m_cardNumSprite.node.active = true;
             this.m_cardColorSprite.node.active = true;
             this.m_cardNumSprite.spriteFrame = spriteAtlas.getSpriteFrame(spriteFrameStruct.cardNumSp);
             this.m_cardColorSprite.spriteFrame = spriteAtlas.getSpriteFrame(spriteFrameStruct.cardColorSp);
@@ -77,7 +77,7 @@ export default class PokerCardNode extends cc.Component {
         this.m_cardBgNode.active = false;
     }
 
-    getCardSpriteFrameName (cardData) {//{cardNum, cardColor, JokerNum}
+    getCardSpriteFrameName(cardData) {//{cardNum, cardColor, JokerNum}
         let cardValue = GameLogicIns.getCardValue(cardData);
         let cardColor = GameLogicIns.getCardColor(cardData);
         var imageName = "LargeCard_commom_shuzi";
@@ -127,7 +127,7 @@ export default class PokerCardNode extends cc.Component {
                 typeName = "LargeCard_huase_3";
                 break;
         }
-    
+
         return {
             cardNumSp: imageName,
             cardColorSp: typeName,
@@ -135,7 +135,7 @@ export default class PokerCardNode extends cc.Component {
         };
     }
 
-    setCardGray (grayTag) {
+    setCardGray(grayTag) {
         if (this._isGray == grayTag) {
             return;
         }
@@ -148,20 +148,22 @@ export default class PokerCardNode extends cc.Component {
 
     }
 
-    standCard () {
+    standCard() {
         if (this._selectedState) {
             return;
         }
 
+        cc.log('wd debug standCard PosY =', this.node.y, 'this._orgPosY =', this._orgPosY, 'StandOffset =', StandOffset)
         this.node.setPositionY(this._orgPosY + StandOffset);
         this._selectedState = true;
     }
 
-    sitCard () {
+    sitCard() {
         if (!this._selectedState) {
             return;
         }
-        
+
+        cc.log('wd debug sitCard PosY =', this.node.y, 'this._orgPosY =', this._orgPosY, 'StandOffset =', StandOffset)
         this.node.setPositionY(this._orgPosY);
         this._selectedState = false;
     }

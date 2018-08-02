@@ -107,8 +107,11 @@ export default class TableMainUI extends cc.Component {
     onQuitClick() {
         let roomInfo: DDZRoomInfo = DDZGameDataLogic.getInstance().getRoomInfo();
 
-        if (roomInfo.state == eRoomState.eRoomSate_WaitReady || roomInfo.state == eRoomState.eRoomState_GameEnd) {
+        if (roomInfo.state == eRoomState.eRoomState_GameEnd) {
             SceneManager.getInstance().changeScene(EmSceneID.SceneID_MainScene);
+        }
+        else if (roomInfo.state == eRoomState.eRoomSate_WaitReady) {
+            PrefabManager.getInstance().showPrefab(EmPrefabEnum.Prefab_PromptDialogLayer, ['匹配中无法退出']);
         }
         else {
             NetSink.getInstance().sendLeaveRoom();
@@ -364,6 +367,9 @@ export default class TableMainUI extends cc.Component {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Game process
     continuePlay() {
+        let roomInfo = DDZGameDataLogic.getInstance().getRoomInfo();
+        roomInfo.state = eRoomState.eRoomSate_WaitReady;
+        
         MainUiSceneLogic.getInstance().requestEnterDDZRoom();
     }
 
