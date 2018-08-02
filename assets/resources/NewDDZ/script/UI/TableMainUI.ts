@@ -154,6 +154,12 @@ export default class TableMainUI extends cc.Component {
         }
 
         this.m_countDownRootLayer.showCountDown(DDZ_WaitRobBankerTime, clientIdx);
+
+        let playerItem: DDZPlayerItem = this.m_playerRootLayer.getPlayerByClientIdx(clientIdx);
+        if (playerItem) {
+            playerItem.setState(EmDDZPlayerState.State_None);
+        }
+        
         this.updateOptions(false);
     }
 
@@ -214,7 +220,11 @@ export default class TableMainUI extends cc.Component {
 
         this.m_countDownRootLayer.showCountDown(DDZ_WaitPlayerActTime, clientIdx);
 
-        cc.log('wd debug onWaitPlayerDiscard');
+        let playerItem: DDZPlayerItem = this.m_playerRootLayer.getPlayerByClientIdx(clientIdx);
+        if (playerItem) {
+            playerItem.setState(EmDDZPlayerState.State_None);
+        }
+
         this.updateOptions(true);
         // let player: DDZPlayerItem = this.m_playerRootLayer.getPlayerByClientIdx(clientIdx);
         // player && player.setIsBanker(true);
@@ -608,7 +618,13 @@ export default class TableMainUI extends cc.Component {
                     this.m_btnGroupController.hideAll();
                 }
                 else {
-                    this.m_countDownRootLayer.showCountDown(roomInfo.stateTime, this.getLocalIDByChairID(this.m_curServerActIdx));
+                    let clientIdx: number = this.getLocalIDByChairID(this.m_curServerActIdx);
+                    this.m_countDownRootLayer.showCountDown(roomInfo.stateTime, clientIdx);
+
+                    let playerItem: DDZPlayerItem = this.m_playerRootLayer.getPlayerByClientIdx(clientIdx);
+                    if (playerItem) {
+                        playerItem.setState(EmDDZPlayerState.State_None);
+                    }
 
                     if (state == eRoomState.eRoomState_DecideBanker) {
                         this.updateOptions(false);
