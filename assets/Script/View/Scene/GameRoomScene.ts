@@ -76,7 +76,7 @@ export default class GameRoomScene extends cc.Component {
     }
 
     updateRoomView() {
-        this._updatebankerRootInfo();
+        this.onUpdateBanker();
         this._updateCountDown();
         this._showWaitNextGame();
         this._updatePoolInfo();
@@ -123,6 +123,8 @@ export default class GameRoomScene extends cc.Component {
     }
 
     exitGame() {
+        this.m_animRootLayer.stopAllAnim();
+
         SceneManager.getInstance().changeScene(EmSceneID.SceneID_MainScene);
     }
 
@@ -162,6 +164,14 @@ export default class GameRoomScene extends cc.Component {
     onUpdateBanker() {
         this._updatebankerRootInfo();
         this.m_bankerRootLayer.updateBankerInfo();
+    }
+
+    showApplyBanker() {
+        this.m_bankerRootLayer.showApplyBanker();
+    }
+    
+    showCancelApplyBankerButton() {
+        this.m_bankerRootLayer.showCancelApplyBankerButton();
     }
 
     distributeCards() {
@@ -286,8 +296,8 @@ export default class GameRoomScene extends cc.Component {
 
     private _registEvents() {
         this._unregistEvents();
-        cc.systemEvent.on(ClientEventDefine.CUSTOM_EVENT_BANKER_LIST_GET, this._updatebankerRootInfo, this);
-        cc.systemEvent.on(ClientEventDefine.CUSTOM_EVENT_PLAYER_DATA_REQ_FINISHED, this._updatebankerRootInfo, this);
+        cc.systemEvent.on(ClientEventDefine.CUSTOM_EVENT_BANKER_LIST_GET, this.onUpdateBanker, this);
+        cc.systemEvent.on(ClientEventDefine.CUSTOM_EVENT_PLAYER_DATA_REQ_FINISHED, this.onUpdateBanker, this);
     }
 
     private _unregistEvents() {

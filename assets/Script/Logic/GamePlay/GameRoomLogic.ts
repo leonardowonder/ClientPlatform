@@ -23,7 +23,6 @@ import PrefabManager, { EmPrefabEnum } from '../../Manager/CommonManager/PrefabM
 import PlayerDataManager from '../../Manager/DataManager/PlayerDataManager';
 import RoomData from '../../Data/GamePlay/RoomData';
 import BankerDataManager from '../../Manager/DataManager/GamePlayDataManger/BankerDataManager';
-import SceneManager, { EmSceneID } from '../../Manager/CommonManager/SceneManager';
 
 let gameController = GameController.getInstance();
 
@@ -38,6 +37,8 @@ class GameRoomLogic extends Singleton {
     }
 
     setCurView(view: GameRoomScene) {
+        this._registEvent();
+        
         this.m_curView = view;
     }
 
@@ -179,6 +180,14 @@ class GameRoomLogic extends Singleton {
                 this._onMsgRBApplayBankerListRsp(msg.jsMsg);
                 break;
             }
+            case eMsgType.MSG_RB_APPLY_BANKER: {
+                this._onMsgRBApplyBankerRsp(msg.jsMsg);
+                break;
+            }
+            case eMsgType.MSG_RB_PLAYER_RESIGN_BANKER: {
+                this._onMsgRBPlayerResignBankerRsp(msg.jsMsg);
+                break;
+            }
             default: {
                 break;
             }
@@ -239,8 +248,7 @@ class GameRoomLogic extends Singleton {
     private _onMsgPlayerLeaveRoomRsp(jsMsg) {
         var errorText = null;
         if (jsMsg.ret == 0) {
-            // this.m_curView && this.m_curView.exitGame();
-            SceneManager.getInstance().changeScene(EmSceneID.SceneID_MainScene);
+            this.m_curView && this.m_curView.exitGame();
         } else if (jsMsg.ret == 1) {
             errorText = "您没有在该房间";
         } else if (jsMsg.ret == 200) {
@@ -316,6 +324,36 @@ class GameRoomLogic extends Singleton {
         let dispEvent: cc.Event.EventCustom = new cc.Event.EventCustom(ClientEventDefine.CUSTOM_EVENT_BANKER_LIST_GET, true);
 
         cc.systemEvent.dispatchEvent(dispEvent);
+    }
+
+    private _onMsgRBApplyBankerRsp(jsMsg) {
+        let errTxt = null;
+        if (jsMsg.ret == 1) {
+            errTxt = '金币不足';
+        }
+        else if (jsMsg.ret == 2) {
+            errTxt = '已经在列表中';
+        }
+        else if (jsMsg.ret == 3) {
+            errTxt = '列表已满';
+        }
+
+        if (errTxt) {
+            PrefabManager.getInstance().showPrefab(EmPrefabEnum.Prefab_PromptDialogLayer, ['errTxt']);
+        }
+        else {
+            this.m_curView && this.m_curView.showCancelApplyBankerButton();
+        }
+    }
+
+    private _onMsgRBPlayerResignBankerRsp(jsMsg) {
+        if (jsMsg.ret == 0) {
+            this.m_curView && this.m_curView.onUpdateBanker();
+            this.m_curView && this.m_curView.showApplyBanker();
+        }
+        else {
+            PrefabManager.getInstance().showPrefab(EmPrefabEnum.Prefab_PromptDialogLayer, ['没有申请上庄']);
+        }
     }
 
     //private

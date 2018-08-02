@@ -101,7 +101,7 @@ class GameController extends Singleton {
 
     //state machine
     onGameStart() {
-        this.m_Basefsm.changeState('Restart');
+        this.m_Basefsm && this.m_Basefsm.changeState('Restart');
 
         this.m_gameRoomScene && this.m_gameRoomScene.onGameStart();
 
@@ -109,7 +109,7 @@ class GameController extends Singleton {
     }
 
     onGameResult(jsMsg: ResultMessegeInfo) {
-        this.m_Basefsm.changeState('Account');
+        this.m_Basefsm && this.m_Basefsm.changeState('Account');
 
         this._updateWinCardsInfo(jsMsg);
 
@@ -182,9 +182,9 @@ class GameController extends Singleton {
     }
 
     private _updateSelfChip(jsMsg: ResultMessegeInfo) {
-        let userData: UserInfo = UserData.getInstance().getUserData();
+        let roomData: RoomData = RoomDataManger.getInstance().getRoomData();
 
-        userData.coin = jsMsg.selfCoin;
+        roomData.selfCoin = jsMsg.selfCoin;
     }
 
     private _updateBankerChip(jsMsg: ResultMessegeInfo) {

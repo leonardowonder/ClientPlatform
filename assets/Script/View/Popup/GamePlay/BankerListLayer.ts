@@ -43,8 +43,6 @@ export default class BankerListLayer extends cc.Component {
         GameRoomLogic.getInstance().requestApplyBankerList();
 
         this.updateBankerList();
-
-        this.updateButton();
     }
 
     hide() {
@@ -69,6 +67,8 @@ export default class BankerListLayer extends cc.Component {
         }
 
         this.m_bankerListView.initTableView(bankerList.length, bankerList);
+
+        this.updateButton();
     }
 
     updateButton() {

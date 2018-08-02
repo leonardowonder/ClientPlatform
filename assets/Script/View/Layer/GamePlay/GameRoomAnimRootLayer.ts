@@ -41,6 +41,10 @@ export default class GameRoomAnimRootLayer extends cc.Component {
         PrefabManager.getInstance().hidePrefab(EmPrefabEnum.Prefab_GameRoomCountDownLayer, [], this.node);
     }
 
+    stopAllAnim() {
+        AnimationPlayManager.getInstance().stopPlay();
+    }
+
     updateCountDown() {
         let roomInfo: RoomData = RoomDataManger.getInstance().getRoomData();
 
@@ -69,6 +73,10 @@ export default class GameRoomAnimRootLayer extends cc.Component {
     }
 
     playBetAreaWinAnim(type: EmBetAreaType) {
+        if (this.m_betAreaFrames == null || this.m_betAreaContentNodes) {
+            return;
+        }
+
         let idx: number = this._getIdx(type);
 
         let targetFramNode: cc.Node = this.m_betAreaFrames[idx];

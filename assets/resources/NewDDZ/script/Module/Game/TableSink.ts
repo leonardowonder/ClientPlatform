@@ -31,6 +31,8 @@ class TableSink extends Singleton {
     }
 
     setCurView(view: TableMainUI) {
+        this._registEvents();
+        
         this.m_curView = view;
     }
 

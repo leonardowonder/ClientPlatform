@@ -238,7 +238,6 @@ export default class TableMainUI extends cc.Component {
         let isMyTurn: boolean = this.getLocalIDByChairID(this.m_curServerActIdx) == 0;
         this.m_consoleNode.setConsoleEnable(isMyTurn);
 
-        cc.log('wd debug updateOptions isMyTurn =', isMyTurn);
         if (!isMyTurn) {
             this.m_btnGroupController.hideAll();
         }
@@ -608,7 +607,6 @@ export default class TableMainUI extends cc.Component {
                 let clientIdx = this.getLocalIDByChairID(bankerIdx);
                 let player: DDZPlayerItem = this.m_playerRootLayer.getPlayerByClientIdx(clientIdx);
 
-                cc.log('wd debug updateRoomView setIsBanker true');
                 player && player.setIsBanker(true);
             }
             else {

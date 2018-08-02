@@ -53,7 +53,7 @@ class AnimationPlayManager extends Singleton {
         this.m_shouldPlay = false;
 
         let curAnim = this.getCurAnim();
-        curAnim.animStopCallback && curAnim.animStopCallback();
+        curAnim && curAnim.animStopCallback && curAnim.animStopCallback();
     }
 
     startPlay() {
@@ -67,19 +67,25 @@ class AnimationPlayManager extends Singleton {
             this.m_animList,
             (anim: Anim, next: Function) => {
                 if (this.m_shouldPlay) {
-                    this.m_curAnimKey = anim.key;
-
-                    anim.animPlayCallback && anim.animPlayCallback();
-
-                    if (anim.playTime && anim.playTime > 0) {
-                        setTimeout(() => {
-                            anim.animStopCallback && anim.animStopCallback();
-                            next();
-                        }, anim.playTime);
+                    if (anim == null) {
+                        cc.warn('AnimationPlayManager startPlay anim = null');
+                        next();
                     }
                     else {
-                        next();
-                        cc.warn('AnimationPlayManager startPlay playTime =', anim.playTime, 'key =', anim.key);
+                        this.m_curAnimKey = anim.key;
+    
+                        anim.animPlayCallback && anim.animPlayCallback();
+    
+                        if (anim.playTime && anim.playTime > 0) {
+                            setTimeout(() => {
+                                anim.animStopCallback && anim.animStopCallback();
+                                next();
+                            }, anim.playTime);
+                        }
+                        else {
+                            next();
+                            cc.warn('AnimationPlayManager startPlay playTime =', anim.playTime, 'key =', anim.key);
+                        }
                     }
                 }
                 else {

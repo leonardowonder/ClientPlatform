@@ -141,12 +141,13 @@ export default class PlayerItem extends cc.Component {
     refreshViewBySelfData() {
         this.hideSeat();
         let player = UserData.getInstance().getUserData();
+        let roomInfo: RoomData = RoomDataManger.getInstance().getRoomData();
 
         if (player) {
             this.node.active = player.uid != 0;
 
             this.setHead(player.headIcon);
-            this.setCoin(player.coin);
+            this.setCoin(roomInfo.selfCoin);
         }
     }
 

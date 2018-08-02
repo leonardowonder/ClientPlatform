@@ -46,6 +46,7 @@ export default class RoomData {
     bestBetCoin: number = 0;
     richestUID: number = 0;
     richestCoin: number = 0;
+    selfCoin: number = 0;
 
     stateTime: number = 0;
     vBetPool: number[] = [];
