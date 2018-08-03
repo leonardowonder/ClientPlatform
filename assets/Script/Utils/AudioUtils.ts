@@ -150,7 +150,7 @@ export function getCanotOfferVoicePath(gamePlayer: any): string {
     let folder: string = isMan ? '/Man' : '/Woman';
 
     let idx = MathUtils.getInstance().getRandomTenBetween(1, 4);
-    let voicePath: string = isMan ? `Man_buyao${idx}.mp3` : `Woman_buyao${idx}.mp3`;
+    let voicePath: string = isMan ? `/Man_buyao${idx}.mp3` : `/Woman_buyao${idx}.mp3`;
 
     let ret: string = rootPath + folder + voicePath;
     return ret;
