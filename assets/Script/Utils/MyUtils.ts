@@ -24,7 +24,7 @@ export function loadHead(sp: cc.Sprite, headUrl: string) {
                 sp.spriteFrame = new cc.SpriteFrame(texture);
                 sp.node.setContentSize(cc.size(96, 96));
             } else {
-                sp.spriteFrame = null;
+                // sp.spriteFrame = null;
             }
         });
     }

@@ -24,6 +24,8 @@ import DDZAnimationRootLayer from './DDZAnimationRootLayer';
 import MainUiSceneLogic from '../../../../Script/Logic/MainUiSceneLogic';
 
 import ClientEventDefine from '../../../../Script/Define/ClientEventDefine';
+import AudioManager from '../../../../Script/Manager/CommonManager/AudioManager';
+import { getCallBankerVoicePath, getCanotOfferVoicePath, getDiscardVoicePath } from '../../../../Script/Utils/AudioUtils';
 
 let userData = UserData.getInstance().getUserData();
 let ResMgrIns = ResManager.getInstance();
@@ -170,11 +172,10 @@ export default class TableMainUI extends cc.Component {
     }
 
     onRoomPlayerRob(serverIdx: number, times: number) {
-        // let clientIdx: number = this.getLocalIDByChairID(serverIdx);
-        // if (clientIdx == -1) {
-        //     cc.warn('TableMainUI onRoomPlayerRob invalid serverIdx =', serverIdx);
-        //     return;
-        // }
+        let gamePlayer: DDZPlayerData = DDZPlayerDataManager.getInstance().getPlayerDataByServerIdx(serverIdx);
+        if (gamePlayer) {
+            AudioManager.getInstance().playerEffect(getCallBankerVoicePath(times, gamePlayer))
+        }
 
         let state = this._getStateByTimes(times);
 
@@ -221,7 +222,7 @@ export default class TableMainUI extends cc.Component {
         }
 
         this.m_countDownRootLayer.showCountDown(DDZ_WaitPlayerActTime, clientIdx);
-        
+
         this.sendOutCard(clientIdx, [], DDZ_Type.DDZ_Max);
 
         let playerItem: DDZPlayerItem = this.m_playerRootLayer.getPlayerByClientIdx(clientIdx);
@@ -262,14 +263,25 @@ export default class TableMainUI extends cc.Component {
     }
 
     onRoomPlayerDiscard(cards: number[], type: DDZCardType, serverIdx: number) {
+        let gamePlayer: DDZPlayerData = DDZPlayerDataManager.getInstance().getPlayerDataByServerIdx(serverIdx);
+
         let clientIdx: number = this.getLocalIDByChairID(serverIdx);
 
         if (cards == null) {
+            if (gamePlayer) {
+                AudioManager.getInstance().playerEffect(getCanotOfferVoicePath(gamePlayer));
+            }
+
             this.setStateTag(serverIdx, EmDDZPlayerState.State_NoDiscard);
 
             this.sendOutCard(clientIdx, [], DDZ_Type.DDZ_Max);
         }
         else {
+            let value = GameLogicIns.getInstance().getCardLogicValue(cards[0]);
+            if (gamePlayer) {
+                AudioManager.getInstance().playerEffect(getDiscardVoicePath(type, value, gamePlayer));
+            }
+
             let serverCardType: DDZ_Type = GameLogicIns.switchCardTypeToServerType(type);
 
             this.playSpecialCardEffect(serverCardType, clientIdx);

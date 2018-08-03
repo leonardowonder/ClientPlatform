@@ -9,6 +9,10 @@ class MatchUtils extends Singleton {
         return num;
     }
 
+    getRandomTenBetween(n: number, m: number) {
+        let random = Math.floor(Math.random()*(m-n+1)+n);
+        return random;
+    }
 }
 
 export default new MatchUtils();

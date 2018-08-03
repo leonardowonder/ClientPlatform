@@ -57,13 +57,21 @@ export default class BankerListLayer extends cc.Component {
         let bankerList: BankerData[] = BankerDataManager.getInstance().getBankerList();
 
         if (bankerList && bankerList.length > 0) {
+            let uidlist: number[] = [];
             _.forEach(bankerList, (banker: BankerData) => {
                 let playerData = PlayerDataManager.getInstance().getPlayerData(banker.uid);
 
                 if (playerData) {
                     _.merge(banker, playerData);
                 }
+                else {
+                    uidlist.push(banker.uid);
+                }
             });
+
+            if (uidlist.length > 0) {
+                PlayerDataManager.getInstance().reqPlayerData(uidlist);
+            }
         }
 
         this.m_bankerListView.initTableView(bankerList.length, bankerList);

@@ -39,7 +39,7 @@ class GameRoomLogic extends Singleton {
 
     setCurView(view: GameRoomScene) {
         this._registEvent();
-        
+
         this.m_curView = view;
     }
 
@@ -341,7 +341,7 @@ class GameRoomLogic extends Singleton {
         }
 
         if (errTxt) {
-            PrefabManager.getInstance().showPrefab(EmPrefabEnum.Prefab_PromptDialogLayer, ['errTxt']);
+            PrefabManager.getInstance().showPrefab(EmPrefabEnum.Prefab_PromptDialogLayer, [errTxt]);
         }
         else {
             this.m_curView && this.m_curView.showCancelApplyBankerButton();

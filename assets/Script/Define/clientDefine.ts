@@ -24,3 +24,8 @@ export enum eGameType
 	eGame_SCMJ,
 	eGame_Max,
 };
+
+export enum EmSexType {
+    Type_Male,
+    Type_Female
+}

@@ -78,7 +78,7 @@ export enum GCloudVoiceCompleteCode {
 }
 
 import VoiceDefine from '../../Define/VoiceDefine';
-import PlayerData from '../../Data/PlayerData';
+import UserData from '../../Data/UserData';
 
 @ccclass
 export default class VoiceManager {
