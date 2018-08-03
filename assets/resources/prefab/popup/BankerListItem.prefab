@@ -820,6 +820,9 @@
     },
     "m_coinLabel": {
       "__id__": 20
+    },
+    "m_defaultFrame": {
+      "__uuid__": "d68a37f9-9a87-4281-b95e-1e57ab6d78cf"
     }
   },
   {

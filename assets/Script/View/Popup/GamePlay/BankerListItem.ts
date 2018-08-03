@@ -18,6 +18,8 @@ export default class BankerListItem extends ViewCell {
     @property(cc.Label)
     m_coinLabel: cc.Label = null;
 
+    @property(cc.SpriteFrame)
+    m_defaultFrame: cc.SpriteFrame = null;
 
     init(index: number, data: any) {
         let _data = data[index];
@@ -40,7 +42,7 @@ export default class BankerListItem extends ViewCell {
 
     reset() {
         this.m_coinLabel.string = '';
-        this.m_headIcon.spriteFrame = null;
+        this.m_headIcon.spriteFrame = this.m_defaultFrame;
         this.m_nameLabel.string = '';
         this.m_indexLabel.string = '';
     }

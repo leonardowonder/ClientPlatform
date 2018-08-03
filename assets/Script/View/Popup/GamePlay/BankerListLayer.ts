@@ -67,6 +67,8 @@ export default class BankerListLayer extends cc.Component {
                 else {
                     uidlist.push(banker.uid);
                 }
+
+                cc.log('wd debug playerdata =', playerData);
             });
 
             if (uidlist.length > 0) {
